@@ -1,0 +1,6 @@
+/ManagedPackageFramework
+/*ReSharper*
+bin/
+obj/
+*.user
+*.suo
