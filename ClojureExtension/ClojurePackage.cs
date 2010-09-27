@@ -53,7 +53,7 @@ namespace Microsoft.VisualStudio.Project.Samples.CustomProject
             menuCommandService.AddCommand(
                 new MenuCommand(
                     (sender, args) =>
-                        new LoadFileIntoActiveRepl(
+                        new LoadFilesIntoRepl(
                             new ReplWriter(),
                             new SelectedReplProvider(replToolWindow.TabControl, ReplStorageProvider.Storage),
                             new SelectedFilesProvider(dte.ToolWindows.SolutionExplorer),
@@ -62,7 +62,12 @@ namespace Microsoft.VisualStudio.Project.Samples.CustomProject
 
             menuCommandService.AddCommand(
                 new MenuCommand(
-                    menuItemClick,
+                    (sender, args) =>
+                        new LoadFilesIntoRepl(
+                            new ReplWriter(),
+                            new SelectedReplProvider(replToolWindow.TabControl, ReplStorageProvider.Storage),
+                            new SelectedProjectFilesProvider(dte.Solution, dte.ToolWindows.SolutionExplorer),
+                            replToolWindowFrame).Execute(),
                     new CommandID(Guids.GuidClojureExtensionCmdSet, CommandIds.LoadProjectIntoActiveRepl)));
 
             menuCommandService.AddCommand(
@@ -75,13 +80,6 @@ namespace Microsoft.VisualStudio.Project.Samples.CustomProject
                             new ReplLauncher(),
                             replToolWindowFrame).Execute(),
                          new CommandID(Guids.GuidClojureExtensionCmdSet, CommandIds.StartReplUsingProjectVersion)));
-        }
-
-        private void menuItemClick(object sender, EventArgs args)
-        {
-            ReplToolWindow window = (ReplToolWindow) FindToolWindow(typeof (ReplToolWindow), 0, true);
-            IVsWindowFrame windowFrame = (IVsWindowFrame) window.Frame;
-            ErrorHandler.ThrowOnFailure(windowFrame.Show());
         }
 
         public override string ProductUserContext

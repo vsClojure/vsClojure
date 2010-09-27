@@ -80,8 +80,9 @@
     <Compile Include="Attributes\ResourcesDescriptionAttribute.cs" />
     <Compile Include="ClojurePackage.cs" />
     <Compile Include="CommandIds.cs" />
+    <Compile Include="Project\Hierarchy\SelectedProjectFilesProvider.cs" />
+    <Compile Include="Project\Menu\LoadFilesIntoRepl.cs" />
     <Compile Include="Project\Hierarchy\SelectedFilesProvider.cs" />
-    <Compile Include="Project\Menu\LoadFileIntoActiveRepl.cs" />
     <Compile Include="Project\Menu\StartReplUsingProjectVersion.cs" />
     <Compile Include="Project\PropertyPage\GeneralPropertyPage.cs" />
     <Compile Include="Guids.cs" />

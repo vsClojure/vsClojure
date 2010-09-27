@@ -8,28 +8,28 @@ using Microsoft.VisualStudio.Shell.Interop;
 
 namespace Microsoft.ClojureExtension.Project.Menu
 {
-    public class LoadFileIntoActiveRepl
+    internal class LoadFilesIntoRepl
     {
         private readonly ReplWriter _writer;
         private readonly IProvider<ReplData> _replProvider;
-        private readonly IProvider<List<string>> _selectedFilesProvider;
+        private readonly IProvider<List<string>> _filesProvider;
         private readonly IVsWindowFrame _replToolWindowFrame;
 
-        public LoadFileIntoActiveRepl(
+        public LoadFilesIntoRepl(
             ReplWriter writer,
             IProvider<ReplData> replProvider,
-            IProvider<List<string>> selectedFilesProvider,
+            IProvider<List<string>> filesProvider,
             IVsWindowFrame replToolWindowFrame)
         {
             _writer = writer;
             _replProvider = replProvider;
-            _selectedFilesProvider = selectedFilesProvider;
+            _filesProvider = filesProvider;
             _replToolWindowFrame = replToolWindowFrame;
         }
 
         public void Execute()
         {
-            IEnumerable<string> filesToLoad = _selectedFilesProvider.Get().Where(p => p.ToLower().EndsWith(".clj"));
+            IEnumerable<string> filesToLoad = _filesProvider.Get().Where(p => p.ToLower().EndsWith(".clj"));
 
             StringBuilder loadFileExpression = new StringBuilder("(map load-file '(");
             filesToLoad.ToList().ForEach(path => loadFileExpression.Append(" \"").Append(path.Replace("\\", "\\\\")).Append("\""));
