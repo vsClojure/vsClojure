@@ -20,12 +20,17 @@ namespace Microsoft.ClojureExtension.Repl
             _promptPosition = 0;
         }
 
-        public void WriteToRepl(string data)
+        public void WriteFromTextBoxToRepl(string data)
         {
             if (data == "\r\n")
             {
                 _process.StandardInput.WriteLine(_textBox.Text.Substring(_promptPosition));
             }
+        }
+
+        public void SendDirectlyToRepl(string data)
+        {
+            _process.StandardInput.WriteLine(data);
         }
 
         public void ReadOutput(StreamReader stream)
@@ -54,6 +59,11 @@ namespace Microsoft.ClojureExtension.Repl
             Thread errorThread = new Thread(() => ReadOutput(_process.StandardError));
             outputThread.Start();
             errorThread.Start();
+        }
+
+        public void SendToTextBox(string s)
+        {
+            _textBox.AppendText("\r\n");
         }
     }
 }

@@ -12,6 +12,11 @@ namespace Microsoft.ClojureExtension.Repl
         private readonly ReplTabFactory _replTabFactory;
         private readonly ReplLauncher _replLauncher;
 
+        public TabControl ReplManager
+        {
+            get { return _replManager; }
+        }
+
         public ReplToolWindow()
             : this(new ReplTabControlFactory().CreateTabControl(), new ReplTabFactory(), new ReplLauncher())
         {
@@ -35,7 +40,7 @@ namespace Microsoft.ClojureExtension.Repl
             Process process = _replLauncher.Execute();
             TextBox interactiveText = _replTabFactory.CreateInteractiveTextBox();
             ReplTextPipe replTextPipe = _replTabFactory.CreateReplTextPipe(process, interactiveText);
-            TabItem replTab = _replTabFactory.CreateTab(interactiveText);
+            TabItem replTab = _replTabFactory.CreateTab(interactiveText, replTextPipe);
             _replManager.Items.Add(replTab);
             _replManager.SelectedItem = replTab;
             replTextPipe.StartMarshallingText();

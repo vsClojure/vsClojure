@@ -80,6 +80,8 @@
     <Compile Include="Attributes\ResourcesDescriptionAttribute.cs" />
     <Compile Include="ClojurePackage.cs" />
     <Compile Include="ClojurePackageCommandId.cs" />
+    <Compile Include="Project\Menu\LoadFileIntoActiveRepl.cs" />
+    <Compile Include="Project\Menu\StartReplUsingProjectVersion.cs" />
     <Compile Include="Project\PropertyPage\GeneralPropertyPage.cs" />
     <Compile Include="Guids.cs" />
     <Compile Include="Project\MyCustomProjectAutomation.cs" />

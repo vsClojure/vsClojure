@@ -12,7 +12,10 @@ PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
 using System;
 using System.ComponentModel.Design;
 using System.Runtime.InteropServices;
+using EnvDTE;
+using EnvDTE80;
 using Microsoft.ClojureExtension;
+using Microsoft.ClojureExtension.Project.Menu;
 using Microsoft.ClojureExtension.Repl;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -41,10 +44,13 @@ namespace Microsoft.VisualStudio.Project.Samples.CustomProject
         private void intializeMenuItems()
         {
             OleMenuCommandService mcs = GetService(typeof (IMenuCommandService)) as OleMenuCommandService;
-
+            ReplToolWindow window = (ReplToolWindow) FindToolWindow(typeof (ReplToolWindow), 0, true);
+            IVsWindowFrame windowFrame = (IVsWindowFrame) window.Frame;
+            DTE2 dte = (DTE2)GetService(typeof(DTE));
+            
             mcs.AddCommand(
                 new MenuCommand(
-                    menuItemClick,
+                    (sender, args) => new LoadFileIntoActiveRepl(dte.ToolWindows.SolutionExplorer, window.ReplManager, windowFrame).Execute(),
                     new CommandID(GuidList.GuidClojureExtensionCmdSet, ClojurePackageCommandId.LoadFileIntoActiveRepl)));
 
             mcs.AddCommand(
@@ -54,7 +60,7 @@ namespace Microsoft.VisualStudio.Project.Samples.CustomProject
 
             mcs.AddCommand(
                 new MenuCommand(
-                    menuItemClick,
+                    (sender, args) => new StartReplUsingProjectVersion(window, windowFrame).Execute(),
                     new CommandID(GuidList.GuidClojureExtensionCmdSet, ClojurePackageCommandId.StartReplUsingProjectVersion)));
         }
 

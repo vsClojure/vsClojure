@@ -25,11 +25,11 @@ namespace Microsoft.ClojureExtension.Repl
         public ReplTextPipe CreateReplTextPipe(Process process, TextBox interactiveText)
         {
             ReplTextPipe textPipe = new ReplTextPipe(interactiveText, process);
-            interactiveText.PreviewKeyDown += (o, e) => textPipe.WriteToRepl(e.Key == Key.Enter ? "\r\n" : "");
+            interactiveText.PreviewKeyDown += (o, e) => textPipe.WriteFromTextBoxToRepl(e.Key == Key.Enter ? "\r\n" : "");
             return textPipe;
         }
 
-        public TabItem CreateTab(TextBox interactiveText)
+        public TabItem CreateTab(TextBox interactiveText, ReplTextPipe replTextPipe)
         {
             Button interruptButton = new Button();
             interruptButton.Width = 26;
@@ -65,7 +65,7 @@ namespace Microsoft.ClojureExtension.Repl
             TabItem tabItem = new TabItem();
             tabItem.Header = "Repl";
             tabItem.Content = grid;
-
+            tabItem.Tag = replTextPipe;
             return tabItem;
         }
     }
