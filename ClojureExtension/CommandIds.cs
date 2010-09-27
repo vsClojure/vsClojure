@@ -1,6 +1,6 @@
 ﻿namespace Microsoft.ClojureExtension
 {
-    internal static class ClojurePackageCommandId
+    public static class CommandIds
     {
         public const int StartReplUsingProjectVersion = 10;
         public const int LoadProjectIntoActiveRepl = 11;

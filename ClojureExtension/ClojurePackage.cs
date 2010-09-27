@@ -51,17 +51,17 @@ namespace Microsoft.VisualStudio.Project.Samples.CustomProject
             mcs.AddCommand(
                 new MenuCommand(
                     (sender, args) => new LoadFileIntoActiveRepl(dte.ToolWindows.SolutionExplorer, window.ReplManager, windowFrame).Execute(),
-                    new CommandID(GuidList.GuidClojureExtensionCmdSet, ClojurePackageCommandId.LoadFileIntoActiveRepl)));
+                    new CommandID(Guids.GuidClojureExtensionCmdSet, CommandIds.LoadFileIntoActiveRepl)));
 
             mcs.AddCommand(
                 new MenuCommand(
                     menuItemClick,
-                    new CommandID(GuidList.GuidClojureExtensionCmdSet, ClojurePackageCommandId.LoadProjectIntoActiveRepl)));
+                    new CommandID(Guids.GuidClojureExtensionCmdSet, CommandIds.LoadProjectIntoActiveRepl)));
 
             mcs.AddCommand(
                 new MenuCommand(
                     (sender, args) => new StartReplUsingProjectVersion(window, windowFrame).Execute(),
-                    new CommandID(GuidList.GuidClojureExtensionCmdSet, ClojurePackageCommandId.StartReplUsingProjectVersion)));
+                    new CommandID(Guids.GuidClojureExtensionCmdSet, CommandIds.StartReplUsingProjectVersion)));
         }
 
         private void menuItemClick(object sender, EventArgs args)

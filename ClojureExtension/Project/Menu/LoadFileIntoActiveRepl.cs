@@ -25,17 +25,24 @@ namespace Microsoft.ClojureExtension.Project.Menu
 
         public void Execute()
         {
-            Array items = _solutionExplorer.SelectedItems as Array;
+            Array items = (Array) _solutionExplorer.SelectedItems;
+            List<string> filesToLoad = new List<string>();
 
             foreach (UIHierarchyItem item in items)
             {
-                ProjectItem projectItem = item.Object as ProjectItem;
-                string path = projectItem.Properties.Item("FullPath").Value.ToString();
-                ReplTextPipe textPipe = (ReplTextPipe) ((TabItem) _replTabControl.SelectedItem).Tag;
-                path = path.Replace("\\", "\\\\");
-                textPipe.SendDirectlyToRepl("(load-file \"" + path + "\")");
-                textPipe.SendToTextBox("\r\n");
+                ProjectItem projectItem = (ProjectItem) item.Object;
+                string filePath = projectItem.Properties.Item("FullPath").Value.ToString();
+                if (!filePath.ToLower().EndsWith(".clj")) continue;
+                filesToLoad.Add(filePath);
             }
+
+            StringBuilder loadFileExpression = new StringBuilder("(map load-file '(");
+            filesToLoad.ForEach(path => loadFileExpression.Append(" \"").Append(path.Replace("\\", "\\\\")).Append("\""));
+            loadFileExpression.Append("))");
+
+            ReplTextPipe textPipe = (ReplTextPipe)((TabItem)_replTabControl.SelectedItem).Tag;
+            textPipe.SendDirectlyToRepl(loadFileExpression.ToString());
+            textPipe.SendToTextBox("\r\n");
 
             ErrorHandler.ThrowOnFailure(_replToolWindowFrame.Show());
         }

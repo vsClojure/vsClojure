@@ -79,7 +79,7 @@
     <Compile Include="Attributes\ResourcesCategoryAttribute.cs" />
     <Compile Include="Attributes\ResourcesDescriptionAttribute.cs" />
     <Compile Include="ClojurePackage.cs" />
-    <Compile Include="ClojurePackageCommandId.cs" />
+    <Compile Include="CommandIds.cs" />
     <Compile Include="Project\Menu\LoadFileIntoActiveRepl.cs" />
     <Compile Include="Project\Menu\StartReplUsingProjectVersion.cs" />
     <Compile Include="Project\PropertyPage\GeneralPropertyPage.cs" />
