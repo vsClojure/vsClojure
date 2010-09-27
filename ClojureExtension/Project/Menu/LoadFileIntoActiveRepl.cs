@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Windows.Controls;
-using EnvDTE;
 using Microsoft.ClojureExtension.Repl;
+using Microsoft.ClojureExtension.Utilities;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
 
@@ -12,38 +10,32 @@ namespace Microsoft.ClojureExtension.Project.Menu
 {
     public class LoadFileIntoActiveRepl
     {
-        private readonly UIHierarchy _solutionExplorer;
-        private readonly TabControl _replTabControl;
+        private readonly ReplWriter _writer;
+        private readonly IProvider<ReplData> _replProvider;
+        private readonly IProvider<List<string>> _selectedFilesProvider;
         private readonly IVsWindowFrame _replToolWindowFrame;
 
-        public LoadFileIntoActiveRepl(UIHierarchy solutionExplorer, TabControl replTabControl, IVsWindowFrame replToolWindowFrame)
+        public LoadFileIntoActiveRepl(
+            ReplWriter writer,
+            IProvider<ReplData> replProvider,
+            IProvider<List<string>> selectedFilesProvider,
+            IVsWindowFrame replToolWindowFrame)
         {
-            _solutionExplorer = solutionExplorer;
-            _replTabControl = replTabControl;
+            _writer = writer;
+            _replProvider = replProvider;
+            _selectedFilesProvider = selectedFilesProvider;
             _replToolWindowFrame = replToolWindowFrame;
         }
 
         public void Execute()
         {
-            Array items = (Array) _solutionExplorer.SelectedItems;
-            List<string> filesToLoad = new List<string>();
-
-            foreach (UIHierarchyItem item in items)
-            {
-                ProjectItem projectItem = (ProjectItem) item.Object;
-                string filePath = projectItem.Properties.Item("FullPath").Value.ToString();
-                if (!filePath.ToLower().EndsWith(".clj")) continue;
-                filesToLoad.Add(filePath);
-            }
+            IEnumerable<string> filesToLoad = _selectedFilesProvider.Get().Where(p => p.ToLower().EndsWith(".clj"));
 
             StringBuilder loadFileExpression = new StringBuilder("(map load-file '(");
-            filesToLoad.ForEach(path => loadFileExpression.Append(" \"").Append(path.Replace("\\", "\\\\")).Append("\""));
+            filesToLoad.ToList().ForEach(path => loadFileExpression.Append(" \"").Append(path.Replace("\\", "\\\\")).Append("\""));
             loadFileExpression.Append("))");
 
-            ReplTextPipe textPipe = (ReplTextPipe)((TabItem)_replTabControl.SelectedItem).Tag;
-            textPipe.SendDirectlyToRepl(loadFileExpression.ToString());
-            textPipe.SendToTextBox("\r\n");
-
+            _writer.WriteBehindTheSceneExpressionToRepl(_replProvider.Get(), loadFileExpression.ToString());
             ErrorHandler.ThrowOnFailure(_replToolWindowFrame.Show());
         }
     }

@@ -43,7 +43,7 @@
         <CommandFlag>DynamicVisibility</CommandFlag>
         <Strings>
           <CommandName>Clojure.LoadFileIntoRepl</CommandName>
-          <ButtonText>Load File into Repl</ButtonText>
+          <ButtonText>Load File(s) into Repl</ButtonText>
         </Strings>
       </Button>
     </Buttons>

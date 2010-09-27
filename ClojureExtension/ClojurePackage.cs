@@ -15,6 +15,7 @@ using System.Runtime.InteropServices;
 using EnvDTE;
 using EnvDTE80;
 using Microsoft.ClojureExtension;
+using Microsoft.ClojureExtension.Project.Hierarchy;
 using Microsoft.ClojureExtension.Project.Menu;
 using Microsoft.ClojureExtension.Repl;
 using Microsoft.VisualStudio.Shell;
@@ -37,31 +38,43 @@ namespace Microsoft.VisualStudio.Project.Samples.CustomProject
         protected override void Initialize()
         {
             base.Initialize();
+            ReplStorageProvider.Storage = new ReplStorage();
             intializeMenuItems();
             RegisterProjectFactory(new ClojureProjectFactory(this));
         }
 
         private void intializeMenuItems()
         {
-            OleMenuCommandService mcs = GetService(typeof (IMenuCommandService)) as OleMenuCommandService;
-            ReplToolWindow window = (ReplToolWindow) FindToolWindow(typeof (ReplToolWindow), 0, true);
-            IVsWindowFrame windowFrame = (IVsWindowFrame) window.Frame;
+            OleMenuCommandService menuCommandService = (OleMenuCommandService) GetService(typeof (IMenuCommandService));
+            ReplToolWindow replToolWindow = (ReplToolWindow) FindToolWindow(typeof (ReplToolWindow), 0, true);
+            IVsWindowFrame replToolWindowFrame = (IVsWindowFrame) replToolWindow.Frame;
             DTE2 dte = (DTE2)GetService(typeof(DTE));
             
-            mcs.AddCommand(
+            menuCommandService.AddCommand(
                 new MenuCommand(
-                    (sender, args) => new LoadFileIntoActiveRepl(dte.ToolWindows.SolutionExplorer, window.ReplManager, windowFrame).Execute(),
-                    new CommandID(Guids.GuidClojureExtensionCmdSet, CommandIds.LoadFileIntoActiveRepl)));
+                    (sender, args) =>
+                        new LoadFileIntoActiveRepl(
+                            new ReplWriter(),
+                            new SelectedReplProvider(replToolWindow.TabControl, ReplStorageProvider.Storage),
+                            new SelectedFilesProvider(dte.ToolWindows.SolutionExplorer),
+                            replToolWindowFrame).Execute(),
+                        new CommandID(Guids.GuidClojureExtensionCmdSet, CommandIds.LoadFileIntoActiveRepl)));
 
-            mcs.AddCommand(
+            menuCommandService.AddCommand(
                 new MenuCommand(
                     menuItemClick,
                     new CommandID(Guids.GuidClojureExtensionCmdSet, CommandIds.LoadProjectIntoActiveRepl)));
 
-            mcs.AddCommand(
+            menuCommandService.AddCommand(
                 new MenuCommand(
-                    (sender, args) => new StartReplUsingProjectVersion(window, windowFrame).Execute(),
-                    new CommandID(Guids.GuidClojureExtensionCmdSet, CommandIds.StartReplUsingProjectVersion)));
+                    (sender, args) =>
+                        new StartReplUsingProjectVersion(
+                            ReplStorageProvider.Storage,
+                            replToolWindow.TabControl,
+                            new ReplTabFactory(),
+                            new ReplLauncher(),
+                            replToolWindowFrame).Execute(),
+                         new CommandID(Guids.GuidClojureExtensionCmdSet, CommandIds.StartReplUsingProjectVersion)));
         }
 
         private void menuItemClick(object sender, EventArgs args)
@@ -69,7 +82,6 @@ namespace Microsoft.VisualStudio.Project.Samples.CustomProject
             ReplToolWindow window = (ReplToolWindow) FindToolWindow(typeof (ReplToolWindow), 0, true);
             IVsWindowFrame windowFrame = (IVsWindowFrame) window.Frame;
             ErrorHandler.ThrowOnFailure(windowFrame.Show());
-            window.CreateNewRepl();
         }
 
         public override string ProductUserContext

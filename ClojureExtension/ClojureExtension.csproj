@@ -80,6 +80,7 @@
     <Compile Include="Attributes\ResourcesDescriptionAttribute.cs" />
     <Compile Include="ClojurePackage.cs" />
     <Compile Include="CommandIds.cs" />
+    <Compile Include="Project\Hierarchy\SelectedFilesProvider.cs" />
     <Compile Include="Project\Menu\LoadFileIntoActiveRepl.cs" />
     <Compile Include="Project\Menu\StartReplUsingProjectVersion.cs" />
     <Compile Include="Project\PropertyPage\GeneralPropertyPage.cs" />
@@ -88,17 +89,23 @@
     <Compile Include="Project\ClojureProjectFactory.cs" />
     <Compile Include="Project\ClojureProjectFileNode.cs" />
     <Compile Include="Project\ClojureProjectNode.cs" />
+    <Compile Include="Repl\ReplData.cs" />
+    <Compile Include="Repl\ReplStorage.cs" />
+    <Compile Include="Repl\ReplStorageProvider.cs" />
     <Compile Include="Repl\ReplTabControlFactory.cs" />
     <Compile Include="Repl\ReplTextPipe.cs" />
     <Compile Include="Repl\ReplLauncher.cs" />
     <Compile Include="Repl\ReplTabFactory.cs" />
     <Compile Include="Repl\ReplToolWindow.cs" />
+    <Compile Include="Repl\ReplWriter.cs" />
+    <Compile Include="Repl\SelectedReplProvider.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilities\IProvider.cs" />
     <EmbeddedResource Include="Resources\ClojureImageList.bmp" />
     <Content Include="Templates\ProjectItems\Clojure\clojure-file.clj">
       <IncludeInVSIX>true</IncludeInVSIX>
