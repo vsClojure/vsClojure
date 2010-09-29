@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics;
 using System.Windows.Controls;
+using Microsoft.ClojureExtension.Configuration;
 using Microsoft.ClojureExtension.Repl;
+using Microsoft.ClojureExtension.Utilities;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
 
@@ -13,15 +15,18 @@ namespace Microsoft.ClojureExtension.Project.Menu
         private readonly ReplTabFactory _replTabFactory;
         private readonly ReplLauncher _replLauncher;
         private readonly IVsWindowFrame _toolWindowFrame;
+        private readonly IProvider<Framework> _frameworkProvider;
 
         public StartReplUsingProjectVersion(
             ReplStorage storage,
             TabControl replManager,
             ReplTabFactory replTabFactory,
             ReplLauncher replLauncher,
-            IVsWindowFrame toolWindowFrame)
+            IVsWindowFrame toolWindowFrame,
+            IProvider<Framework> frameworkProvider)
         {
             _storage = storage;
+            _frameworkProvider = frameworkProvider;
             _replManager = replManager;
             _replTabFactory = replTabFactory;
             _replLauncher = replLauncher;
@@ -30,7 +35,7 @@ namespace Microsoft.ClojureExtension.Project.Menu
 
         public void Execute()
         {
-            Process process = _replLauncher.Execute();
+            Process process = _replLauncher.Execute(_frameworkProvider.Get().Location);
             TextBox interactiveText = _replTabFactory.CreateInteractiveTextBox();
             TabItem replTab = _replTabFactory.CreateTab(interactiveText);
             ReplData replData = new ReplData(process, interactiveText, replTab);

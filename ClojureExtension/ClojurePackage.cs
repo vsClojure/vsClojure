@@ -11,10 +11,12 @@ PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
 
 using System;
 using System.ComponentModel.Design;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using EnvDTE;
 using EnvDTE80;
 using Microsoft.ClojureExtension;
+using Microsoft.ClojureExtension.Configuration;
 using Microsoft.ClojureExtension.Project.Hierarchy;
 using Microsoft.ClojureExtension.Project.Menu;
 using Microsoft.ClojureExtension.Repl;
@@ -31,6 +33,7 @@ namespace Microsoft.VisualStudio.Project.Samples.CustomProject
     [ProvideProjectItem(typeof (ClojureProjectFactory), "Clojure Items", @"Templates\ProjectItems\Clojure", 500)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [ProvideToolWindow(typeof (ReplToolWindow))]
+    [ProvideOptionPage(typeof(FrameworkOptionsDialogPage), "Clojure", "Frameworks", 0, 0, true)]
     public sealed class ClojurePackage : ProjectPackage
     {
         public const string PackageGuid = "40953a10-3425-499c-8162-a90059792d13";
@@ -38,9 +41,19 @@ namespace Microsoft.VisualStudio.Project.Samples.CustomProject
         protected override void Initialize()
         {
             base.Initialize();
+            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
             ReplStorageProvider.Storage = new ReplStorage();
+            createSettingsStore();
             intializeMenuItems();
             RegisterProjectFactory(new ClojureProjectFactory(this));
+        }
+
+        private void createSettingsStore()
+        {
+            IVsWritableSettingsStore settingsStore;
+            var settingsManager = (IVsSettingsManager) GetService(typeof(SVsSettingsManager));
+            settingsManager.GetWritableSettingsStore((uint)__VsSettingsScope.SettingsScope_UserSettings, out settingsStore);
+            SettingsStoreProvider.Store = new SettingsStore("Clojure", settingsStore);
         }
 
         private void intializeMenuItems()
@@ -49,7 +62,7 @@ namespace Microsoft.VisualStudio.Project.Samples.CustomProject
             ReplToolWindow replToolWindow = (ReplToolWindow) FindToolWindow(typeof (ReplToolWindow), 0, true);
             IVsWindowFrame replToolWindowFrame = (IVsWindowFrame) replToolWindow.Frame;
             DTE2 dte = (DTE2)GetService(typeof(DTE));
-            
+
             menuCommandService.AddCommand(
                 new MenuCommand(
                     (sender, args) =>
@@ -66,7 +79,8 @@ namespace Microsoft.VisualStudio.Project.Samples.CustomProject
                         new LoadFilesIntoRepl(
                             new ReplWriter(),
                             new SelectedReplProvider(replToolWindow.TabControl, ReplStorageProvider.Storage),
-                            new SelectedProjectFilesProvider(dte.Solution, dte.ToolWindows.SolutionExplorer),
+                            new ProjectFilesProvider(
+                                new SelectedProjectProvider(dte.Solution, dte.ToolWindows.SolutionExplorer)),
                             replToolWindowFrame).Execute(),
                     new CommandID(Guids.GuidClojureExtensionCmdSet, CommandIds.LoadProjectIntoActiveRepl)));
 
@@ -78,13 +92,25 @@ namespace Microsoft.VisualStudio.Project.Samples.CustomProject
                             replToolWindow.TabControl,
                             new ReplTabFactory(),
                             new ReplLauncher(),
-                            replToolWindowFrame).Execute(),
+                            replToolWindowFrame,
+                            new GetFrameworkFromSelectedProject(
+                                new SelectedProjectProvider(dte.Solution, dte.ToolWindows.SolutionExplorer),
+                                SettingsStoreProvider.Store)).Execute(),
                          new CommandID(Guids.GuidClojureExtensionCmdSet, CommandIds.StartReplUsingProjectVersion)));
         }
 
         public override string ProductUserContext
         {
             get { return "ClojureProj"; }
+        }
+
+        private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+        {
+            foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+                if (assembly.FullName == args.Name)
+                    return assembly;
+
+            return null;
         }
     }
 }

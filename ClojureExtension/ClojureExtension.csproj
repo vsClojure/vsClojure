@@ -80,7 +80,21 @@
     <Compile Include="Attributes\ResourcesDescriptionAttribute.cs" />
     <Compile Include="ClojurePackage.cs" />
     <Compile Include="CommandIds.cs" />
-    <Compile Include="Project\Hierarchy\SelectedProjectFilesProvider.cs" />
+    <Compile Include="Configuration\FrameworkOptions.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Configuration\FrameworkOptions.Designer.cs">
+      <DependentUpon>FrameworkOptions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration\FrameworkOptionsDialogPage.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Configuration\Framework.cs" />
+    <Compile Include="Configuration\SettingsStore.cs" />
+    <Compile Include="Configuration\SettingsStoreProvider.cs" />
+    <Compile Include="Project\Hierarchy\GetFrameworkFromSelectedProject.cs" />
+    <Compile Include="Project\Hierarchy\ProjectFilesProvider.cs" />
+    <Compile Include="Project\Hierarchy\SelectedProjectProvider.cs" />
     <Compile Include="Project\Menu\LoadFilesIntoRepl.cs" />
     <Compile Include="Project\Hierarchy\SelectedFilesProvider.cs" />
     <Compile Include="Project\Menu\StartReplUsingProjectVersion.cs" />
@@ -107,6 +121,9 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\IProvider.cs" />
+    <EmbeddedResource Include="Configuration\FrameworkOptions.resx">
+      <DependentUpon>FrameworkOptions.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\ClojureImageList.bmp" />
     <Content Include="Templates\ProjectItems\Clojure\clojure-file.clj">
       <IncludeInVSIX>true</IncludeInVSIX>

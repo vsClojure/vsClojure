@@ -15,6 +15,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using EnvDTE;
+using Microsoft.ClojureExtension;
 using VSLangProj;
 using Microsoft.VisualStudio.Project.Automation;
 
@@ -24,7 +25,7 @@ namespace Microsoft.VisualStudio.Project.Samples.CustomProject
 	/// This class extends the ProjectNode in order to represent our project 
 	/// within the hierarchy.
 	/// </summary>
-	[Guid("6FC514F7-6F4D-4FD4-95ED-F37F61E798EF")]
+	[Guid(Guids.ClojureProject)]
 	public class ClojureProjectNode : ProjectNode
 	{
 		#region Enum for image list
@@ -106,7 +107,7 @@ namespace Microsoft.VisualStudio.Project.Samples.CustomProject
 		/// <value>The project GUID.</value>
 		public override Guid ProjectGuid
 		{
-			get { return typeof(ClojureProjectFactory).GUID; }
+            get { return new Guid(Guids.ClojureProject); }
 		}
 
         public override bool IsCodeFile(string fileName)

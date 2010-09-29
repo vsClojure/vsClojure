@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.ClojureExtension.Repl;
@@ -30,6 +31,8 @@ namespace Microsoft.ClojureExtension.Project.Menu
         public void Execute()
         {
             IEnumerable<string> filesToLoad = _filesProvider.Get().Where(p => p.ToLower().EndsWith(".clj"));
+
+            if (filesToLoad.Count() == 0) throw new Exception("No files to load.");
 
             StringBuilder loadFileExpression = new StringBuilder("(map load-file '(");
             filesToLoad.ToList().ForEach(path => loadFileExpression.Append(" \"").Append(path.Replace("\\", "\\\\")).Append("\""));
