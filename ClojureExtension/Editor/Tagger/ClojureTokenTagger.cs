@@ -30,9 +30,7 @@ namespace Microsoft.ClojureExtension.Editor
             foreach (SnapshotSpan curSpan in spans)
             {
                 ITextSnapshotLine containingLine = curSpan.Start.GetContainingLine();
-
-                MemoryStream stream = new MemoryStream(Encoding.ASCII.GetBytes(containingLine.GetText()));
-                ClojureLexer lexer = new ClojureLexer(new ANTLRInputStream(stream));
+                ClojureLexer lexer = new ClojureLexer(new ANTLRStringStream(containingLine.GetText()));
                 IToken token = lexer.NextToken();
                 int currentIndex = containingLine.Start;
 

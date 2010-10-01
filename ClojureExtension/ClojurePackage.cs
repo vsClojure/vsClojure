@@ -38,7 +38,6 @@ namespace Microsoft.VisualStudio.Project.Samples.CustomProject
     public sealed class ClojurePackage : ProjectPackage
     {
         public const string PackageGuid = "40953a10-3425-499c-8162-a90059792d13";
-        //private CommandEvents _commandEvents;
 
         protected override void Initialize()
         {
@@ -64,8 +63,6 @@ namespace Microsoft.VisualStudio.Project.Samples.CustomProject
             ReplToolWindow replToolWindow = (ReplToolWindow) FindToolWindow(typeof (ReplToolWindow), 0, true);
             IVsWindowFrame replToolWindowFrame = (IVsWindowFrame) replToolWindow.Frame;
             DTE2 dte = (DTE2)GetService(typeof(DTE));
-           // _commandEvents = dte.Events.CommandEvents["ClassViewContentMenus.ClassViewMultiselectProjectreferencesItems.Properties", -1];
-            //_commandEvents.BeforeExecute += ClojurePackage_BeforeExecute;
 
             menuCommandService.AddCommand(
                 new MenuCommand(

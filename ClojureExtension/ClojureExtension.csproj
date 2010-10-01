@@ -94,9 +94,9 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Attributes\LocDisplayNameAttribute.cs" />
-    <Compile Include="Attributes\ResourcesCategoryAttribute.cs" />
-    <Compile Include="Attributes\ResourcesDescriptionAttribute.cs" />
+    <Compile Include="Configuration\Attributes\LocDisplayNameAttribute.cs" />
+    <Compile Include="Configuration\Attributes\ResourcesCategoryAttribute.cs" />
+    <Compile Include="Configuration\Attributes\ResourcesDescriptionAttribute.cs" />
     <Compile Include="ClojurePackage.cs" />
     <Compile Include="CommandIds.cs" />
     <Compile Include="Configuration\FrameworkOptions.cs">
@@ -111,6 +111,8 @@
     <Compile Include="Configuration\Framework.cs" />
     <Compile Include="Configuration\SettingsStore.cs" />
     <Compile Include="Configuration\SettingsStoreProvider.cs" />
+    <Compile Include="Editor\AutoIndent\ClojureSmartIndent.cs" />
+    <Compile Include="Editor\AutoIndent\SmartIndentProvider.cs" />
     <Compile Include="Editor\BraceMatching\BraceMatchingTagger.cs" />
     <Compile Include="Editor\BraceMatching\BraceMatchingTaggerProvider.cs" />
     <Compile Include="Editor\BraceMatching\BraceMatchingFormatDefinitions.cs" />
