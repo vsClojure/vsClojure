@@ -22,5 +22,6 @@
   </References>
   <Content>
     <VsPackage>|%CurrentProject%;PkgdefProjectOutputGroup|</VsPackage>
+    <MefComponent>|ClojureExtension|</MefComponent>
   </Content>
 </Vsix>
