@@ -6,44 +6,30 @@ using Microsoft.VisualStudio.Utilities;
 namespace Microsoft.ClojureExtension.Editor.Classification
 {
     [Export(typeof (EditorFormatDefinition))]
-    [ClassificationType(ClassificationTypeNames = "StartList")]
-    [Name("StartList")]
-    [UserVisible(false)]
-    [Order(Before = Priority.Default)]
-    internal sealed class ClojureStartList : ClassificationFormatDefinition
-    {
-        public ClojureStartList()
-        {
-            DisplayName = "StartList";
-            ForegroundColor = Colors.Black;
-        }
-    }
-
-    [Export(typeof (EditorFormatDefinition))]
-    [ClassificationType(ClassificationTypeNames = "EndList")]
-    [Name("EndList")]
-    [UserVisible(false)]
-    [Order(Before = Priority.Default)]
-    internal sealed class ClojureEndList : ClassificationFormatDefinition
-    {
-        public ClojureEndList()
-        {
-            DisplayName = "EndList";
-            ForegroundColor = Colors.Black;
-        }
-    }
-
-    [Export(typeof (EditorFormatDefinition))]
-    [ClassificationType(ClassificationTypeNames = "Symbol")]
-    [Name("Symbol")]
-    [UserVisible(false)]
+    [ClassificationType(ClassificationTypeNames = "ClojureSymbol")]
+    [Name("ClojureSymbol")]
+    [UserVisible(true)]
     [Order(Before = Priority.Default)]
     internal sealed class ClojureSymbol : ClassificationFormatDefinition
     {
         public ClojureSymbol()
         {
-            DisplayName = "Symbol";
+            DisplayName = "Clojure - Symbol";
             ForegroundColor = Colors.Blue;
+        }
+    }
+
+    [Export(typeof(EditorFormatDefinition))]
+    [ClassificationType(ClassificationTypeNames = "ClojureKeyword")]
+    [Name("ClojureKeyword")]
+    [UserVisible(true)]
+    [Order(Before = Priority.Default)]
+    internal sealed class ClojureKeyword : ClassificationFormatDefinition
+    {
+        public ClojureKeyword()
+        {
+            DisplayName = "Clojure - Keyword";
+            ForegroundColor = Colors.DarkMagenta;
         }
     }
 }

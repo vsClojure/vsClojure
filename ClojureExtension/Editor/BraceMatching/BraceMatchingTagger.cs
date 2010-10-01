@@ -198,12 +198,12 @@ namespace Microsoft.ClojureExtension.Editor.BraceMatching
                 m_braceList.TryGetValue(currentText, out closeChar);
                 if (FindMatchingCloseChar(currentChar, currentText, closeChar, View.TextViewLines.Count, out pairSpan) == true)
                 {
-                    yield return new TagSpan<TextMarkerTag>(new SnapshotSpan(currentChar, 1), new TextMarkerTag("blue"));
-                    yield return new TagSpan<TextMarkerTag>(pairSpan, new TextMarkerTag("blue"));
+                    yield return new TagSpan<TextMarkerTag>(new SnapshotSpan(currentChar, 1), new TextMarkerTag("ClojureBraceFound"));
+                    yield return new TagSpan<TextMarkerTag>(pairSpan, new TextMarkerTag("ClojureBraceFound"));
                 }
                 else
                 {
-                    yield return new TagSpan<TextMarkerTag>(new SnapshotSpan(currentChar, 1), new TextMarkerTag("yellow"));
+                    yield return new TagSpan<TextMarkerTag>(new SnapshotSpan(currentChar, 1), new TextMarkerTag("ClojureBraceNotFound"));
                 }
             }
             else if (m_braceList.ContainsValue(lastText)) //the value is the close brace, which is the *previous* character 
@@ -211,12 +211,46 @@ namespace Microsoft.ClojureExtension.Editor.BraceMatching
                 var open = from n in m_braceList
                            where n.Value.Equals(lastText)
                            select n.Key;
-                if (FindMatchingOpenChar(lastChar, (char) open.ElementAt<char>(0), lastText, View.TextViewLines.Count, out pairSpan) == true)
+                if (FindMatchingOpenChar(lastChar, (char)open.ElementAt<char>(0), lastText, View.TextViewLines.Count, out pairSpan) == true)
                 {
-                    yield return new TagSpan<TextMarkerTag>(new SnapshotSpan(lastChar, 1), new TextMarkerTag("blue"));
-                    yield return new TagSpan<TextMarkerTag>(pairSpan, new TextMarkerTag("blue"));
+                    yield return new TagSpan<TextMarkerTag>(new SnapshotSpan(lastChar, 1), new TextMarkerTag("ClojureBraceFound"));
+                    yield return new TagSpan<TextMarkerTag>(pairSpan, new TextMarkerTag("ClojureBraceFound"));
+                }
+                else
+                {
+                    yield return new TagSpan<TextMarkerTag>(new SnapshotSpan(lastChar, 1), new TextMarkerTag("ClojureBraceNotFound"));
                 }
             }
+
+            //if (m_braceList.ContainsKey(currentText)) //the key is the open brace
+            //{
+            //    char closeChar;
+            //    m_braceList.TryGetValue(currentText, out closeChar);
+            //    if (FindMatchingCloseChar(currentChar, currentText, closeChar, View.TextViewLines.Count, out pairSpan) == true)
+            //    {
+            //        yield return new TagSpan<TextMarkerTag>(new SnapshotSpan(currentChar, 1), new TextMarkerTag("MarkerFormatDefinition/BraceFoundFormatDefinition"));
+            //        yield return new TagSpan<TextMarkerTag>(pairSpan, new TextMarkerTag("MarkerFormatDefinition/BraceFoundFormatDefinition"));
+            //    }
+            //    else
+            //    {
+            //        yield return new TagSpan<TextMarkerTag>(new SnapshotSpan(currentChar, 1), new TextMarkerTag("MarkerFormatDefinition/BraceNotFoundFormatDefinition"));
+            //    }
+            //}
+            //else if (m_braceList.ContainsValue(lastText)) //the value is the close brace, which is the *previous* character 
+            //{
+            //    var open = from n in m_braceList
+            //               where n.Value.Equals(lastText)
+            //               select n.Key;
+            //    if (FindMatchingOpenChar(lastChar, (char) open.ElementAt<char>(0), lastText, View.TextViewLines.Count, out pairSpan) == true)
+            //    {
+            //        yield return new TagSpan<TextMarkerTag>(new SnapshotSpan(lastChar, 1), new TextMarkerTag("MarkerFormatDefinition/BraceFoundFormatDefinition"));
+            //        yield return new TagSpan<TextMarkerTag>(pairSpan, new TextMarkerTag("MarkerFormatDefinition/BraceFoundFormatDefinition"));
+            //    }
+            //    else
+            //    {
+            //        yield return new TagSpan<TextMarkerTag>(new SnapshotSpan(lastChar, 1), new TextMarkerTag("MarkerFormatDefinition/BraceNotFoundFormatDefinition"));
+            //    }
+            //}
         }
     }
 }

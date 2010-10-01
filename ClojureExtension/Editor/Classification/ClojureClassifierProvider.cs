@@ -21,10 +21,10 @@ namespace Microsoft.ClojureExtension.Editor.Classification
 
         public ITagger<T> CreateTagger<T>(ITextBuffer buffer) where T : ITag
         {
-            ITagAggregator<ClojureTokenTag> ookTagAggregator =
+            ITagAggregator<ClojureTokenTag> clojureTagAggregator =
                 aggregatorFactory.CreateTagAggregator<ClojureTokenTag>(buffer);
 
-            return new ClojureClassifier(buffer, ookTagAggregator, ClassificationTypeRegistry) as ITagger<T>;
+            return new ClojureClassifier(buffer, clojureTagAggregator, ClassificationTypeRegistry) as ITagger<T>;
         }
     }
 }
