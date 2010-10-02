@@ -3,6 +3,8 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
+using Microsoft.ClojureExtension.Repl.Operations;
+using Brush = System.Drawing.Brush;
 
 namespace Microsoft.ClojureExtension.Repl
 {
@@ -15,7 +17,7 @@ namespace Microsoft.ClojureExtension.Repl
             interactiveText.VerticalAlignment = VerticalAlignment.Stretch;
             interactiveText.FontSize = 12;
             interactiveText.FontFamily = new FontFamily("Courier New");
-            interactiveText.Margin = new Thickness(28, 0, 0, 0);
+            interactiveText.Margin = new Thickness(0, 0, 0, 0);
             interactiveText.IsEnabled = true;
             interactiveText.AcceptsReturn = true;
             return interactiveText;
@@ -30,40 +32,41 @@ namespace Microsoft.ClojureExtension.Repl
 
         public TabItem CreateTab(TextBox interactiveText)
         {
-            Button interruptButton = new Button();
-            interruptButton.Width = 26;
-            interruptButton.Padding = new Thickness(1);
-            interruptButton.Margin = new Thickness(0, 7, 0, 0);
-            interruptButton.Content = "I";
-
-            Button terminateButton = new Button();
-            terminateButton.Width = 26;
-            terminateButton.Padding = new Thickness(1);
-            terminateButton.Margin = new Thickness(0, 7, 0, 0);
-            terminateButton.Content = "T";
-
-            Button clearButton = new Button();
-            clearButton.Width = 26;
-            clearButton.Padding = new Thickness(1);
-            clearButton.Margin = new Thickness(0, 7, 0, 0);
-            clearButton.Content = "C";
-
-            ToolBarPanel toolBarPanel = new ToolBarPanel();
-            toolBarPanel.Children.Add(interruptButton);
-            toolBarPanel.Children.Add(terminateButton);
-            toolBarPanel.Children.Add(clearButton);
-            toolBarPanel.VerticalAlignment = VerticalAlignment.Stretch;
-            toolBarPanel.HorizontalAlignment = HorizontalAlignment.Left;
-            toolBarPanel.Width = 28;
-            toolBarPanel.Orientation = Orientation.Vertical;
-
             Grid grid = new Grid();
-            grid.Children.Add(toolBarPanel);
             grid.Children.Add(interactiveText);
 
+            Button closeButton = new Button();
+            closeButton.Content = "X";
+            closeButton.Width = 20;
+            closeButton.Height = 19;
+            closeButton.FontFamily = new FontFamily("Courier");
+            closeButton.FontSize = 12;
+            closeButton.FontWeight = (FontWeight) new FontWeightConverter().ConvertFromString("Bold");
+            closeButton.HorizontalAlignment = HorizontalAlignment.Right;
+            closeButton.VerticalAlignment = VerticalAlignment.Top;
+            closeButton.Style = (Style) closeButton.FindResource(ToolBar.ButtonStyleKey);
+            closeButton.Margin = new Thickness(3, 0, 0, 0);
+            closeButton.Click += (obj, sender) => new TerminateRepl().Execute();
+
+            Label name = new Label();
+            name.Content = "Repl";
+            name.Height = 19;
+            name.HorizontalAlignment = HorizontalAlignment.Left;
+            name.VerticalAlignment = VerticalAlignment.Top;
+            name.VerticalContentAlignment = VerticalAlignment.Center;
+            name.FontFamily = new FontFamily("Courier");
+            name.FontSize = 12;
+            name.Padding = new Thickness(0);
+            name.Margin = new Thickness(0, 1, 0, 0);
+
+            WrapPanel headerPanel = new WrapPanel();
+            headerPanel.Children.Add(name);
+            headerPanel.Children.Add(closeButton);
+
             TabItem tabItem = new TabItem();
-            tabItem.Header = "Repl";
+            tabItem.Header = headerPanel;
             tabItem.Content = grid;
+
             return tabItem;
         }
     }

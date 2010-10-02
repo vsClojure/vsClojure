@@ -16,6 +16,11 @@ namespace Microsoft.ClojureExtension.Repl
             if (!_replList.Contains(replData)) _replList.Add(replData);
         }
 
+        public void RemoveRepl(ReplData replData)
+        {
+            _replList.Remove(replData);
+        }
+
         public List<ReplData> GetRepls()
         {
             return new List<ReplData>(_replList);

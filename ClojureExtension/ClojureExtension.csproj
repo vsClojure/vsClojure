@@ -135,6 +135,7 @@
     <Compile Include="Project\ClojureProjectFactory.cs" />
     <Compile Include="Project\ClojureProjectFileNode.cs" />
     <Compile Include="Project\ClojureProjectNode.cs" />
+    <Compile Include="Repl\Operations\TerminateRepl.cs" />
     <Compile Include="Repl\ReplData.cs" />
     <Compile Include="Repl\ReplStorage.cs" />
     <Compile Include="Repl\ReplStorageProvider.cs" />
@@ -164,11 +165,11 @@
     </VSCTCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="VSPackage.resx">
+    <EmbeddedResource Include="VSPackage.resx">
       <MergeWithCTO>true</MergeWithCTO>
       <ManifestResourceName>VSPackage</ManifestResourceName>
       <SubType>Designer</SubType>
-    </None>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="Editor\Tagger\Clojure.g" />
@@ -188,7 +189,6 @@
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="..\ManagedPackageFramework\ProjectBase.Files" />
   <PropertyGroup>
     <!--
