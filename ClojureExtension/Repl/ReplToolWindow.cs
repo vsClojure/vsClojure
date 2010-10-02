@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.Shell;
 
 namespace Microsoft.ClojureExtension.Repl
 {
-    [Guid("0c0e8214-0808-42e5-ccea-b965a2126fb9")]
+    [Guid("8C5C7302-ECC8-435D-AAFE-D0E5A0A02FE9")]
     public class ReplToolWindow : ToolWindowPane
     {
         private readonly TabControl _replManager;

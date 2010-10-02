@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Text;
 using Antlr.Runtime;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Tagging;
 
-namespace Microsoft.ClojureExtension.Editor
+namespace Microsoft.ClojureExtension.Editor.Tagger
 {
     internal sealed class ClojureTokenTagger : ITagger<ClojureTokenTag>
     {

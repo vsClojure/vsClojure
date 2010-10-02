@@ -94,9 +94,6 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Configuration\Attributes\LocDisplayNameAttribute.cs" />
-    <Compile Include="Configuration\Attributes\ResourcesCategoryAttribute.cs" />
-    <Compile Include="Configuration\Attributes\ResourcesDescriptionAttribute.cs" />
     <Compile Include="ClojurePackage.cs" />
     <Compile Include="CommandIds.cs" />
     <Compile Include="Configuration\FrameworkOptions.cs">

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using Microsoft.ClojureExtension.Configuration;
+﻿using System.Diagnostics;
 
 namespace Microsoft.ClojureExtension.Repl
 {

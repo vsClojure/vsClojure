@@ -6,7 +6,7 @@ using Microsoft.VisualStudio.Shell;
 namespace Microsoft.ClojureExtension.Configuration
 {
     [ClassInterface(ClassInterfaceType.AutoDual)]
-    [Guid("3FEE3B77-BD73-4417-9FF0-2C2772DB853C")]
+    [Guid("1E5E2726-EA97-47C8-AF28-80572D4F2021")]
     public class FrameworkOptionsDialogPage : DialogPage
     {
         private readonly FrameworkOptions _frameworkOptionPage;

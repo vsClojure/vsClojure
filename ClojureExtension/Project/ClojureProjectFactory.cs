@@ -9,16 +9,16 @@ PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
 
 ***************************************************************************/
 
-using System;
 using System.Runtime.InteropServices;
-using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
+using Microsoft.VisualStudio.Project;
+using IServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 
-namespace Microsoft.VisualStudio.Project.Samples.CustomProject
+namespace Microsoft.ClojureExtension.Project
 {
 	/// <summary>
 	/// Represent the methods for creating projects within the solution.
 	/// </summary>
-	[Guid("7C65038C-1B2F-41E1-A629-BED71D161F6F")]
+    [Guid("985F20FF-87AE-45F6-86E0-1DBBF0224EB9")]
 	public class ClojureProjectFactory : ProjectFactory
 	{
 		#region Fields
@@ -45,7 +45,7 @@ namespace Microsoft.VisualStudio.Project.Samples.CustomProject
 		protected override ProjectNode CreateProject()
 		{
 			ClojureProjectNode project = new ClojureProjectNode(this.package);
-			project.SetSite((IOleServiceProvider)((IServiceProvider)this.package).GetService(typeof(IOleServiceProvider)));
+			project.SetSite((IServiceProvider)((System.IServiceProvider)this.package).GetService(typeof(IServiceProvider)));
 			return project;
 		}
 		#endregion

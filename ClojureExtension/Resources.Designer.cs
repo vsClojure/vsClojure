@@ -29,35 +29,6 @@ namespace Microsoft.ClojureExtension {
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal sealed class Resources
     {
-        #region Constants
-        internal const string Application = "Application";
-        internal const string ApplicationCaption = "ApplicationCaption";
-        internal const string GeneralCaption = "GeneralCaption";
-        internal const string AssemblyName = "AssemblyName";
-        internal const string AssemblyNameDescription = "AssemblyNameDescription";
-        internal const string OutputType = "OutputType";
-        internal const string OutputTypeDescription = "OutputTypeDescription";
-        internal const string DefaultNamespace = "DefaultNamespace";
-        internal const string DefaultNamespaceDescription = "DefaultNamespaceDescription";
-        internal const string StartupObject = "StartupObject";
-        internal const string StartupObjectDescription = "StartupObjectDescription";
-        internal const string ApplicationIcon = "ApplicationIcon";
-        internal const string ApplicationIconDescription = "ApplicationIconDescription";
-        internal const string Project = "Project";
-        internal const string ProjectFile = "ProjectFile";
-        internal const string ProjectFileDescription = "ProjectFileDescription";
-        internal const string ProjectFolder = "ProjectFolder";
-        internal const string ProjectFolderDescription = "ProjectFolderDescription";
-        internal const string OutputFile = "OutputFile";
-        internal const string OutputFileDescription = "OutputFileDescription";
-        internal const string TargetFrameworkMoniker = "TargetFrameworkMoniker";
-        internal const string TargetFrameworkMonikerDescription = "TargetFrameworkMonikerDescription";
-        internal const string NestedProjectFileAssemblyFilter = "NestedProjectFileAssemblyFilter";
-        internal const string ClojureFrameworkPath = "ClojureFrameworkPath";
-        internal const string ClojureFrameworkPathDescription = "ClojureFrameworkPath";
-        //internal const string MsgFailedToLoadTemplateFile = "Failed to add template file to project";
-        #endregion Constants
-
         #region Fields
         private static Resources loader;
         private ResourceManager resourceManager;

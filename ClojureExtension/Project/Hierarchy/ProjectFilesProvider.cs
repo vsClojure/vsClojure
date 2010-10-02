@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using EnvDTE;
 using Microsoft.ClojureExtension.Utilities;
-using Microsoft.VisualStudio.Project.Samples.CustomProject;
 
 namespace Microsoft.ClojureExtension.Project.Hierarchy
 {

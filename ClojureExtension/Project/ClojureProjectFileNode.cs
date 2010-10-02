@@ -10,9 +10,10 @@ PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
 ***************************************************************************/
 
 using System;
+using Microsoft.VisualStudio.Project;
 using Microsoft.VisualStudio.Project.Automation;
 
-namespace Microsoft.VisualStudio.Project.Samples.CustomProject
+namespace Microsoft.ClojureExtension.Project
 {
 	/// <summary>
 	/// This class extends the FileNode in order to represent a file 

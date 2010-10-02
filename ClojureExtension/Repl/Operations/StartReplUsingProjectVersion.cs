@@ -1,12 +1,11 @@
 ﻿using System.Diagnostics;
 using System.Windows.Controls;
 using Microsoft.ClojureExtension.Configuration;
-using Microsoft.ClojureExtension.Repl;
 using Microsoft.ClojureExtension.Utilities;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
 
-namespace Microsoft.ClojureExtension.Project.Menu
+namespace Microsoft.ClojureExtension.Repl.Operations
 {
     public class StartReplUsingProjectVersion
     {

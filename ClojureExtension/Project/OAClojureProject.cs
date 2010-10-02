@@ -11,7 +11,6 @@ PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
 
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Project.Automation;
-using Microsoft.VisualStudio.Project.Samples.CustomProject;
 
 namespace Microsoft.ClojureExtension.Project
 {

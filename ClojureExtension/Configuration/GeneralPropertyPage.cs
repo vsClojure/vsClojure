@@ -9,14 +9,16 @@ PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
 
 ***************************************************************************/
 
+using System.ComponentModel;
 using System.IO;
 using System.Runtime.InteropServices;
-using Microsoft.ClojureExtension;
+using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.Project;
 
-namespace Microsoft.VisualStudio.Project.Samples.CustomProject
+namespace Microsoft.ClojureExtension.Configuration
 {
     [ComVisible(true)]
-    [Guid("5F9F1697-2E61-4c10-9AD2-94FA2A9BAAE8")]
+    [Guid("EBAF977F-39E1-481D-BFB8-13C960B55D6E")]
     public class GeneralPropertyPage : SettingsPage
     {
         private string _defaultNamespace;
@@ -24,12 +26,12 @@ namespace Microsoft.VisualStudio.Project.Samples.CustomProject
 
         public GeneralPropertyPage()
         {
-            Name = Resources.GetString(Resources.GeneralCaption);
+            Name = "General";
         }
 
-        [ResourcesCategoryAttribute(Resources.ClojureFrameworkPath)]
-        [LocDisplayName(Resources.ClojureFrameworkPath)]
-        [ResourcesDescriptionAttribute(Resources.ClojureFrameworkPathDescription)]
+        [Description("Clojure Framework Version")]
+        [DisplayName("Clojure Framework Version")]
+        [Category("Clojure")]
         public string ClojureFrameworkPath
         {
             get { return _clojureFrameworkPath; }
@@ -41,9 +43,9 @@ namespace Microsoft.VisualStudio.Project.Samples.CustomProject
             }
         }
 
-        [ResourcesCategoryAttribute(Resources.Application)]
-        [LocDisplayName(Resources.DefaultNamespace)]
-        [ResourcesDescriptionAttribute(Resources.DefaultNamespaceDescription)]
+        [Category("Clojure")]
+        [DisplayName("Default Namespace")]
+        [Description("Default Namespace")]
         public string DefaultNamespace
         {
             get { return _defaultNamespace; }
@@ -54,17 +56,17 @@ namespace Microsoft.VisualStudio.Project.Samples.CustomProject
             }
         }
 
-        [ResourcesCategoryAttribute(Resources.Project)]
-        [LocDisplayName(Resources.ProjectFile)]
-        [ResourcesDescriptionAttribute(Resources.ProjectFileDescription)]
+        [Category("Project")]
+        [DisplayName("Project File")]
+        [Description("Project File")]
         public string ProjectFile
         {
             get { return Path.GetFileName(ProjectMgr.ProjectFile); }
         }
 
-        [ResourcesCategoryAttribute(Resources.Project)]
-        [LocDisplayName(Resources.ProjectFolder)]
-        [ResourcesDescriptionAttribute(Resources.ProjectFolderDescription)]
+        [Category("Project")]
+        [DisplayName("Project Folder")]
+        [Description("Project Folder")]
         public string ProjectFolder
         {
             get { return Path.GetDirectoryName(ProjectMgr.ProjectFolder); }
@@ -83,7 +85,6 @@ namespace Microsoft.VisualStudio.Project.Samples.CustomProject
 
         protected override int ApplyChanges()
         {
-            if (ProjectMgr == null) return VSConstants.E_INVALIDARG;
             ProjectMgr.SetProjectProperty("RootNamespace", _defaultNamespace);
             ProjectMgr.SetProjectProperty("ClojureFrameworkPath", _clojureFrameworkPath);
             IsDirty = false;

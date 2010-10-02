@@ -10,12 +10,13 @@ PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
 ***************************************************************************/
 
 using System.Runtime.InteropServices;
+using Microsoft.VisualStudio.Project;
 using Microsoft.VisualStudio.Project.Automation;
 
-namespace Microsoft.VisualStudio.Project.Samples.CustomProject
+namespace Microsoft.ClojureExtension.Project
 {
     [ComVisible(true)]
-    [Guid("D7EDB436-6F5A-4EF4-9E3F-67C15C2FA301")]
+    [Guid("FBFF33D7-CCCD-4BEC-A75E-4ECF6DB4474C")]
     public class OAClojureProjectFileItem : OAFileItem
     {
         public OAClojureProjectFileItem(OAProject project, FileNode node)

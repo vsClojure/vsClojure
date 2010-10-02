@@ -1,7 +1,7 @@
 ﻿using Antlr.Runtime;
 using Microsoft.VisualStudio.Text.Tagging;
 
-namespace Microsoft.ClojureExtension.Editor
+namespace Microsoft.ClojureExtension.Editor.Tagger
 {
     public class ClojureTokenTag : ITag
     {
