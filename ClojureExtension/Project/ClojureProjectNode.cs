@@ -16,6 +16,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using EnvDTE;
 using Microsoft.ClojureExtension;
+using Microsoft.ClojureExtension.Project;
 using VSLangProj;
 using Microsoft.VisualStudio.Project.Automation;
 
@@ -143,7 +144,7 @@ namespace Microsoft.VisualStudio.Project.Samples.CustomProject
 		/// <returns>The automation object</returns>
 		public override object GetAutomationObject()
 		{
-			return new OaClojureProject(this);
+			return new OAClojureProject(this);
 		}
 
 		/// <summary>

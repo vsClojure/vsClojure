@@ -128,12 +128,13 @@
     <Compile Include="Project\Hierarchy\GetFrameworkFromSelectedProject.cs" />
     <Compile Include="Project\Hierarchy\ProjectFilesProvider.cs" />
     <Compile Include="Project\Hierarchy\SelectedProjectProvider.cs" />
+    <Compile Include="Project\OaClojureProject.cs" />
     <Compile Include="Repl\Operations\LoadFilesIntoRepl.cs" />
     <Compile Include="Project\Hierarchy\SelectedFilesProvider.cs" />
     <Compile Include="Repl\Operations\StartReplUsingProjectVersion.cs" />
     <Compile Include="Configuration\GeneralPropertyPage.cs" />
     <Compile Include="Guids.cs" />
-    <Compile Include="Project\MyCustomProjectAutomation.cs" />
+    <Compile Include="Project\OAClojureProjectFileItem.cs" />
     <Compile Include="Project\ClojureProjectFactory.cs" />
     <Compile Include="Project\ClojureProjectFileNode.cs" />
     <Compile Include="Project\ClojureProjectNode.cs" />

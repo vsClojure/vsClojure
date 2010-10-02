@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel.Composition;
+﻿using System.Collections.Generic;
 using Antlr.Runtime;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
@@ -14,7 +11,6 @@ namespace Microsoft.ClojureExtension.Editor.AutoIndent
 
         public ClojureSmartIndent() : this(new IndentSize())
         {
-            
         }
 
         public ClojureSmartIndent(IndentSize indentSize)
