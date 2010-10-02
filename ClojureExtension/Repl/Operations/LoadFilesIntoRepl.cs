@@ -32,6 +32,7 @@ namespace Microsoft.ClojureExtension.Repl.Operations
             IEnumerable<string> filesToLoad = _filesProvider.Get().Where(p => p.ToLower().EndsWith(".clj"));
 
             if (filesToLoad.Count() == 0) throw new Exception("No files to load.");
+            if (_replProvider.Get() == null) throw new Exception("No active repl.");
 
             StringBuilder loadFileExpression = new StringBuilder("(map load-file '(");
             filesToLoad.ToList().ForEach(path => loadFileExpression.Append(" \"").Append(path.Replace("\\", "\\\\")).Append("\""));

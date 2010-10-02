@@ -1,16 +1,16 @@
-﻿using System.Windows;
+﻿using System.Diagnostics;
+using System.Threading;
+using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using Microsoft.ClojureExtension.Repl.Operations;
-using Brush = System.Drawing.Brush;
 
 namespace Microsoft.ClojureExtension.Repl
 {
     public class ReplTabFactory
     {
-        public TextBox CreateInteractiveTextBox()
+        public ReplData CreateRepl(Process replProcess, TabControl replManager)
         {
             TextBox interactiveText = new TextBox();
             interactiveText.HorizontalAlignment = HorizontalAlignment.Stretch;
@@ -20,18 +20,7 @@ namespace Microsoft.ClojureExtension.Repl
             interactiveText.Margin = new Thickness(0, 0, 0, 0);
             interactiveText.IsEnabled = true;
             interactiveText.AcceptsReturn = true;
-            return interactiveText;
-        }
 
-        public ReplTextPipe CreateReplTextPipe(ReplData replData)
-        {
-            ReplTextPipe textPipe = new ReplTextPipe(replData, new ReplWriter());
-            replData.InteractiveTextBox.PreviewKeyDown += (o, e) => textPipe.WriteFromTextBoxToRepl(e.Key == Key.Enter ? "\r\n" : "");
-            return textPipe;
-        }
-
-        public TabItem CreateTab(TextBox interactiveText)
-        {
             Grid grid = new Grid();
             grid.Children.Add(interactiveText);
 
@@ -46,7 +35,6 @@ namespace Microsoft.ClojureExtension.Repl
             closeButton.VerticalAlignment = VerticalAlignment.Top;
             closeButton.Style = (Style) closeButton.FindResource(ToolBar.ButtonStyleKey);
             closeButton.Margin = new Thickness(3, 0, 0, 0);
-            closeButton.Click += (obj, sender) => new TerminateRepl().Execute();
 
             Label name = new Label();
             name.Content = "Repl";
@@ -67,7 +55,35 @@ namespace Microsoft.ClojureExtension.Repl
             tabItem.Header = headerPanel;
             tabItem.Content = grid;
 
-            return tabItem;
+            ReplData replData = new ReplData(replProcess, interactiveText, tabItem);
+            ReplTextPipe textPipe = new ReplTextPipe(replData, new ReplWriter());
+            Thread outputReaderThread = new Thread(() => textPipe.WriteFromReplToTextBox(replProcess.StandardOutput));
+            Thread errorReaderThread = new Thread(() => textPipe.WriteFromReplToTextBox(replProcess.StandardError));
+
+            interactiveText.PreviewKeyDown +=
+                (o, e) =>
+                textPipe.WriteFromTextBoxToRepl(e.Key == Key.Enter ? "\r\n" : "");
+            
+            interactiveText.Loaded +=
+                (o, e) =>
+                {
+                    if (outputReaderThread.IsAlive) return;
+                    outputReaderThread.Start();
+                    errorReaderThread.Start();
+                };
+
+            replProcess.Exited +=
+                (o, e) =>
+                {
+                    outputReaderThread.Abort();
+                    errorReaderThread.Abort();
+                };
+
+            closeButton.Click +=
+                (obj, sender) =>
+                new TerminateRepl(replData, replManager, textPipe, ReplStorageProvider.Storage).Execute();
+
+            return replData;
         }
     }
 }

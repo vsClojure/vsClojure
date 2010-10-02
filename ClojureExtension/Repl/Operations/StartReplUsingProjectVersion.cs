@@ -35,15 +35,10 @@ namespace Microsoft.ClojureExtension.Repl.Operations
         public void Execute()
         {
             Process process = _replLauncher.Execute(_frameworkProvider.Get().Location);
-            TextBox interactiveText = _replTabFactory.CreateInteractiveTextBox();
-            TabItem replTab = _replTabFactory.CreateTab(interactiveText);
-            ReplData replData = new ReplData(process, interactiveText, replTab);
+            ReplData replData = _replTabFactory.CreateRepl(process, _replManager);
             _storage.SaveRepl(replData);
-
-            _replManager.Items.Add(replTab);
-            _replManager.SelectedItem = replTab;
-            ReplTextPipe replTextPipe = _replTabFactory.CreateReplTextPipe(replData);
-            replTextPipe.StartMarshallingText();
+            _replManager.Items.Add(replData.Tab);
+            _replManager.SelectedItem = replData.Tab;
             ErrorHandler.ThrowOnFailure(_toolWindowFrame.Show());
         }
     }

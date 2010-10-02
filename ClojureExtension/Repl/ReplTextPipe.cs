@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using System.Threading;
 using System.Windows.Threading;
 
 namespace Microsoft.ClojureExtension.Repl
@@ -25,7 +24,7 @@ namespace Microsoft.ClojureExtension.Repl
             }
         }
 
-        public void ReadOutput(StreamReader stream)
+        public void WriteFromReplToTextBox(StreamReader stream)
         {
             while (!_replData.ReplProcess.HasExited)
             {
@@ -43,14 +42,6 @@ namespace Microsoft.ClojureExtension.Repl
                             return null;
                         }), null);
             }
-        }
-
-        public void StartMarshallingText()
-        {
-            Thread outputThread = new Thread(() => ReadOutput(_replData.ReplProcess.StandardOutput));
-            Thread errorThread = new Thread(() => ReadOutput(_replData.ReplProcess.StandardError));
-            outputThread.Start();
-            errorThread.Start();
         }
     }
 }
