@@ -1,0 +1,17 @@
+Clojure Grammar - Adapted for C#.
+
+	Laurent Petit
+	counterclockwise (http://code.google.com/p/counterclockwise/)
+	Eclipse Public License v1.0 (http://www.eclipse.org/legal/epl-v10.html)
+
+Brace Matching - Used verbatim.
+
+	Unknown Contributor
+	MSDN Community Content (http://msdn.microsoft.com/en-us/library/ee197650.aspx)
+	Ms-PL (http://msdn.microsoft.com/en-us/library/aa721778.aspx)
+
+Project Type - Adapted the CustomProject example from the Managed Package Framework for Clojure.
+
+	MPF Team (http://mpfproj.codeplex.com/team/view)
+	Managed Package Framework (http://mpfproj.codeplex.com/)
+	Ms-PL (http://msdn.microsoft.com/en-us/library/aa721778.aspx)

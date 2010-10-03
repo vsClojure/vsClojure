@@ -42,7 +42,10 @@ Current Features:
 		* Clojure project type
 
 	2.) Repl
-		* Multiple repl support.
+		* Support for multiple open repls.
 		* Loading files from the Solution Explorer into the repl.
 		* Loading a project from the Solution Explorer into the repl.
 
+License:
+
+	See LICENSE.txt.
