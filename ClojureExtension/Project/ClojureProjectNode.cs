@@ -108,7 +108,7 @@ namespace Microsoft.ClojureExtension.Project
 		/// <value>The project GUID.</value>
 		public override Guid ProjectGuid
 		{
-            get { return new Guid(Guids.ClojureProject); }
+            get { return typeof(ClojureProjectFactory).GUID; }
 		}
 
         public override bool IsCodeFile(string fileName)
