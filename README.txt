@@ -49,3 +49,7 @@ Current Features:
 License:
 
 	See LICENSE.txt.
+
+Attribution:
+
+	See ATTRIBUTION.txt.
