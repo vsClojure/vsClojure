@@ -1,0 +1,31 @@
+* Debugging.
+	* REPL
+	* Running application
+* Building.
+	* To assembly
+	* To executable
+* Running.
+* Rebuilding.
+* Cleaning.
+* Loading active file into REPL.
+	* Menu command
+	* Hotkey
+* Switching active REPL to current file namespace.
+	* Menu command
+	* Hotkey
+* Repl history.
+	* View/Select
+	* Hotkey
+* Repl interruption.
+* Repl pretty printing.
+* No editing anything in repl before prompt.
+* Reset REPL to blank state.
+* Dropdown for selecting framework in project properties.
+* Clojure file icons.
+* Icons for all menu commands.
+* Intellisense
+	* Clojure
+	* .NET assemblies
+* Goto definition
+* Navigation bar
+* Find all references
