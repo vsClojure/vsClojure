@@ -20,7 +20,7 @@ namespace Microsoft.ClojureExtension.Project.Hierarchy
         public Framework Get()
         {
             EnvDTE.Project project = _projectProvider.Get();
-            if (project.Kind.ToLower() != Guids.ClojureProjectGuid.ToString("B").ToLower()) throw new Exception(project.Name + " is not a Clojure project.");
+            if (project.Kind.ToLower() != typeof(ClojureProjectFactory).GUID.ToString("B").ToLower()) throw new Exception(project.Name + " is not a Clojure project.");
             ProjectNode projectNode = (ProjectNode) project.Object;
             string frameworkName = projectNode.GetProjectProperty("ClojureFrameworkPath");
             List<Framework> frameworks = _settingsStore.Get<List<Framework>>("Frameworks");
