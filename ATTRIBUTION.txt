@@ -1,4 +1,4 @@
-Clojure Grammar - Adapted for C#.
+Clojure Grammar - Adapted to C#.
 
 	Laurent Petit
 	counterclockwise (http://code.google.com/p/counterclockwise/)
@@ -15,3 +15,9 @@ Project Type - Adapted the CustomProject example from the Managed Package Framew
 	MPF Team (http://mpfproj.codeplex.com/team/view)
 	Managed Package Framework (http://mpfproj.codeplex.com/)
 	Ms-PL (http://msdn.microsoft.com/en-us/library/aa721778.aspx)
+
+Auto-indentation - Adapted to C#, modified to use a lexer, and added support for tabs.
+
+	ThorTech, L.L.C.
+	Enclojure (http://www.enclojure.org/)
+	Eclipse Public License v1.0 (http://www.eclipse.org/legal/epl-v10.html)
