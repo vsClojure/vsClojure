@@ -12,6 +12,9 @@
       <Group guid="clojureGroups" id="clojureProjectMenuGroup" priority="1">
         <Parent guid="solutionExplorer" id="solutionExplorerProjectMenu"/>
       </Group>
+      <Group guid="clojureGroups" id="clojureCodeWindowMenuGroup" priority="1">
+        <Parent guid="solutionExplorer" id="codeWindowMenu"/>
+      </Group>
     </Groups>
     <Buttons>
       <Button guid="clojureGroups" id="startReplUsingProjectVersion" priority="0" type="Button">
@@ -46,6 +49,14 @@
           <ButtonText>Load File(s) into Repl</ButtonText>
         </Strings>
       </Button>
+      <Button guid="clojureGroups" id="loadActiveDocumentIntoRepl" priority="0" type="Button">
+        <Parent guid="clojureGroups" id="clojureCodeWindowMenuGroup"/>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <Strings>
+          <CommandName>Clojure.LoadActiveDocumentIntoRepl</CommandName>
+          <ButtonText>Load File Into Repl</ButtonText>
+        </Strings>
+      </Button>
     </Buttons>
   </Commands>
 
@@ -54,13 +65,16 @@
     <GuidSymbol name="clojureGroups" value="{44f0b6b9-595a-426f-88d1-468f7af14242}">
       <IDSymbol name="clojureFileMenuGroup" value="4128"/>
       <IDSymbol name="clojureProjectMenuGroup" value="4129"/>
+      <IDSymbol name="clojureCodeWindowMenuGroup" value="4130"/>
       <IDSymbol name="startReplUsingProjectVersion" value="10"/>
       <IDSymbol name="loadProjectIntoActiveRepl" value="11"/>
       <IDSymbol name="loadFileIntoActiveRepl" value="12"/>
+      <IDSymbol name="loadActiveDocumentIntoRepl" value="13"/>
     </GuidSymbol>
     <GuidSymbol name="solutionExplorer" value="{D309F791-903F-11D0-9EFC-00A0C911004F}">
       <IDSymbol name="solutionExplorerFileMenu" value="1072" />
       <IDSymbol name="solutionExplorerProjectMenu" value="1026" />
+      <IDSymbol name="codeWindowMenu" value="1037"/>
     </GuidSymbol>
   </Symbols>
 </CommandTable>

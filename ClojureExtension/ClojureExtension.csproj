@@ -95,7 +95,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClojurePackage.cs" />
-    <Compile Include="CommandIds.cs" />
     <Compile Include="Configuration\FrameworkOptions.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -126,6 +125,7 @@
     <Compile Include="Project\Hierarchy\ProjectFilesProvider.cs" />
     <Compile Include="Project\Hierarchy\SelectedProjectProvider.cs" />
     <Compile Include="Project\OAClojureProject.cs" />
+    <Compile Include="Repl\Operations\ActiveFileProvider.cs" />
     <Compile Include="Repl\Operations\LoadFilesIntoRepl.cs" />
     <Compile Include="Project\Hierarchy\SelectedFilesProvider.cs" />
     <Compile Include="Repl\Operations\StartReplUsingProjectVersion.cs" />

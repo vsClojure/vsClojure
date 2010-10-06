@@ -72,7 +72,7 @@ namespace Microsoft.ClojureExtension
                         new SelectedReplProvider(replToolWindow.TabControl, ReplStorageProvider.Storage),
                         new SelectedFilesProvider(dte.ToolWindows.SolutionExplorer),
                         replToolWindowFrame).Execute(),
-                    new CommandID(Guids.GuidClojureExtensionCmdSet, CommandIds.LoadFileIntoActiveRepl)));
+                    new CommandID(Guids.GuidClojureExtensionCmdSet, 12)));
 
             menuCommandService.AddCommand(
                 new MenuCommand(
@@ -83,7 +83,7 @@ namespace Microsoft.ClojureExtension
                         new ProjectFilesProvider(
                             new SelectedProjectProvider(dte.Solution, dte.ToolWindows.SolutionExplorer)),
                         replToolWindowFrame).Execute(),
-                    new CommandID(Guids.GuidClojureExtensionCmdSet, CommandIds.LoadProjectIntoActiveRepl)));
+                    new CommandID(Guids.GuidClojureExtensionCmdSet, 11)));
 
             menuCommandService.AddCommand(
                 new MenuCommand(
@@ -97,7 +97,17 @@ namespace Microsoft.ClojureExtension
                         new GetFrameworkFromSelectedProject(
                             new SelectedProjectProvider(dte.Solution, dte.ToolWindows.SolutionExplorer),
                             SettingsStoreProvider.Store)).Execute(),
-                    new CommandID(Guids.GuidClojureExtensionCmdSet, CommandIds.StartReplUsingProjectVersion)));
+                    new CommandID(Guids.GuidClojureExtensionCmdSet, 10)));
+
+            menuCommandService.AddCommand(
+                new MenuCommand(
+                    (sender, args) =>
+                    new LoadFilesIntoRepl(
+                        new ReplWriter(),
+                        new SelectedReplProvider(replToolWindow.TabControl, ReplStorageProvider.Storage),
+                        new ActiveFileProvider(dte),
+                        replToolWindowFrame).Execute(),
+                    new CommandID(Guids.GuidClojureExtensionCmdSet, 13)));
         }
 
         public override string ProductUserContext

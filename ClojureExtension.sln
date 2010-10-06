@@ -8,6 +8,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{
 		ATTRIBUTION.txt = ATTRIBUTION.txt
 		LICENSE.txt = LICENSE.txt
 		README.txt = README.txt
+		TODO.txt = TODO.txt
 	EndProjectSection
 EndProject
 Global
