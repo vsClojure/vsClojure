@@ -96,7 +96,8 @@ namespace Microsoft.ClojureExtension
                         replToolWindowFrame,
                         new GetFrameworkFromSelectedProject(
                             new SelectedProjectProvider(dte.Solution, dte.ToolWindows.SolutionExplorer),
-                            SettingsStoreProvider.Store)).Execute(),
+                            SettingsStoreProvider.Store),
+                        new SelectedProjectProvider(dte.Solution, dte.ToolWindows.SolutionExplorer)).Execute(),
                     new CommandID(Guids.GuidClojureExtensionCmdSet, 10)));
 
             menuCommandService.AddCommand(
@@ -108,6 +109,15 @@ namespace Microsoft.ClojureExtension
                         new ActiveFileProvider(dte),
                         replToolWindowFrame).Execute(),
                     new CommandID(Guids.GuidClojureExtensionCmdSet, 13)));
+
+            menuCommandService.AddCommand(
+                new MenuCommand(
+                    (sender, args) =>
+                    new SwitchNamespaceToFile(
+                        new ActiveFileProvider(dte),
+                        new ReplWriter(),
+                        new SelectedReplProvider(replToolWindow.TabControl, ReplStorageProvider.Storage)).Execute(),
+                    new CommandID(Guids.GuidClojureExtensionCmdSet, 14)));
         }
 
         public override string ProductUserContext

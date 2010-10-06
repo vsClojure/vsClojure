@@ -7,12 +7,6 @@
 * Running.
 * Rebuilding.
 * Cleaning.
-* Loading active file into REPL.
-	* Menu command
-	* Hotkey
-* Switching active REPL to current file namespace.
-	* Menu command
-	* Hotkey
 * Repl history.
 	* View/Select
 	* Hotkey
@@ -29,3 +23,5 @@
 * Goto definition
 * Navigation bar
 * Find all references
+* Setup hotkeys for all menu commands.
+* Ensure all commands hide themselves when not applicable.

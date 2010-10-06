@@ -135,6 +135,7 @@
     <Compile Include="Project\ClojureProjectFactory.cs" />
     <Compile Include="Project\ClojureProjectFileNode.cs" />
     <Compile Include="Project\ClojureProjectNode.cs" />
+    <Compile Include="Repl\Operations\SwitchNamespaceToFile.cs" />
     <Compile Include="Repl\Operations\TerminateRepl.cs" />
     <Compile Include="Repl\ReplData.cs" />
     <Compile Include="Repl\ReplStorage.cs" />

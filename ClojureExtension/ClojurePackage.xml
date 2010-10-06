@@ -57,6 +57,14 @@
           <ButtonText>Load File Into Repl</ButtonText>
         </Strings>
       </Button>
+      <Button guid="clojureGroups" id="switchReplNamespaceToActiveDocument" priority="0" type="Button">
+        <Parent guid="clojureGroups" id="clojureCodeWindowMenuGroup"/>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <Strings>
+          <CommandName>Clojure.SwitchReplNamespaceToActiveDocument</CommandName>
+          <ButtonText>Switch to File's Namespace</ButtonText>
+        </Strings>
+      </Button>
     </Buttons>
   </Commands>
 
@@ -70,6 +78,7 @@
       <IDSymbol name="loadProjectIntoActiveRepl" value="11"/>
       <IDSymbol name="loadFileIntoActiveRepl" value="12"/>
       <IDSymbol name="loadActiveDocumentIntoRepl" value="13"/>
+      <IDSymbol name="switchReplNamespaceToActiveDocument" value="14"/>
     </GuidSymbol>
     <GuidSymbol name="solutionExplorer" value="{D309F791-903F-11D0-9EFC-00A0C911004F}">
       <IDSymbol name="solutionExplorerFileMenu" value="1072" />

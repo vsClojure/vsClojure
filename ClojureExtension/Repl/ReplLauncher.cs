@@ -4,7 +4,7 @@ namespace Microsoft.ClojureExtension.Repl
 {
     public class ReplLauncher
     {
-        public Process Execute(string replPath)
+        public Process Execute(string replPath, string projectPath)
         {
             Process process = new Process();
             process.StartInfo = new ProcessStartInfo();
@@ -14,6 +14,7 @@ namespace Microsoft.ClojureExtension.Repl
             process.StartInfo.RedirectStandardError = true;
             process.StartInfo.CreateNoWindow = true;
             process.StartInfo.UseShellExecute = false;
+            process.StartInfo.EnvironmentVariables["clojure.load.path"] = projectPath;
             process.Start();
             process.StandardInput.AutoFlush = true;
             return process;
