@@ -38,10 +38,19 @@
   </Target>
   <Target Name="CoreCompile">
     <PropertyGroup>
-      <ProjectNamespaces>@(Compile -> '%(RelativeDir)%(Filename)', ' ')</ProjectNamespaces>
+      <ClojureNamespaces>@(Compile -> '%(RelativeDir)%(Filename)', ' ')</ClojureNamespaces>
     </PropertyGroup>
-    <Copy SourceFiles="@(Compile)" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" DestinationFiles="@(Compile -> '$(OutDir)%(RelativeDir)%(Filename)%(Extension)')" />
-    <Exec WorkingDirectory="$(OutDir)" Command="$(ClojureFrameworkPath)\Clojure.Compile $(ProjectNamespaces.Replace('\', '.'))" />
+    <Copy SourceFiles="@(Compile)" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" DestinationFiles="@(Compile -> '$(OutDir)%(RelativeDir)%(Filename)%(Extension)')"/>
+    <Exec WorkingDirectory="$(OutDir)" Command="$(ClojureFrameworkPath)\Clojure.Compile $(ClojureNamespaces.Replace('\', '.'))"/>
+    <RemoveDuplicates Inputs="@(Compile -> '$(OutDir)%(RelativeDir)')">
+      <Output TaskParameter="Filtered" ItemName="SourceDirectories"/>
+    </RemoveDuplicates>
+    <ItemGroup>
+      <FileWrites Include="@(Compile -> '$(OutDir)%(RelativeDir)%(Filename)%(Extension)')"/>
+      <FileWrites Include="@(Compile -> '$(OutDir)%(RelativeDir)%(Filename)%(Extension).dll')"/>
+      <FileWrites Include="@(Compile -> '$(OutDir)%(RelativeDir)%(Filename)%(Extension).pdb')"/>
+      <FileWrites Include="@(SourceDirectories)"/>
+    </ItemGroup>
   </Target>
   <Target Name="BeforeBuild">
   </Target>
