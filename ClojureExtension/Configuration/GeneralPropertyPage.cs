@@ -29,8 +29,8 @@ namespace Microsoft.ClojureExtension.Configuration
             Name = "General";
         }
 
-        [Description("Clojure Framework Version")]
-        [DisplayName("Clojure Framework Version")]
+        [Description("Clojure Framework Path")]
+        [DisplayName("Clojure Framework Path")]
         [Category("Clojure")]
         public string ClojureFrameworkPath
         {

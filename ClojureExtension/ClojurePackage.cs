@@ -34,7 +34,6 @@ namespace Microsoft.ClojureExtension
     [ProvideProjectItem(typeof (ClojureProjectFactory), "Clojure Items", @"Templates\ProjectItems\Clojure", 500)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [ProvideToolWindow(typeof (ReplToolWindow))]
-    [ProvideOptionPage(typeof (FrameworkOptionsDialogPage), "Clojure", "Frameworks", 0, 0, true)]
     public sealed class ClojurePackage : ProjectPackage
     {
         public const string PackageGuid = "40953a10-3425-499c-8162-a90059792d13";
@@ -94,9 +93,7 @@ namespace Microsoft.ClojureExtension
                         new ReplTabFactory(),
                         new ReplLauncher(),
                         replToolWindowFrame,
-                        new GetFrameworkFromSelectedProject(
-                            new SelectedProjectProvider(dte.Solution, dte.ToolWindows.SolutionExplorer),
-                            SettingsStoreProvider.Store),
+                        new GetFrameworkFromSelectedProject(new SelectedProjectProvider(dte.Solution, dte.ToolWindows.SolutionExplorer)),
                         new SelectedProjectProvider(dte.Solution, dte.ToolWindows.SolutionExplorer)).Execute(),
                     new CommandID(Guids.GuidClojureExtensionCmdSet, 10)));
 

@@ -15,7 +15,7 @@ namespace Microsoft.ClojureExtension.Repl.Operations
         private readonly ReplTabFactory _replTabFactory;
         private readonly ReplLauncher _replLauncher;
         private readonly IVsWindowFrame _toolWindowFrame;
-        private readonly IProvider<Framework> _frameworkProvider;
+        private readonly IProvider<string> _frameworkProvider;
         private readonly IProvider<EnvDTE.Project> _selectedProjectProvider;
 
         public StartReplUsingProjectVersion(
@@ -24,7 +24,7 @@ namespace Microsoft.ClojureExtension.Repl.Operations
             ReplTabFactory replTabFactory,
             ReplLauncher replLauncher,
             IVsWindowFrame toolWindowFrame,
-            IProvider<Framework> frameworkProvider,
+            IProvider<string> frameworkProvider,
             IProvider<EnvDTE.Project> selectedProjectProvider)
         {
             _storage = storage;
@@ -39,7 +39,7 @@ namespace Microsoft.ClojureExtension.Repl.Operations
         public void Execute()
         {
             Process process = _replLauncher.Execute(
-                _frameworkProvider.Get().Location,
+                _frameworkProvider.Get(),
                 Path.GetDirectoryName(_selectedProjectProvider.Get().FullName));
 
             ReplData replData = _replTabFactory.CreateRepl(process, _replManager);

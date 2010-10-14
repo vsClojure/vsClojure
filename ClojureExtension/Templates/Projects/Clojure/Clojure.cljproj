@@ -37,11 +37,36 @@
   <Target Name="CreateManifestResourceNames">
   </Target>
   <Target Name="CoreCompile">
-    <Copy SourceFiles="@(Compile)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
-    <Exec WorkingDirectory="$(OutDir)" Command="$(ClojureFrameworkPath)\Clojure.Compile" />
+    <PropertyGroup>
+      <ProjectNamespaces>@(Compile -> '%(RelativeDir)%(Filename)', ' ')</ProjectNamespaces>
+    </PropertyGroup>
+    <Copy SourceFiles="@(Compile)" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" DestinationFiles="@(Compile -> '$(OutDir)%(RelativeDir)%(Filename)%(Extension)')" />
+    <Exec WorkingDirectory="$(OutDir)" Command="$(ClojureFrameworkPath)\Clojure.Compile $(ProjectNamespaces.Replace('\', '.'))" />
   </Target>
   <Target Name="BeforeBuild">
   </Target>
   <Target Name="AfterBuild">
+  </Target>
+  <Target
+        Name="CopyFilesToOutputDirectory"
+        DependsOnTargets="
+            ComputeIntermediateSatelliteAssemblies;
+            _CopyFilesMarkedCopyLocal;
+            _CopySourceItemsToOutputDirectory;
+            _CopyAppConfigFile;
+            _CopyManifestFiles;
+            _CheckForCompileOutputs;
+            _SGenCheckForOutputs">
+    <Copy
+            SourceFiles="@(AddModules)"
+            DestinationFolder="$(OutDir)"
+            SkipUnchangedFiles="$(SkipCopyUnchangedFiles)"
+            OverwriteReadOnlyFiles="$(OverwriteReadOnlyFiles)"
+            Retries="$(CopyRetryCount)"
+            RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)"
+            UseHardlinksIfPossible="$(CreateHardLinksForCopyAdditionalFilesIfPossible)"
+            Condition="'@(AddModules)' != ''">
+      <Output TaskParameter="DestinationFiles" ItemName="FileWrites"/>
+    </Copy>
   </Target>
 </Project>

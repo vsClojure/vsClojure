@@ -26,10 +26,8 @@ Running:
 	1.) Download or build ClojureCLR (http://github.com/richhickey/clojure-clr).
 	2.) Build vsClojure.
 	3.) Run vsClojure from Visual Studio.
-	4.) Add a reference to ClojureCLR.
-		* Goto Tools -> Options -> Clojure.
-		* Add a new framework with the directory containing the ClojureCLR assemblies.
-	5.) Select the framework by name in your project's properties.
+	4.) Add a new Clojure project.
+	5.) Set the path to ClojureCLR in the project properties.
 
 Current Features:
 
