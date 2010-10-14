@@ -29,21 +29,6 @@ Running:
 	4.) Add a new Clojure project.
 	5.) Set the path to ClojureCLR in the project properties.
 
-Current Features:
-
-	1.) Editor
-		* Syntax highlighting
-		* Auto-indentation
-		* Brace matching
-
-	2.) Project
-		* Clojure project type
-
-	2.) Repl
-		* Support for multiple open repls.
-		* Loading files from the Solution Explorer into the repl.
-		* Loading a project from the Solution Explorer into the repl.
-
 License:
 
 	See LICENSE.txt.
