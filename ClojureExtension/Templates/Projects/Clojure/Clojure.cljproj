@@ -8,6 +8,9 @@
     <RootNamespace>$(MSBuildProjectName)</RootNamespace>
     <AssemblyName>$(MSBuildProjectName)</AssemblyName>
     <ClojureFrameworkPath></ClojureFrameworkPath>
+    <StartupNamespace>core</StartupNamespace>
+    <StartupFunction>main</StartupFunction>
+    <StartupArguments></StartupArguments>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>

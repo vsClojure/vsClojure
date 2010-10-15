@@ -111,9 +111,15 @@
     <Compile Include="Editor\Tagger\ClojureTagProvider.cs" />
     <Compile Include="Editor\Tagger\ClojureTokenTag.cs" />
     <Compile Include="Editor\Tagger\ClojureTokenTagger.cs" />
+    <Compile Include="Project\ClojureConfigProvider.cs" />
+    <Compile Include="Project\ClojureProjectConfig.cs" />
     <Compile Include="Project\Hierarchy\GetFrameworkFromSelectedProject.cs" />
     <Compile Include="Project\Hierarchy\ProjectFilesProvider.cs" />
     <Compile Include="Project\Hierarchy\SelectedProjectProvider.cs" />
+    <Compile Include="Project\Launching\LaunchParameters.cs" />
+    <Compile Include="Project\Launching\LaunchParametersBuilder.cs" />
+    <Compile Include="Project\Launching\LaunchParametersValidator.cs" />
+    <Compile Include="Project\Launching\ProjectLauncher.cs" />
     <Compile Include="Project\OAClojureProject.cs" />
     <Compile Include="Repl\Operations\ActiveFileProvider.cs" />
     <Compile Include="Repl\Operations\LoadFilesIntoRepl.cs" />
@@ -176,6 +182,12 @@
     <Content Include="Templates\Projects\Clojure\Clojure.ico">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ClojureRunner\ClojureRunner.csproj">
+      <Project>{EC3F08EE-6381-4903-84A3-CF2B726308BC}</Project>
+      <Name>ClojureRunner</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="..\ManagedPackageFramework\ProjectBase.Files" />
   <PropertyGroup>

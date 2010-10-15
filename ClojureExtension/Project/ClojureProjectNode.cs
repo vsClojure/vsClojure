@@ -240,6 +240,12 @@ namespace Microsoft.ClojureExtension.Project
 			}
 			return service;
 		}
+
+        protected override ConfigProvider CreateConfigProvider()
+        {
+            return new ClojureConfigProvider(this);
+        }
+
 		#endregion
 	}
 }
