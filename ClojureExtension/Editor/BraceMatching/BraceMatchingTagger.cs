@@ -168,13 +168,21 @@ namespace Microsoft.ClojureExtension.Editor.BraceMatching
             return false;
         }
 
+        private static char getSnapshotPointChar(SnapshotPoint sp)
+        {
+            if (sp.Position == sp.Snapshot.Length)
+                return sp.Snapshot.GetText(sp.Position != 0 ? sp.Position - 1 : 0, 1)[0];
+
+            return sp.GetChar();
+        }
+
         public IEnumerable<ITagSpan<TextMarkerTag>> GetTags(NormalizedSnapshotSpanCollection spans)
         {
-            if (spans.Count == 0) //there is no content in the buffer
+            if (spans.Count == 0)   //there is no content in the buffer
                 yield break;
 
             //don't do anything if the current SnapshotPoint is not initialized or at the end of the buffer
-            if (!CurrentChar.HasValue || CurrentChar.Value.Position >= CurrentChar.Value.Snapshot.Length)
+            if (!CurrentChar.HasValue || CurrentChar.Value.Position > CurrentChar.Value.Snapshot.Length)
                 yield break;
 
             //hold on to a snapshot of the current character
@@ -187,7 +195,7 @@ namespace Microsoft.ClojureExtension.Editor.BraceMatching
             }
 
             //get the current char and the previous char
-            char currentText = currentChar.GetChar();
+            char currentText = getSnapshotPointChar(currentChar);
             SnapshotPoint lastChar = currentChar == 0 ? currentChar : currentChar - 1; //if currentChar is 0 (beginning of buffer), don't move it back
             char lastText = lastChar.GetChar();
             SnapshotSpan pairSpan = new SnapshotSpan();
