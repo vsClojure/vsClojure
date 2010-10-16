@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{EC3F08EE-6381-4903-84A3-CF2B726308BC}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{2C1E5148-DF8C-408D-887A-9B3986C7160D}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ClojureRunner</RootNamespace>
-    <AssemblyName>ClojureRunner</AssemblyName>
+    <RootNamespace>ClojureWindowsRunner</RootNamespace>
+    <AssemblyName>ClojureWindowsRunner</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -34,13 +34,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject />
+    <StartupObject>ClojureWindowsRunner.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Clojure">
-      <HintPath>C:\Users\Jon\Desktop\ClojureCLR\clojure-clr\Clojure\Clojure.Main\bin\Debug\Clojure.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -49,11 +45,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Runner.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ClojureRunner\ClojureRunner.csproj">
+      <Project>{EC3F08EE-6381-4903-84A3-CF2B726308BC}</Project>
+      <Name>ClojureRunner</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -11,6 +11,7 @@
     <StartupNamespace>core</StartupNamespace>
     <StartupFunction>main</StartupFunction>
     <StartupArguments></StartupArguments>
+    <LaunchType>ConsoleApplication</LaunchType>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>

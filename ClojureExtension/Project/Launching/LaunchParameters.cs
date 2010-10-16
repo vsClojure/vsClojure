@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.ClojureExtension.Configuration;
 
 namespace Microsoft.ClojureExtension.Project.Launching
 {
@@ -14,8 +15,9 @@ namespace Microsoft.ClojureExtension.Project.Launching
         private readonly string _remoteDebugMachine;
         private readonly string _enableUnmanagedDebugging;
         private readonly Guid _debugType;
+        private readonly LaunchType _launchType;
 
-        public LaunchParameters(string runnerPath, string frameworkPath, string applicationPath, string startupNamespace, string startupFunction, string startupArguments, string allArguments, string remoteDebugMachine, string enableUnmanagedDebugging, Guid debugType)
+        public LaunchParameters(string runnerPath, string frameworkPath, string applicationPath, string startupNamespace, string startupFunction, string startupArguments, string allArguments, string remoteDebugMachine, string enableUnmanagedDebugging, Guid debugType, LaunchType launchType)
         {
             _runnerPath = runnerPath;
             _frameworkPath = frameworkPath;
@@ -27,6 +29,12 @@ namespace Microsoft.ClojureExtension.Project.Launching
             _remoteDebugMachine = remoteDebugMachine;
             _enableUnmanagedDebugging = enableUnmanagedDebugging;
             _debugType = debugType;
+            _launchType = launchType;
+        }
+
+        public LaunchType LaunchType
+        {
+            get { return _launchType; }
         }
 
         public Guid DebugType

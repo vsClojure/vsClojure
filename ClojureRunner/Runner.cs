@@ -7,13 +7,13 @@ using clojure.lang;
 
 namespace ClojureRunner
 {
-    public class Program
+    public class Runner
     {
         private static string _frameworkPath = "";
 
-        public static int Main(string[] args)
+        public static int Run(string[] args)
         {
-            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainAssemblyResolve;
+            AppDomain.CurrentDomain.AssemblyResolve += currentDomainAssemblyResolve;
 
             _frameworkPath = args[0];
             string applicationPath = args[1];
@@ -35,7 +35,7 @@ namespace ClojureRunner
             var.applyTo(RT.list(args.Skip(4)));
         }
 
-        public static Assembly CurrentDomainAssemblyResolve(object sender, ResolveEventArgs args)
+        private static Assembly currentDomainAssemblyResolve(object sender, ResolveEventArgs args)
         {
             foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
                 if (assembly.FullName == args.Name)

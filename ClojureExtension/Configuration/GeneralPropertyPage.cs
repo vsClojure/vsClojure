@@ -9,6 +9,7 @@ PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
 
 ***************************************************************************/
 
+using System;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -26,6 +27,7 @@ namespace Microsoft.ClojureExtension.Configuration
         private string _startupNamespace;
         private string _startupFunction;
         private string _startupArguments;
+        private LaunchType _launchType;
 
         public GeneralPropertyPage()
         {
@@ -59,7 +61,7 @@ namespace Microsoft.ClojureExtension.Configuration
             }
         }
 
-        [Category("Project")]
+        [Category("Running")]
         [DisplayName("Startup Function")]
         [Description("Startup Function")]
         public string StartupFunction
@@ -72,7 +74,7 @@ namespace Microsoft.ClojureExtension.Configuration
             }
         }
 
-        [Category("Project")]
+        [Category("Running")]
         [DisplayName("Startup Namespace")]
         [Description("Startup Namespace")]
         public string StartupNamespace
@@ -85,7 +87,7 @@ namespace Microsoft.ClojureExtension.Configuration
             }
         }
 
-        [Category("Project")]
+        [Category("Running")]
         [DisplayName("Startup Arguments")]
         [Description("Startup Arguments")]
         public string StartupArguments
@@ -94,6 +96,19 @@ namespace Microsoft.ClojureExtension.Configuration
             set
             {
                 _startupArguments = value;
+                IsDirty = true;
+            }
+        }
+
+        [Category("Running")]
+        [DisplayName("Launch As")]
+        [Description("Launch As")]
+        public LaunchType LaunchAs
+        {
+            get { return _launchType; }
+            set
+            {
+                _launchType = value;
                 IsDirty = true;
             }
         }
@@ -126,6 +141,7 @@ namespace Microsoft.ClojureExtension.Configuration
             _startupNamespace = ProjectMgr.GetProjectProperty("StartupNamespace", false);
             _startupFunction = ProjectMgr.GetProjectProperty("StartupFunction", false);
             _startupArguments = ProjectMgr.GetProjectProperty("StartupArguments", false);
+            _launchType = (LaunchType)Enum.Parse(typeof(LaunchType), ProjectMgr.GetProjectProperty("LaunchType", false));
         }
 
         protected override int ApplyChanges()
@@ -135,6 +151,7 @@ namespace Microsoft.ClojureExtension.Configuration
             ProjectMgr.SetProjectProperty("StartupNamespace", _startupNamespace);
             ProjectMgr.SetProjectProperty("StartupFunction", _startupFunction);
             ProjectMgr.SetProjectProperty("StartupArguments", _startupArguments);
+            ProjectMgr.SetProjectProperty("LaunchType", _launchType.ToString());
             IsDirty = false;
             return VSConstants.S_OK;
         }

@@ -5,13 +5,14 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{EC3F08EE-6381-4903-84A3-CF2B726308BC}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{393DCA16-9005-4BAE-974F-6480AA5B70B6}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ClojureRunner</RootNamespace>
-    <AssemblyName>ClojureRunner</AssemblyName>
+    <RootNamespace>ClojureConsoleRunner</RootNamespace>
+    <AssemblyName>ClojureConsoleRunner</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -34,13 +35,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject />
+    <StartupObject>ClojureConsoleRunner.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Clojure">
-      <HintPath>C:\Users\Jon\Desktop\ClojureCLR\clojure-clr\Clojure\Clojure.Main\bin\Debug\Clojure.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -49,8 +46,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Runner.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ClojureRunner\ClojureRunner.csproj">
+      <Project>{EC3F08EE-6381-4903-84A3-CF2B726308BC}</Project>
+      <Name>ClojureRunner</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

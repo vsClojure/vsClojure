@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Microsoft.ClojureExtension.Configuration;
 using Microsoft.ClojureExtension.Utilities;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Project;
@@ -27,6 +28,7 @@ namespace Microsoft.ClojureExtension.Project.Launching
             string startupArguments = _project.GetProjectProperty("StartupArguments", false);
             string remoteMachineDebug = _project.GetProjectProperty("RemoteDebugMachine", false);
             string unmanagedDebugging = _project.GetProjectProperty("EnableUnmanagedDebugging", false);
+            LaunchType launchType = (LaunchType)Enum.Parse(typeof(LaunchType), _project.GetProjectProperty("LaunchType", false));
 
             frameworkPath = frameworkPath.TrimEnd(new[] {'\\'});
             applicationPath = applicationPath.TrimEnd(new[] {'\\'});
@@ -38,8 +40,12 @@ namespace Microsoft.ClojureExtension.Project.Launching
                 ? new Guid("{3B476D35-A401-11D2-AAD4-00C04F990171}")
                 : VSConstants.CLSID_ComPlusOnlyDebugEngine;
 
+            string runnerPath = _packageInstallPath + "\\Project\\Launching\\Runners\\";
+            if (launchType == LaunchType.ConsoleApplication) runnerPath += "ClojureConsoleRunner.exe";
+            else runnerPath += "ClojureWindowsRunner.exe";
+
             return new LaunchParameters(
-                _packageInstallPath + "\\ClojureRunner.exe",
+                runnerPath,
                 frameworkPath,
                 applicationPath,
                 startupNamespace,
@@ -48,7 +54,8 @@ namespace Microsoft.ClojureExtension.Project.Launching
                 allArguments,
                 remoteMachineDebug,
                 unmanagedDebugging,
-                debugType);
+                debugType,
+                launchType);
         }
     }
 }
