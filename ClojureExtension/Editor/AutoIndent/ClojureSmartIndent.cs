@@ -63,20 +63,19 @@ namespace Microsoft.ClojureExtension.Editor.AutoIndent
             if (openDataStructures.Count == 0) return null;
 
             CommonToken lastDataStructureToken = openDataStructures.Peek();
-            int beginningOfLine = lastDataStructureToken.StartIndex;
-            char indentCharacter = codeBeforeLineBreak[beginningOfLine];
+            int currentIndexBeforeLastDataStructureToken = lastDataStructureToken.StartIndex - 1;
+            if (currentIndexBeforeLastDataStructureToken < 0) currentIndexBeforeLastDataStructureToken = 0;
+            char characterBeforeLastDataStructureToken = codeBeforeLineBreak[currentIndexBeforeLastDataStructureToken];
+            int previousLineIndent = 0;
 
-            while (beginningOfLine > 0 && indentCharacter != '\r' && indentCharacter != '\n') indentCharacter = codeBeforeLineBreak[--beginningOfLine];
+            while (currentIndexBeforeLastDataStructureToken > 0 && characterBeforeLastDataStructureToken != '\r' && characterBeforeLastDataStructureToken != '\n')
+            {
+                previousLineIndent += characterBeforeLastDataStructureToken == '\t' ? _indentSize.Default : 1;
+                characterBeforeLastDataStructureToken = codeBeforeLineBreak[--currentIndexBeforeLastDataStructureToken];
+            }
 
-            string previousLineIndent = codeBeforeLineBreak.Substring(beginningOfLine + 1, lastDataStructureToken.StartIndex - beginningOfLine - 1);
-            int actualPreviousLineIndent = 0;
-
-            foreach (char c in previousLineIndent)
-                if (c == '\t') actualPreviousLineIndent += _indentSize.Default;
-                else actualPreviousLineIndent += 1;
-
-            if (lastDataStructureToken.Type == ClojureLexer.OPEN_PAREN) return actualPreviousLineIndent + _indentSize.Default;
-            return actualPreviousLineIndent + 1;
+            if (lastDataStructureToken.Type == ClojureLexer.OPEN_PAREN) return previousLineIndent + _indentSize.Default;
+            return previousLineIndent + 1;
         }
     }
 }
