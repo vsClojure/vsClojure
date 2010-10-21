@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Linq;
+using System.Diagnostics;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -60,10 +61,10 @@ namespace Microsoft.ClojureExtension.Repl
             Thread outputReaderThread = new Thread(() => textPipe.WriteFromReplToTextBox(replProcess.StandardOutput));
             Thread errorReaderThread = new Thread(() => textPipe.WriteFromReplToTextBox(replProcess.StandardError));
 
-            interactiveText.PreviewKeyDown +=
-                (o, e) =>
-                textPipe.WriteFromTextBoxToRepl(e.Key == Key.Enter ? "\r\n" : "");
-            
+            interactiveText.PreviewTextInput += textPipe.PreviewTextInput;
+            interactiveText.PreviewKeyDown += textPipe.PreviewKeyDown;
+            interactiveText.PreviewKeyUp += textPipe.PreviewKeyUp;
+          
             interactiveText.Loaded +=
                 (o, e) =>
                 {
