@@ -1,6 +1,7 @@
 /ManagedPackageFramework
 /*ReSharper*
 /ClojureExtension/Project/Launching/Runners
+/ClojureExtension/ProjectBase/
 bin/
 obj/
 *.user
