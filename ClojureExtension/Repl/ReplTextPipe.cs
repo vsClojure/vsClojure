@@ -15,7 +15,7 @@ namespace Microsoft.ClojureExtension.Repl
     	private readonly Process _process;
     	private readonly ReplWriter _replWriter;
         private int _promptPosition;
-		private LinkedList<Key> _downKeys = new LinkedList<Key>();
+		private readonly LinkedList<Key> _downKeys;
 
         public ReplTextPipe(TextBox interactiveTextBox, Process process, ReplWriter replWriter)
         {
@@ -23,6 +23,7 @@ namespace Microsoft.ClojureExtension.Repl
         	_replWriter = replWriter;
             _promptPosition = 0;
 			_interactiveTextBox = interactiveTextBox;
+			_downKeys = new LinkedList<Key>();
         }
 
         public void WriteFromTextBoxToRepl(string data)
@@ -59,7 +60,7 @@ namespace Microsoft.ClojureExtension.Repl
 			if (_interactiveTextBox.CaretIndex < _promptPosition) e.Handled = true;
         }
 
-        private bool isShiftDown()
+        private bool IsShiftDown()
         {
             return _downKeys.Contains(Key.LeftShift) || _downKeys.Contains(Key.RightShift);
         }
@@ -70,14 +71,14 @@ namespace Microsoft.ClojureExtension.Repl
 
             if (e.Key == Key.Enter) WriteFromTextBoxToRepl("\r\n");
 
-			if (_interactiveTextBox.CaretIndex > _promptPosition && e.Key == Key.Home && !isShiftDown())
+			if (_interactiveTextBox.CaretIndex > _promptPosition && e.Key == Key.Home && !IsShiftDown())
             {
 				_interactiveTextBox.CaretIndex = _promptPosition;
                 e.Handled = true;
                 return;
             }
 
-			if (_interactiveTextBox.CaretIndex > _promptPosition && e.Key == Key.Home && isShiftDown())
+			if (_interactiveTextBox.CaretIndex > _promptPosition && e.Key == Key.Home && IsShiftDown())
             {
 				_interactiveTextBox.Select(_promptPosition, _interactiveTextBox.CaretIndex - _promptPosition + _interactiveTextBox.SelectionLength);
                 e.Handled = true;
@@ -87,7 +88,13 @@ namespace Microsoft.ClojureExtension.Repl
             if (e.Key == Key.Up || e.Key == Key.Down || e.Key == Key.Left || e.Key == Key.Right) return;
             if (e.Key == Key.Home || e.Key == Key.End || e.Key == Key.PageUp || e.Key == Key.PageDown) return;
 			if (_interactiveTextBox.CaretIndex < _promptPosition) e.Handled = true;
-			if (_interactiveTextBox.CaretIndex == _promptPosition && e.Key == Key.Back) e.Handled = true;
+
+			if (_interactiveTextBox.CaretIndex == _promptPosition && e.Key == Key.Back)
+			{
+				_interactiveTextBox.Text = _interactiveTextBox.Text.Remove(_interactiveTextBox.SelectionStart, _interactiveTextBox.SelectionLength);
+				_interactiveTextBox.CaretIndex = _promptPosition;
+				e.Handled = true;
+			}
         }
 
         public void PreviewKeyUp(object sender, KeyEventArgs e)

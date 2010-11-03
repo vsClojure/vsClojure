@@ -11,6 +11,7 @@ PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
 
 using System;
 using System.ComponentModel.Design;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using EnvDTE;
@@ -42,12 +43,12 @@ namespace Microsoft.ClojureExtension
         {
             base.Initialize();
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
-            createSettingsStore();
-            intializeMenuItems();
+            CreateSettingsStore();
+            IntializeMenuItems();
             RegisterProjectFactory(new ClojureProjectFactory(this));
         }
 
-        private void createSettingsStore()
+        private void CreateSettingsStore()
         {
             IVsWritableSettingsStore settingsStore;
             var settingsManager = (IVsSettingsManager) GetService(typeof (SVsSettingsManager));
@@ -55,7 +56,7 @@ namespace Microsoft.ClojureExtension
             SettingsStoreProvider.Store = new SettingsStore("Clojure", settingsStore);
         }
 
-        private void intializeMenuItems()
+        private void IntializeMenuItems()
         {
             OleMenuCommandService menuCommandService = (OleMenuCommandService) GetService(typeof (IMenuCommandService));
             ReplToolWindow replToolWindow = (ReplToolWindow) FindToolWindow(typeof (ReplToolWindow), 0, true);
@@ -79,13 +80,9 @@ namespace Microsoft.ClojureExtension
             get { return "ClojureProj"; }
         }
 
-        private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+        private static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
         {
-            foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
-                if (assembly.FullName == args.Name)
-                    return assembly;
-
-            return null;
+        	return AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(assembly => assembly.FullName == args.Name);
         }
     }
 }
