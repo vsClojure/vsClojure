@@ -1,21 +1,33 @@
-﻿namespace Microsoft.ClojureExtension.Repl
+﻿using System.Diagnostics;
+using System.Windows.Controls;
+
+namespace Microsoft.ClojureExtension.Repl
 {
     public class ReplWriter
     {
-        public void WriteBehindTheSceneExpressionToRepl(ReplData repl, string expression)
+    	private readonly Process _process;
+    	private readonly TextBox _interactiveTextBox;
+
+    	public ReplWriter(Process process, TextBox interactiveTextBox)
+    	{
+    		_process = process;
+    		_interactiveTextBox = interactiveTextBox;
+    	}
+
+    	public void WriteBehindTheSceneExpressionToRepl(string expression)
         {
-            WriteExpressionToRepl(repl, expression);
-            WriteToInteractive(repl, "\r\n");
+            WriteExpressionToRepl(expression);
+            WriteToInteractive("\r\n");
         }
 
-        public void WriteExpressionToRepl(ReplData repl, string expression)
+        public void WriteExpressionToRepl(string expression)
         {
-            repl.ReplProcess.StandardInput.WriteLine(expression);
+			_process.StandardInput.WriteLine(expression);
         }
 
-        public void WriteToInteractive(ReplData repl, string s)
+        public void WriteToInteractive(string s)
         {
-            repl.InteractiveTextBox.AppendText(s);
+			_interactiveTextBox.AppendText(s);
         }
     }
 }

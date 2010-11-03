@@ -42,7 +42,6 @@ namespace Microsoft.ClojureExtension
         {
             base.Initialize();
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
-            ReplStorageProvider.Storage = new ReplStorage();
             createSettingsStore();
             intializeMenuItems();
             RegisterProjectFactory(new ClojureProjectFactory(this));
@@ -66,55 +65,13 @@ namespace Microsoft.ClojureExtension
             menuCommandService.AddCommand(
                 new MenuCommand(
                     (sender, args) =>
-                    new LoadFilesIntoRepl(
-                        new ReplWriter(),
-                        new SelectedReplProvider(replToolWindow.TabControl, ReplStorageProvider.Storage),
-                        new SelectedFilesProvider(dte.ToolWindows.SolutionExplorer),
-                        replToolWindowFrame).Execute(),
-                    new CommandID(Guids.GuidClojureExtensionCmdSet, 12)));
-
-            menuCommandService.AddCommand(
-                new MenuCommand(
-                    (sender, args) =>
-                    new LoadFilesIntoRepl(
-                        new ReplWriter(),
-                        new SelectedReplProvider(replToolWindow.TabControl, ReplStorageProvider.Storage),
-                        new ProjectFilesProvider(
-                            new SelectedProjectProvider(dte.Solution, dte.ToolWindows.SolutionExplorer)),
-                        replToolWindowFrame).Execute(),
-                    new CommandID(Guids.GuidClojureExtensionCmdSet, 11)));
-
-            menuCommandService.AddCommand(
-                new MenuCommand(
-                    (sender, args) =>
                     new StartReplUsingProjectVersion(
-                        ReplStorageProvider.Storage,
                         replToolWindow.TabControl,
-                        new ReplTabFactory(),
-                        new ReplLauncher(),
+                        new ReplTabFactory(dte, replToolWindowFrame, menuCommandService),
                         replToolWindowFrame,
                         new GetFrameworkFromSelectedProject(new SelectedProjectProvider(dte.Solution, dte.ToolWindows.SolutionExplorer)),
                         new SelectedProjectProvider(dte.Solution, dte.ToolWindows.SolutionExplorer)).Execute(),
                     new CommandID(Guids.GuidClojureExtensionCmdSet, 10)));
-
-            menuCommandService.AddCommand(
-                new MenuCommand(
-                    (sender, args) =>
-                    new LoadFilesIntoRepl(
-                        new ReplWriter(),
-                        new SelectedReplProvider(replToolWindow.TabControl, ReplStorageProvider.Storage),
-                        new ActiveFileProvider(dte),
-                        replToolWindowFrame).Execute(),
-                    new CommandID(Guids.GuidClojureExtensionCmdSet, 13)));
-
-            menuCommandService.AddCommand(
-                new MenuCommand(
-                    (sender, args) =>
-                    new SwitchNamespaceToFile(
-                        new ActiveFileProvider(dte),
-                        new ReplWriter(),
-                        new SelectedReplProvider(replToolWindow.TabControl, ReplStorageProvider.Storage)).Execute(),
-                    new CommandID(Guids.GuidClojureExtensionCmdSet, 14)));
         }
 
         public override string ProductUserContext

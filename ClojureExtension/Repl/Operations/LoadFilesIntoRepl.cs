@@ -11,18 +11,15 @@ namespace Microsoft.ClojureExtension.Repl.Operations
     internal class LoadFilesIntoRepl
     {
         private readonly ReplWriter _writer;
-        private readonly IProvider<ReplData> _replProvider;
         private readonly IProvider<List<string>> _filesProvider;
         private readonly IVsWindowFrame _replToolWindowFrame;
 
         public LoadFilesIntoRepl(
             ReplWriter writer,
-            IProvider<ReplData> replProvider,
             IProvider<List<string>> filesProvider,
             IVsWindowFrame replToolWindowFrame)
         {
             _writer = writer;
-            _replProvider = replProvider;
             _filesProvider = filesProvider;
             _replToolWindowFrame = replToolWindowFrame;
         }
@@ -32,13 +29,12 @@ namespace Microsoft.ClojureExtension.Repl.Operations
             IEnumerable<string> filesToLoad = _filesProvider.Get().Where(p => p.ToLower().EndsWith(".clj"));
 
             if (filesToLoad.Count() == 0) throw new Exception("No files to load.");
-            if (_replProvider.Get() == null) throw new Exception("No active repl.");
 
             StringBuilder loadFileExpression = new StringBuilder("(map load-file '(");
             filesToLoad.ToList().ForEach(path => loadFileExpression.Append(" \"").Append(path.Replace("\\", "\\\\")).Append("\""));
             loadFileExpression.Append("))");
 
-            _writer.WriteBehindTheSceneExpressionToRepl(_replProvider.Get(), loadFileExpression.ToString());
+            _writer.WriteBehindTheSceneExpressionToRepl(loadFileExpression.ToString());
             ErrorHandler.ThrowOnFailure(_replToolWindowFrame.Show());
         }
     }

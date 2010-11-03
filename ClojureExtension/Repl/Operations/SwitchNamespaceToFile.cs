@@ -10,22 +10,17 @@ namespace Microsoft.ClojureExtension.Repl.Operations
     {
         private readonly IProvider<List<string>> _activeFileProvider;
         private readonly ReplWriter _replWriter;
-        private readonly IProvider<ReplData> _activeReplProvider;
 
         public SwitchNamespaceToFile(
             IProvider<List<string>> activeFileProvider,
-            ReplWriter replWriter,
-            IProvider<ReplData> activeReplProvider)
+            ReplWriter replWriter)
         {
             _activeFileProvider = activeFileProvider;
             _replWriter = replWriter;
-            _activeReplProvider = activeReplProvider;
         }
 
         public void Execute()
         {
-            ReplData activeRepl = _activeReplProvider.Get();
-            if (activeRepl == null) throw new Exception("No active repl.");
             string activeFilePath = _activeFileProvider.Get()[0];
             ClojureLexer lexer = new ClojureLexer(new ANTLRFileStream(activeFilePath));
             IToken token = lexer.NextToken();
@@ -38,7 +33,7 @@ namespace Microsoft.ClojureExtension.Repl.Operations
                     while (namespaceToken.Type == ClojureLexer.SPACE) namespaceToken = lexer.NextToken();
                     if (namespaceToken.Type != ClojureLexer.SYMBOL) throw new Exception("Cannot determine file namespace.");
                     string completeNamespace = namespaceToken.Text;
-                    _replWriter.WriteBehindTheSceneExpressionToRepl(activeRepl, "(do (require '" + completeNamespace + ") (in-ns '" + completeNamespace + "))");
+                    _replWriter.WriteBehindTheSceneExpressionToRepl("(do (require '" + completeNamespace + ") (in-ns '" + completeNamespace + "))");
                     return;
                 }
 

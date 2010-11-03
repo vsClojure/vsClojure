@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,51 +11,52 @@ namespace Microsoft.ClojureExtension.Repl
 {
     public class ReplTextPipe
     {
-        private readonly ReplData _replData;
-        private readonly ReplWriter _replWriter;
+    	private readonly TextBox _interactiveTextBox;
+    	private readonly Process _process;
+    	private readonly ReplWriter _replWriter;
         private int _promptPosition;
+		private LinkedList<Key> _downKeys = new LinkedList<Key>();
 
-        public ReplTextPipe(ReplData replData, ReplWriter replWriter)
+        public ReplTextPipe(TextBox interactiveTextBox, Process process, ReplWriter replWriter)
         {
-            _replData = replData;
-            _replWriter = replWriter;
+        	_process = process;
+        	_replWriter = replWriter;
             _promptPosition = 0;
+			_interactiveTextBox = interactiveTextBox;
         }
 
         public void WriteFromTextBoxToRepl(string data)
         {
             if (data == "\r\n")
             {
-                _replWriter.WriteExpressionToRepl(_replData, _replData.InteractiveTextBox.Text.Substring(_promptPosition));
-                _promptPosition = _replData.InteractiveTextBox.Text.Length;
+				_replWriter.WriteExpressionToRepl(_interactiveTextBox.Text.Substring(_promptPosition));
+				_promptPosition = _interactiveTextBox.Text.Length;
             }
         }
 
         public void WriteFromReplToTextBox(StreamReader stream)
         {
-            while (!_replData.ReplProcess.HasExited)
+			while (!_process.HasExited)
             {
                 string output = ((char) stream.Read()).ToString();
                 while (stream.Peek() != -1) output += ((char) stream.Read()).ToString();
 
-                _replData.InteractiveTextBox.Dispatcher.Invoke(
+				_interactiveTextBox.Dispatcher.Invoke(
                     DispatcherPriority.Normal,
                     new DispatcherOperationCallback(
                         delegate
                         {
-                            _replData.InteractiveTextBox.AppendText(output);
-                            _replData.InteractiveTextBox.ScrollToEnd();
-                            _promptPosition = _replData.InteractiveTextBox.Text.Length;
+							_interactiveTextBox.AppendText(output);
+							_interactiveTextBox.ScrollToEnd();
+							_promptPosition = _interactiveTextBox.Text.Length;
                             return null;
                         }), null);
             }
         }
 
-        private LinkedList<Key> _downKeys = new LinkedList<Key>();
-
         public void PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            if (_replData.InteractiveTextBox.CaretIndex < _promptPosition) e.Handled = true;
+			if (_interactiveTextBox.CaretIndex < _promptPosition) e.Handled = true;
         }
 
         private bool isShiftDown()
@@ -68,24 +70,24 @@ namespace Microsoft.ClojureExtension.Repl
 
             if (e.Key == Key.Enter) WriteFromTextBoxToRepl("\r\n");
 
-            if (_replData.InteractiveTextBox.CaretIndex > _promptPosition && e.Key == Key.Home && !isShiftDown())
+			if (_interactiveTextBox.CaretIndex > _promptPosition && e.Key == Key.Home && !isShiftDown())
             {
-                _replData.InteractiveTextBox.CaretIndex = _promptPosition;
+				_interactiveTextBox.CaretIndex = _promptPosition;
                 e.Handled = true;
                 return;
             }
 
-            if (_replData.InteractiveTextBox.CaretIndex > _promptPosition && e.Key == Key.Home && isShiftDown())
+			if (_interactiveTextBox.CaretIndex > _promptPosition && e.Key == Key.Home && isShiftDown())
             {
-                _replData.InteractiveTextBox.Select(_promptPosition, _replData.InteractiveTextBox.CaretIndex - _promptPosition + _replData.InteractiveTextBox.SelectionLength);
+				_interactiveTextBox.Select(_promptPosition, _interactiveTextBox.CaretIndex - _promptPosition + _interactiveTextBox.SelectionLength);
                 e.Handled = true;
                 return;
             }
             
             if (e.Key == Key.Up || e.Key == Key.Down || e.Key == Key.Left || e.Key == Key.Right) return;
             if (e.Key == Key.Home || e.Key == Key.End || e.Key == Key.PageUp || e.Key == Key.PageDown) return;
-            if (_replData.InteractiveTextBox.CaretIndex < _promptPosition) e.Handled = true;
-            if (_replData.InteractiveTextBox.CaretIndex == _promptPosition && e.Key == Key.Back) e.Handled = true;
+			if (_interactiveTextBox.CaretIndex < _promptPosition) e.Handled = true;
+			if (_interactiveTextBox.CaretIndex == _promptPosition && e.Key == Key.Back) e.Handled = true;
         }
 
         public void PreviewKeyUp(object sender, KeyEventArgs e)
