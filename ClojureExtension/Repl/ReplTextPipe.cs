@@ -16,6 +16,8 @@ namespace Microsoft.ClojureExtension.Repl
     	private readonly ReplWriter _replWriter;
         private int _promptPosition;
 		private readonly LinkedList<Key> _downKeys;
+    	private readonly LinkedList<string> _history;
+    	private LinkedListNode<string> _currentlySelectedHistoryItem;
 
         public ReplTextPipe(TextBox interactiveTextBox, Process process, ReplWriter replWriter)
         {
@@ -24,15 +26,7 @@ namespace Microsoft.ClojureExtension.Repl
             _promptPosition = 0;
 			_interactiveTextBox = interactiveTextBox;
 			_downKeys = new LinkedList<Key>();
-        }
-
-        public void WriteFromTextBoxToRepl(string data)
-        {
-            if (data == "\r\n")
-            {
-				_replWriter.WriteExpressionToRepl(_interactiveTextBox.Text.Substring(_promptPosition));
-				_promptPosition = _interactiveTextBox.Text.Length;
-            }
+			_history = new LinkedList<string>();
         }
 
         public void WriteFromReplToTextBox(StreamReader stream)
@@ -65,11 +59,35 @@ namespace Microsoft.ClojureExtension.Repl
             return _downKeys.Contains(Key.LeftShift) || _downKeys.Contains(Key.RightShift);
         }
 
+		private bool ControlIsDown()
+		{
+			return _downKeys.Contains(Key.LeftCtrl) || _downKeys.Contains(Key.RightCtrl);
+		}
+
         public void PreviewKeyDown(object sender, KeyEventArgs e)
         {
             _downKeys.AddLast(e.Key);
 
-            if (e.Key == Key.Enter) WriteFromTextBoxToRepl("\r\n");
+			if (e.Key == Key.Enter && !IsShiftDown() && _interactiveTextBox.CaretIndex >= _promptPosition)
+            {
+            	string userInput = _interactiveTextBox.Text.Substring(_promptPosition);
+				
+				if (_currentlySelectedHistoryItem != null && _currentlySelectedHistoryItem.Value == userInput)
+				{
+					_history.Remove(_currentlySelectedHistoryItem.Value);
+					_history.AddFirst(_currentlySelectedHistoryItem.Value);
+				}
+				else
+				{
+					_history.AddFirst(userInput);
+				}
+
+				_currentlySelectedHistoryItem = null;
+				_replWriter.WriteExpressionToRepl(userInput);
+				_promptPosition = _interactiveTextBox.Text.Length;
+            	_interactiveTextBox.CaretIndex = _interactiveTextBox.Text.Length;
+            	return;
+            }
 
 			if (_interactiveTextBox.CaretIndex > _promptPosition && e.Key == Key.Home && !IsShiftDown())
             {
@@ -84,7 +102,46 @@ namespace Microsoft.ClojureExtension.Repl
                 e.Handled = true;
                 return;
             }
-            
+
+			if (_interactiveTextBox.CaretIndex >= _promptPosition && e.Key == Key.Down && ControlIsDown())
+			{
+				if (_currentlySelectedHistoryItem != null)
+				{
+					_interactiveTextBox.Text = _interactiveTextBox.Text.Remove(_promptPosition, _interactiveTextBox.Text.Length - _promptPosition);
+
+					if (_currentlySelectedHistoryItem.Previous == null)
+					{
+						_currentlySelectedHistoryItem = null;
+					}
+					else
+					{
+						_currentlySelectedHistoryItem = _currentlySelectedHistoryItem.Previous;
+						_interactiveTextBox.AppendText(_currentlySelectedHistoryItem.Value);
+					}
+
+					_interactiveTextBox.CaretIndex = _interactiveTextBox.Text.Length;
+				}
+
+				e.Handled = true;
+				return;
+			}
+
+			if (_interactiveTextBox.CaretIndex >= _promptPosition && e.Key == Key.Up && ControlIsDown())
+			{
+				if (_currentlySelectedHistoryItem == null) _currentlySelectedHistoryItem = _history.First;
+				else if (_currentlySelectedHistoryItem.Next != null) _currentlySelectedHistoryItem = _currentlySelectedHistoryItem.Next;
+
+				if (_currentlySelectedHistoryItem != null)
+				{
+					_interactiveTextBox.Text = _interactiveTextBox.Text.Remove(_promptPosition, _interactiveTextBox.Text.Length - _promptPosition);
+					_interactiveTextBox.AppendText(_currentlySelectedHistoryItem.Value);
+					_interactiveTextBox.CaretIndex = _interactiveTextBox.Text.Length;
+				}
+				
+				e.Handled = true;
+				return;
+			}
+
             if (e.Key == Key.Up || e.Key == Key.Down || e.Key == Key.Left || e.Key == Key.Right) return;
             if (e.Key == Key.Home || e.Key == Key.End || e.Key == Key.PageUp || e.Key == Key.PageDown) return;
 			if (_interactiveTextBox.CaretIndex < _promptPosition) e.Handled = true;
