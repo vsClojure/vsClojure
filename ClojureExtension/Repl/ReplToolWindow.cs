@@ -16,7 +16,7 @@ namespace Microsoft.ClojureExtension.Repl
         }
 
         public ReplToolWindow()
-            : this(new ReplTabControlFactory().CreateTabControl())
+            : this(ReplUserInterfaceFactory.CreateTabControl())
         {
         }
 

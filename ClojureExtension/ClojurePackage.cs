@@ -68,7 +68,7 @@ namespace Microsoft.ClojureExtension
                     (sender, args) =>
                     new StartReplUsingProjectVersion(
                         replToolWindow.TabControl,
-                        new ReplTabFactory(dte, replToolWindowFrame, menuCommandService),
+                        new ReplFactory(dte, replToolWindowFrame, menuCommandService),
                         replToolWindowFrame,
                         new GetFrameworkFromSelectedProject(new SelectedProjectProvider(dte.Solution, dte.ToolWindows.SolutionExplorer)),
                         new SelectedProjectProvider(dte.Solution, dte.ToolWindows.SolutionExplorer)).Execute(),

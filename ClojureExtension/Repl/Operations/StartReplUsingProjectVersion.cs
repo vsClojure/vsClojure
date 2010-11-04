@@ -8,14 +8,14 @@ namespace Microsoft.ClojureExtension.Repl.Operations
 	public class StartReplUsingProjectVersion
 	{
 		private readonly TabControl _replManager;
-		private readonly ReplTabFactory _replTabFactory;
+		private readonly ReplFactory _replFactory;
 		private readonly IVsWindowFrame _toolWindowFrame;
 		private readonly IProvider<string> _frameworkProvider;
 		private readonly IProvider<EnvDTE.Project> _selectedProjectProvider;
 
 		public StartReplUsingProjectVersion(
 			TabControl replManager,
-			ReplTabFactory replTabFactory,
+			ReplFactory replFactory,
 			IVsWindowFrame toolWindowFrame,
 			IProvider<string> frameworkProvider,
 			IProvider<EnvDTE.Project> selectedProjectProvider)
@@ -23,13 +23,13 @@ namespace Microsoft.ClojureExtension.Repl.Operations
 			_frameworkProvider = frameworkProvider;
 			_selectedProjectProvider = selectedProjectProvider;
 			_replManager = replManager;
-			_replTabFactory = replTabFactory;
+			_replFactory = replFactory;
 			_toolWindowFrame = toolWindowFrame;
 		}
 
 		public void Execute()
 		{
-			_replTabFactory.CreateRepl(_frameworkProvider.Get(), Path.GetDirectoryName(_selectedProjectProvider.Get().FullName), _replManager);
+			_replFactory.CreateRepl(_frameworkProvider.Get(), Path.GetDirectoryName(_selectedProjectProvider.Get().FullName), _replManager);
 			_toolWindowFrame.Show();
 		}
 	}

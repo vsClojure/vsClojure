@@ -122,6 +122,8 @@
     <Compile Include="Project\Launching\LaunchParametersValidator.cs" />
     <Compile Include="Project\Launching\ProjectLauncher.cs" />
     <Compile Include="Project\OAClojureProject.cs" />
+    <Compile Include="Repl\History.cs" />
+    <Compile Include="Repl\MetaKeyWatcher.cs" />
     <Compile Include="Repl\Operations\ActiveFileProvider.cs" />
     <Compile Include="Repl\Operations\LoadFilesIntoRepl.cs" />
     <Compile Include="Project\Hierarchy\SelectedFilesProvider.cs" />
@@ -133,12 +135,15 @@
     <Compile Include="Project\ClojureProjectFileNode.cs" />
     <Compile Include="Project\ClojureProjectNode.cs" />
     <Compile Include="Repl\Operations\SwitchNamespaceToFile.cs" />
-    <Compile Include="Repl\ReplTabControlFactory.cs" />
-    <Compile Include="Repl\ReplTextPipe.cs" />
-    <Compile Include="Repl\ReplTabFactory.cs" />
+    <Compile Include="Repl\ProcessOutputTunnel.cs" />
+    <Compile Include="Repl\ReplState.cs" />
+    <Compile Include="Repl\InputKeyHandler.cs" />
+    <Compile Include="Repl\ReplFactory.cs" />
     <Compile Include="Repl\ReplToolWindow.cs" />
+    <Compile Include="Repl\ReplUserInterfaceFactory.cs" />
     <Compile Include="Repl\ReplWriter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilities\Entity.cs" />
     <Compile Include="Utilities\IProvider.cs" />
     <EmbeddedResource Include="Resources\ClojureImageList.bmp" />
     <Content Include="Project\Launching\Runners\ClojureConsoleRunner.exe">
@@ -202,6 +207,7 @@
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="..\ManagedPackageFramework\ProjectBase.Files" />
   <PropertyGroup>
     <!--
