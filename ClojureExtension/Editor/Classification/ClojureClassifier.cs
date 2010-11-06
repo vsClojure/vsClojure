@@ -7,41 +7,51 @@ using Microsoft.VisualStudio.Text.Tagging;
 
 namespace Microsoft.ClojureExtension.Editor.Classification
 {
-    internal sealed class ClojureClassifier : ITagger<ClassificationTag>
-    {
-        private ITextBuffer _buffer;
-        private readonly ITagAggregator<ClojureTokenTag> _aggregator;
-        private readonly IDictionary<int, IClassificationType> _clojureTypes;
+	public class ClojureClassifier : ITagger<ClassificationTag>
+	{
+		private ITextBuffer _buffer;
+		private readonly ITagAggregator<ClojureTokenTag> _aggregator;
+		private readonly IDictionary<int, IClassificationType> _clojureTypes;
 
-        internal ClojureClassifier(ITextBuffer buffer,
-                                   ITagAggregator<ClojureTokenTag> clojureTagAggregator,
-                                   IClassificationTypeRegistryService typeService)
-        {
-            _buffer = buffer;
-            _aggregator = clojureTagAggregator;
-            _clojureTypes = new Dictionary<int, IClassificationType>();
-            _clojureTypes[ClojureLexer.SYMBOL] = typeService.GetClassificationType("ClojureSymbol");
-            _clojureTypes[ClojureLexer.STRING] = typeService.GetClassificationType("String");
-            _clojureTypes[ClojureLexer.NUMBER] = typeService.GetClassificationType("Number");
-            _clojureTypes[ClojureLexer.COMMENT] = typeService.GetClassificationType("Comment");
-            _clojureTypes[ClojureLexer.KEYWORD] = typeService.GetClassificationType("ClojureKeyword");
-            _clojureTypes[ClojureLexer.CHARACTER] = typeService.GetClassificationType("Character");
-        }
+		public ClojureClassifier(ITextBuffer buffer,
+								   ITagAggregator<ClojureTokenTag> clojureTagAggregator,
+								   IClassificationTypeRegistryService typeService)
+		{
+			_buffer = buffer;
+			_aggregator = clojureTagAggregator;
+			_clojureTypes = new Dictionary<int, IClassificationType>();
+			_clojureTypes[ClojureLexer.SYMBOL] = typeService.GetClassificationType("ClojureSymbol");
+			_clojureTypes[ClojureLexer.STRING] = typeService.GetClassificationType("ClojureString");
+			_clojureTypes[ClojureLexer.NUMBER] = typeService.GetClassificationType("ClojureNumber");
+			_clojureTypes[ClojureLexer.HEXDIGIT] = typeService.GetClassificationType("ClojureNumber");
+			_clojureTypes[ClojureLexer.COMMENT] = typeService.GetClassificationType("ClojureComment");
+			_clojureTypes[ClojureLexer.KEYWORD] = typeService.GetClassificationType("ClojureKeyword");
+			_clojureTypes[ClojureLexer.CHARACTER] = typeService.GetClassificationType("ClojureCharacter");
+			_clojureTypes[ClojureLexer.SPECIAL_FORM] = typeService.GetClassificationType("ClojureBuiltIn");
+			_clojureTypes[ClojureLexer.BOOLEAN] = typeService.GetClassificationType("ClojureBoolean");
+			_clojureTypes[ClojureLexer.OPEN_PAREN] = typeService.GetClassificationType("ClojureList");
+			_clojureTypes[ClojureLexer.CLOSE_PAREN] = typeService.GetClassificationType("ClojureList");
+			_clojureTypes[ClojureLexer.LEFT_SQUARE_BRACKET] = typeService.GetClassificationType("ClojureVector");
+			_clojureTypes[ClojureLexer.RIGHT_SQUARE_BRACKET] = typeService.GetClassificationType("ClojureVector");
+			_clojureTypes[ClojureLexer.LEFT_CURLY_BRACKET] = typeService.GetClassificationType("ClojureMap");
+			_clojureTypes[ClojureLexer.RIGHT_CURLY_BRACKET] = typeService.GetClassificationType("ClojureMap");
+			_clojureTypes[ClojureLexer.METADATA_TYPEHINT] = typeService.GetClassificationType("ClojureMetadataTypeHint");
+		}
 
-        public event EventHandler<SnapshotSpanEventArgs> TagsChanged
-        {
-            add { }
-            remove { }
-        }
+		public event EventHandler<SnapshotSpanEventArgs> TagsChanged
+		{
+			add { }
+			remove { }
+		}
 
-        public IEnumerable<ITagSpan<ClassificationTag>> GetTags(NormalizedSnapshotSpanCollection spans)
-        {
-            foreach (var tagSpan in _aggregator.GetTags(spans))
-            {
-                if (!_clojureTypes.ContainsKey(tagSpan.Tag.AntlrToken.Type)) continue;
-                var tagSpans = tagSpan.Span.GetSpans(spans[0].Snapshot);
-                yield return new TagSpan<ClassificationTag>(tagSpans[0], new ClassificationTag(_clojureTypes[tagSpan.Tag.AntlrToken.Type]));
-            }
-        }
-    }
+		public IEnumerable<ITagSpan<ClassificationTag>> GetTags(NormalizedSnapshotSpanCollection spans)
+		{
+			foreach (var tagSpan in _aggregator.GetTags(spans))
+			{
+				if (!_clojureTypes.ContainsKey(tagSpan.Tag.AntlrToken.Type)) continue;
+				var tagSpans = tagSpan.Span.GetSpans(spans[0].Snapshot);
+				yield return new TagSpan<ClassificationTag>(tagSpans[0], new ClassificationTag(_clojureTypes[tagSpan.Tag.AntlrToken.Type]));
+			}
+		}
+	}
 }
