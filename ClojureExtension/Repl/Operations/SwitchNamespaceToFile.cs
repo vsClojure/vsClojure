@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using Antlr.Runtime;
+using Microsoft.ClojureExtension.Editor.Parsing;
 using Microsoft.ClojureExtension.Utilities;
 
 namespace Microsoft.ClojureExtension.Repl.Operations
@@ -22,22 +22,22 @@ namespace Microsoft.ClojureExtension.Repl.Operations
         public void Execute()
         {
             string activeFilePath = _activeFileProvider.Get()[0];
-            ClojureLexer lexer = new ClojureLexer(new ANTLRFileStream(activeFilePath));
-            IToken token = lexer.NextToken();
+			Lexer lexer = new Lexer(new PushBackCharacterStream(new StringReader(File.ReadAllText(activeFilePath))));
+            Token token = lexer.Next();
 
-            while (token.Type != -1)
+            while (token != null)
             {
                 if (token.Text == "ns" || token.Text == "in-ns")
                 {
-                    IToken namespaceToken = lexer.NextToken();
-                    while (namespaceToken.Type == ClojureLexer.SPACE) namespaceToken = lexer.NextToken();
-                    if (namespaceToken.Type != ClojureLexer.SYMBOL) throw new Exception("Cannot determine file namespace.");
+                    Token namespaceToken = lexer.Next();
+                    while (namespaceToken.Type == TokenType.Whitespace) namespaceToken = lexer.Next();
+                    if (namespaceToken.Type != TokenType.Symbol) throw new Exception("Cannot determine file namespace.");
                     string completeNamespace = namespaceToken.Text;
                     _replWriter.WriteBehindTheSceneExpressionToRepl("(do (require '" + completeNamespace + ") (in-ns '" + completeNamespace + "))");
                     return;
                 }
 
-                token = lexer.NextToken();
+                token = lexer.Next();
             }
         }
     }

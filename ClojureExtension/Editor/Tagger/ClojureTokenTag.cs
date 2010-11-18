@@ -1,20 +1,20 @@
-﻿using Antlr.Runtime;
+﻿using Microsoft.ClojureExtension.Editor.Parsing;
 using Microsoft.VisualStudio.Text.Tagging;
 
 namespace Microsoft.ClojureExtension.Editor.Tagger
 {
     public class ClojureTokenTag : ITag
     {
-        private readonly IToken _antlrToken;
+        private readonly Token _token;
 
-        public IToken AntlrToken
+		public Token Token
         {
-            get { return _antlrToken; }
+            get { return _token; }
         }
 
-        public ClojureTokenTag(IToken antlrToken)
+		public ClojureTokenTag(Token token)
         {
-            _antlrToken = antlrToken;
+            _token = token;
         }
     }
 }

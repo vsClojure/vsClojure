@@ -15,7 +15,8 @@
 *******************************************************************************/
 
 using System.Collections.Generic;
-using Antlr.Runtime;
+using System.IO;
+using Microsoft.ClojureExtension.Editor.Parsing;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 
@@ -41,28 +42,28 @@ namespace Microsoft.ClojureExtension.Editor.AutoIndent
         public int? GetDesiredIndentation(ITextSnapshotLine line)
         {
             string codeBeforeLineBreak = line.Snapshot.GetText(0, line.Start);
-            ClojureLexer lexer = new ClojureLexer(new ANTLRStringStream(codeBeforeLineBreak));
-            CommonToken token = (CommonToken) lexer.NextToken();
-            Stack<CommonToken> openDataStructures = new Stack<CommonToken>();
+			Lexer lexer = new Lexer(new PushBackCharacterStream(new StringReader(codeBeforeLineBreak)));
+            Token token = lexer.Next();
+			Stack<Token> openDataStructures = new Stack<Token>();
 
-            while (token.Type != -1)
+            while (lexer.Next() != null)
             {
-                if (token.Type == ClojureLexer.OPEN_PAREN) openDataStructures.Push(token);
-                else if (token.Type == ClojureLexer.LEFT_CURLY_BRACKET) openDataStructures.Push(token);
-                else if (token.Type == ClojureLexer.LEFT_SQUARE_BRACKET) openDataStructures.Push(token);
+                if (token.Type == TokenType.ListStart) openDataStructures.Push(token);
+                else if (token.Type == TokenType.MapStart) openDataStructures.Push(token);
+                else if (token.Type == TokenType.VectorStart) openDataStructures.Push(token);
                 else if (openDataStructures.Count > 0)
                 {
-                    if (token.Type == ClojureLexer.CLOSE_PAREN) openDataStructures.Pop();
-                    else if (token.Type == ClojureLexer.RIGHT_CURLY_BRACKET) openDataStructures.Pop();
-                    else if (token.Type == ClojureLexer.RIGHT_SQUARE_BRACKET) openDataStructures.Pop();
+					if (token.Type == TokenType.ListEnd) openDataStructures.Pop();
+					else if (token.Type == TokenType.MapEnd) openDataStructures.Pop();
+					else if (token.Type == TokenType.VectorEnd) openDataStructures.Pop();
                 }
 
-                token = (CommonToken) lexer.NextToken();
+                token = lexer.Next();
             }
 
             if (openDataStructures.Count == 0) return null;
 
-            CommonToken lastDataStructureToken = openDataStructures.Peek();
+            Token lastDataStructureToken = openDataStructures.Peek();
             int currentIndexBeforeLastDataStructureToken = lastDataStructureToken.StartIndex - 1;
             if (currentIndexBeforeLastDataStructureToken < 0) currentIndexBeforeLastDataStructureToken = 0;
             char characterBeforeLastDataStructureToken = codeBeforeLineBreak[currentIndexBeforeLastDataStructureToken];
@@ -74,7 +75,7 @@ namespace Microsoft.ClojureExtension.Editor.AutoIndent
                 characterBeforeLastDataStructureToken = codeBeforeLineBreak[--currentIndexBeforeLastDataStructureToken];
             }
 
-            if (lastDataStructureToken.Type == ClojureLexer.OPEN_PAREN) return previousLineIndent + _indentSize.Default;
+            if (lastDataStructureToken.Type == TokenType.ListStart) return previousLineIndent + _indentSize.Default;
             return previousLineIndent + 1;
         }
     }

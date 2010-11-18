@@ -1,0 +1,244 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Microsoft.ClojureExtension.Editor.Parsing;
+using Microsoft.ClojureExtension.Utilities;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.Text;
+using Rhino.Mocks;
+using Rhino.Mocks.Impl;
+using Rhino.Mocks.Interfaces;
+
+namespace ClojureExtension.Tests
+{
+	[TestClass]
+	public class BufferTextChangeHandlerTests
+	{
+		private Tokenizer _tokenizer;
+		private Entity<LinkedList<Token>> _tokenizedBufferEntity;
+		private ITextBufferAdapter _textBuffer;
+		private BufferTextChangeHandler _bufferTextChangeHandler;
+
+		[TestInitialize]
+		public void Initialize()
+		{
+			_tokenizer = new Tokenizer();
+			_tokenizedBufferEntity = new Entity<LinkedList<Token>>();
+			TokenList tokenList = new TokenList(_tokenizedBufferEntity);
+			_textBuffer = MockRepository.GenerateStub<ITextBufferAdapter>();
+
+			_bufferTextChangeHandler = new BufferTextChangeHandler(
+				_textBuffer,
+				_tokenizedBufferEntity,
+				tokenList,
+				new Tokenizer());
+
+			_bufferTextChangeHandler.TokenChanged += MockRepository.GenerateStub<EventHandler<TokenChangedEventArgs>>();
+		}
+
+		[TestMethod]
+		public void ShouldReplaceTokenThatHasBeenModifiedByAddingOneLetterAtStart()
+		{
+			string beforeText = "(declare sym1)\r\n(declare sym2)\r\n(println sym1 \"asdf\")\r\n(println \"fdsadf\")";
+			_tokenizedBufferEntity.CurrentState = _tokenizer.Tokenize(beforeText);
+
+			string afterText = "(declare asym1)\r\n(declare sym2)\r\n(println sym1 \"asdf\")\r\n(println \"fdsadf\")";
+			_textBuffer.Stub(t => t.GetText(0)).IgnoreArguments().WhenCalled(t => t.ReturnValue = afterText.Substring((int) t.Arguments[0])).Return("");
+			_textBuffer.Stub(t => t.Length).Return(afterText.Length);
+
+			_bufferTextChangeHandler.OnTextChanged(new List<TextChangeData>() { new TextChangeData(beforeText.IndexOf("sym1"), 1) });
+			AssertAreEqual(_tokenizedBufferEntity.CurrentState, _tokenizer.Tokenize(afterText));
+		}
+
+		[TestMethod]
+		public void ShouldReplaceTokenThatHasBeenModifiedByAddingOneLetterAtTheEnd()
+		{
+			string beforeText = "(declare sym1)\r\n(declare sym2)\r\n(println sym1 \"asdf\")\r\n(println \"fdsadf\")";
+			_tokenizedBufferEntity.CurrentState = _tokenizer.Tokenize(beforeText);
+
+			string afterText = "(declare sym1a)\r\n(declare sym2)\r\n(println sym1 \"asdf\")\r\n(println \"fdsadf\")";
+			_textBuffer.Stub(t => t.GetText(0)).IgnoreArguments().WhenCalled(t => t.ReturnValue = afterText.Substring((int)t.Arguments[0])).Return("");
+			_textBuffer.Stub(t => t.Length).Return(afterText.Length);
+
+			_bufferTextChangeHandler.OnTextChanged(new List<TextChangeData>() { new TextChangeData(beforeText.IndexOf("sym1"), 1) });
+			AssertAreEqual(_tokenizedBufferEntity.CurrentState, _tokenizer.Tokenize(afterText));
+		}
+
+		[TestMethod]
+		public void ShouldReplaceTokenThatHasBeenModifiedByAddingOneLetterAtToTheRightOfATokenOfLengthOne()
+		{
+			string beforeText = "(declare z sym1)\r\n(declare sym2)\r\n(println sym1 \"asdf\")\r\n(println \"fdsadf\")";
+			_tokenizedBufferEntity.CurrentState = _tokenizer.Tokenize(beforeText);
+
+			string afterText = "(declare ze sym1)\r\n(declare sym2)\r\n(println sym1 \"asdf\")\r\n(println \"fdsadf\")";
+			_textBuffer.Stub(t => t.GetText(0)).IgnoreArguments().WhenCalled(t => t.ReturnValue = afterText.Substring((int)t.Arguments[0])).Return("");
+			_textBuffer.Stub(t => t.Length).Return(afterText.Length);
+
+			_bufferTextChangeHandler.OnTextChanged(new List<TextChangeData>() { new TextChangeData(beforeText.IndexOf("z"), 1) });
+			AssertAreEqual(_tokenizedBufferEntity.CurrentState, _tokenizer.Tokenize(afterText));
+		}
+
+		[TestMethod]
+		public void ShouldReplaceTokenThatHasBeenModifiedByAddingOneLetterAtToTheLeftOfATokenOfLengthOne()
+		{
+			string beforeText = "(declare z sym1)\r\n(declare sym2)\r\n(println sym1 \"asdf\")\r\n(println \"fdsadf\")";
+			_tokenizedBufferEntity.CurrentState = _tokenizer.Tokenize(beforeText);
+
+			string afterText = "(declare ez sym1)\r\n(declare sym2)\r\n(println sym1 \"asdf\")\r\n(println \"fdsadf\")";
+			_textBuffer.Stub(t => t.GetText(0)).IgnoreArguments().WhenCalled(t => t.ReturnValue = afterText.Substring((int)t.Arguments[0])).Return("");
+			_textBuffer.Stub(t => t.Length).Return(afterText.Length);
+
+			_bufferTextChangeHandler.OnTextChanged(new List<TextChangeData>() { new TextChangeData(beforeText.IndexOf(" "), 1) });
+			AssertAreEqual(_tokenizedBufferEntity.CurrentState, _tokenizer.Tokenize(afterText));
+		}
+
+		[TestMethod]
+		public void ShouldInsertNewTokenThatHasBeenAddedInWhitespace()
+		{
+			string beforeText = "(declare sym1)\r\n(declare sym2)\r\n(println sym1 \"asdf\")\r\n(println \"fdsadf\")";
+			_tokenizedBufferEntity.CurrentState = _tokenizer.Tokenize(beforeText);
+
+			string afterText = "(declare asdf sym1)\r\n(declare sym2)\r\n(println sym1 \"asdf\")\r\n(println \"fdsadf\")";
+			_textBuffer.Stub(t => t.GetText(0)).IgnoreArguments().WhenCalled(t => t.ReturnValue = afterText.Substring((int)t.Arguments[0])).Return("");
+			_textBuffer.Stub(t => t.Length).Return(afterText.Length);
+
+			_bufferTextChangeHandler.OnTextChanged(new List<TextChangeData>() { new TextChangeData(beforeText.IndexOf(" "), 5) });
+			AssertAreEqual(_tokenizedBufferEntity.CurrentState, _tokenizer.Tokenize(afterText));
+		}
+
+		[TestMethod]
+		public void ShouldModifyTokenThatHasHadFirstCharacterDeleted()
+		{
+			string beforeText = "(declare sym1)\r\n(declare sym2)\r\n(println sym1 \"asdf\")\r\n(println \"fdsadf\")";
+			_tokenizedBufferEntity.CurrentState = _tokenizer.Tokenize(beforeText);
+
+			string afterText = "(declare ym1)\r\n(declare sym2)\r\n(println sym1 \"asdf\")\r\n(println \"fdsadf\")";
+			_textBuffer.Stub(t => t.GetText(0)).IgnoreArguments().WhenCalled(t => t.ReturnValue = afterText.Substring((int)t.Arguments[0])).Return("");
+			_textBuffer.Stub(t => t.Length).Return(afterText.Length);
+
+			_bufferTextChangeHandler.OnTextChanged(new List<TextChangeData>() { new TextChangeData(beforeText.IndexOf("sym1"), -1) });
+			AssertAreEqual(_tokenizedBufferEntity.CurrentState, _tokenizer.Tokenize(afterText));
+		}
+
+		[TestMethod]
+		public void ShouldModifyTokenThatHasHadLastCharacterDeleted()
+		{
+			string beforeText = "(declare sym1)\r\n(declare sym2)\r\n(println sym1 \"asdf\")\r\n(println \"fdsadf\")";
+			_tokenizedBufferEntity.CurrentState = _tokenizer.Tokenize(beforeText);
+
+			string afterText = "(declare sym)\r\n(declare sym2)\r\n(println sym1 \"asdf\")\r\n(println \"fdsadf\")";
+			_textBuffer.Stub(t => t.GetText(0)).IgnoreArguments().WhenCalled(t => t.ReturnValue = afterText.Substring((int)t.Arguments[0])).Return("");
+			_textBuffer.Stub(t => t.Length).Return(afterText.Length);
+
+			_bufferTextChangeHandler.OnTextChanged(new List<TextChangeData>() { new TextChangeData(beforeText.IndexOf("sym1"), -1) });
+			AssertAreEqual(_tokenizedBufferEntity.CurrentState, _tokenizer.Tokenize(afterText));
+		}
+
+		[TestMethod]
+		public void ShouldModifyTokenThatHasHadMiddleCharactersDeleted()
+		{
+			string beforeText = "(declare sym1)\r\n(declare sym2)\r\n(println sym1 \"asdf\")\r\n(println \"fdsadf\")";
+			_tokenizedBufferEntity.CurrentState = _tokenizer.Tokenize(beforeText);
+
+			string afterText = "(declare s1)\r\n(declare sym2)\r\n(println sym1 \"asdf\")\r\n(println \"fdsadf\")";
+			_textBuffer.Stub(t => t.GetText(0)).IgnoreArguments().WhenCalled(t => t.ReturnValue = afterText.Substring((int)t.Arguments[0])).Return("");
+			_textBuffer.Stub(t => t.Length).Return(afterText.Length);
+
+			_bufferTextChangeHandler.OnTextChanged(new List<TextChangeData>() { new TextChangeData(beforeText.IndexOf("ym1"), -2) });
+			AssertAreEqual(_tokenizedBufferEntity.CurrentState, _tokenizer.Tokenize(afterText));
+		}
+
+		[TestMethod]
+		public void ShouldCombineTokensThatHaveHadWhitespaceInBetweenDeleted()
+		{
+			string beforeText = "(declare sym1)\r\n(declare sym2)\r\n(println sym1 \"asdf\")\r\n(println \"fdsadf\")";
+			_tokenizedBufferEntity.CurrentState = _tokenizer.Tokenize(beforeText);
+
+			string afterText = "(declaresym1)\r\n(declare sym2)\r\n(println sym1 \"asdf\")\r\n(println \"fdsadf\")";
+			_textBuffer.Stub(t => t.GetText(0)).IgnoreArguments().WhenCalled(t => t.ReturnValue = afterText.Substring((int)t.Arguments[0])).Return("");
+			_textBuffer.Stub(t => t.Length).Return(afterText.Length);
+
+			_bufferTextChangeHandler.OnTextChanged(new List<TextChangeData>() { new TextChangeData(beforeText.IndexOf(" "), -1) });
+			AssertAreEqual(_tokenizedBufferEntity.CurrentState, _tokenizer.Tokenize(afterText));
+		}
+
+		[TestMethod]
+		public void ShouldRemoveTokensThatHaveBeenDeleted()
+		{
+			string beforeText = "(declare sym1)\r\n(declare sym2)\r\n(println sym1 \"asdf\")\r\n(println \"fdsadf\")";
+			_tokenizedBufferEntity.CurrentState = _tokenizer.Tokenize(beforeText);
+
+			string afterText = "(declare)\r\n(declare sym2)\r\n(println sym1 \"asdf\")\r\n(println \"fdsadf\")";
+			_textBuffer.Stub(t => t.GetText(0)).IgnoreArguments().WhenCalled(t => t.ReturnValue = afterText.Substring((int)t.Arguments[0])).Return("");
+			_textBuffer.Stub(t => t.Length).Return(afterText.Length);
+
+			_bufferTextChangeHandler.OnTextChanged(new List<TextChangeData>() { new TextChangeData(beforeText.IndexOf(" "), -5) });
+			AssertAreEqual(_tokenizedBufferEntity.CurrentState, _tokenizer.Tokenize(afterText));
+		}
+
+		[TestMethod]
+		public void ShouldModifyAllFollowingTokensWhenDoubleQuoteAdded()
+		{
+			string beforeText = "(declare sym1)\r\n(declare sym2)\r\n(println sym1 \"asdf\")\r\n(println \"fdsadf\")";
+			_tokenizedBufferEntity.CurrentState = _tokenizer.Tokenize(beforeText);
+
+			string afterText = "(declare \"sym1)\r\n(declare sym2)\r\n(println sym1 \"asdf\")\r\n(println \"fdsadf\")";
+			_textBuffer.Stub(t => t.GetText(0)).IgnoreArguments().WhenCalled(t => t.ReturnValue = afterText.Substring((int)t.Arguments[0])).Return("");
+			_textBuffer.Stub(t => t.Length).Return(afterText.Length);
+
+			_bufferTextChangeHandler.OnTextChanged(new List<TextChangeData>() { new TextChangeData(beforeText.IndexOf("sym1"), 1) });
+			AssertAreEqual(_tokenizedBufferEntity.CurrentState, _tokenizer.Tokenize(afterText));
+		}
+
+		[TestMethod]
+		public void ShouldModifyAllFollowingTokensWhenDoubleQuoteAdded_RealLifeExample()
+		{
+			string beforeText = "(def unquote) (def unquote-splicing) (def ^{:arglists '([& items]) :doc \"Creates a new list containing the items.\" :added \"1.0\"} list (. clojure.lang.PersistentList creator))";
+			_tokenizedBufferEntity.CurrentState = _tokenizer.Tokenize(beforeText);
+
+			string afterText = "(def \"unquote) (def unquote-splicing) (def ^{:arglists '([& items]) :doc \"Creates a new list containing the items.\" :added \"1.0\"} list (. clojure.lang.PersistentList creator))";
+			_textBuffer.Stub(t => t.GetText(0)).IgnoreArguments().WhenCalled(t => t.ReturnValue = afterText.Substring((int)t.Arguments[0])).Return("");
+			_textBuffer.Stub(t => t.Length).Return(afterText.Length);
+
+			_bufferTextChangeHandler.OnTextChanged(new List<TextChangeData>() { new TextChangeData(beforeText.IndexOf("unquote"), 1) });
+			AssertAreEqual(_tokenizedBufferEntity.CurrentState, _tokenizer.Tokenize(afterText));
+		}
+
+		[TestMethod]
+		public void ShouldRemoveFirstTokenWhenOneCharacterLongTokenDeletedFromStart()
+		{
+			string beforeText = "(def";
+			_tokenizedBufferEntity.CurrentState = _tokenizer.Tokenize(beforeText);
+
+			string afterText = "def";
+			_textBuffer.Stub(t => t.GetText(0)).IgnoreArguments().WhenCalled(t => t.ReturnValue = afterText.Substring((int)t.Arguments[0])).Return("");
+			_textBuffer.Stub(t => t.Length).Return(afterText.Length);
+
+			_bufferTextChangeHandler.OnTextChanged(new List<TextChangeData>() { new TextChangeData(beforeText.IndexOf("("), -1) });
+			AssertAreEqual(_tokenizedBufferEntity.CurrentState, _tokenizer.Tokenize(afterText));
+		}
+
+		private void AssertAreEqual(LinkedList<Token> listOne, LinkedList<Token> listTwo)
+		{
+			LinkedListNode<Token> currentListOneNode = listOne.First;
+			LinkedListNode<Token> currentListTwoNode = listTwo.First;
+
+			while (currentListOneNode != null && currentListTwoNode != null)
+			{
+				AreEqual(currentListOneNode.Value, currentListTwoNode.Value);
+				currentListOneNode = currentListOneNode.Next;
+				currentListTwoNode = currentListTwoNode.Next;
+			}
+
+			Assert.AreEqual(currentListOneNode, currentListTwoNode);
+		}
+
+		private void AreEqual(Token tokenOne, Token tokenTwo)
+		{
+			Assert.AreEqual(tokenOne.Length, tokenTwo.Length);
+			Assert.AreEqual(tokenOne.Text, tokenTwo.Text);
+			Assert.AreEqual(tokenOne.Type, tokenTwo.Type);
+		}
+	}
+}

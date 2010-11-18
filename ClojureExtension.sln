@@ -20,6 +20,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClojureConsoleRunner", "Clo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClojureWindowsRunner", "ClojureWindowsRunner\ClojureWindowsRunner.csproj", "{2C1E5148-DF8C-408D-887A-9B3986C7160D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClojureExtension.Tests", "ClojureExtension.Tests\ClojureExtension.Tests.csproj", "{F417C00C-CE80-4E74-A611-8EC6CC04F37E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -70,6 +72,16 @@ Global
 		{2C1E5148-DF8C-408D-887A-9B3986C7160D}.Release|Mixed Platforms.Build.0 = Release|x86
 		{2C1E5148-DF8C-408D-887A-9B3986C7160D}.Release|x86.ActiveCfg = Release|x86
 		{2C1E5148-DF8C-408D-887A-9B3986C7160D}.Release|x86.Build.0 = Release|x86
+		{F417C00C-CE80-4E74-A611-8EC6CC04F37E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F417C00C-CE80-4E74-A611-8EC6CC04F37E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F417C00C-CE80-4E74-A611-8EC6CC04F37E}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{F417C00C-CE80-4E74-A611-8EC6CC04F37E}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{F417C00C-CE80-4E74-A611-8EC6CC04F37E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F417C00C-CE80-4E74-A611-8EC6CC04F37E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F417C00C-CE80-4E74-A611-8EC6CC04F37E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F417C00C-CE80-4E74-A611-8EC6CC04F37E}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{F417C00C-CE80-4E74-A611-8EC6CC04F37E}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{F417C00C-CE80-4E74-A611-8EC6CC04F37E}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

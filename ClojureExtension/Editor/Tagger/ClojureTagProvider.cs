@@ -1,4 +1,7 @@
-﻿using System.ComponentModel.Composition;
+﻿using System.Collections.Generic;
+using System.ComponentModel.Composition;
+using Microsoft.ClojureExtension.Editor.Parsing;
+using Microsoft.ClojureExtension.Utilities;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Tagging;
 using Microsoft.VisualStudio.Utilities;
@@ -12,7 +15,25 @@ namespace Microsoft.ClojureExtension.Editor.Tagger
     {
         public ITagger<T> CreateTagger<T>(ITextBuffer buffer) where T : ITag
         {
-            return new ClojureTokenTagger(buffer) as ITagger<T>;
+			Entity<LinkedList<Token>> tokenizedBuffer = new Entity<LinkedList<Token>>();
+			tokenizedBuffer.CurrentState = new LinkedList<Token>();
+
+			ClojureTokenTagger tagger = new ClojureTokenTagger(
+				new Tokenizer(),
+				new TokenList(tokenizedBuffer),
+				buffer,
+				tokenizedBuffer);
+
+			BufferTextChangeHandler textChangeHandler = new BufferTextChangeHandler(
+				new TextBufferAdapter(buffer),
+				tokenizedBuffer,
+				new TokenList(tokenizedBuffer),
+				new Tokenizer());
+
+			TextChangeAdapter textChangeAdapter = new TextChangeAdapter(textChangeHandler);
+        	buffer.Changed += textChangeAdapter.OnTextChange;
+        	textChangeHandler.TokenChanged += tagger.OnTokenChange;
+			return tagger as ITagger<T>;
         }
     }
 }
