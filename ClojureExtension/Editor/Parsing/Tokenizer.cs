@@ -7,10 +7,10 @@ namespace Microsoft.ClojureExtension.Editor.Parsing
 	{
 		public LinkedList<Token> Tokenize(string input)
 		{
-			return TokenizeUpTo(input, input.Length);
+			return Tokenize(input, input.Length);
 		}
 
-		public LinkedList<Token> TokenizeUpTo(string input, int length)
+		public LinkedList<Token> Tokenize(string input, int length)
 		{
 			Lexer lexer = new Lexer(new PushBackCharacterStream(new StringReader(input)));
 			Token currentToken = lexer.Next();

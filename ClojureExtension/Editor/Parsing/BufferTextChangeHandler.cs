@@ -34,10 +34,10 @@ namespace Microsoft.ClojureExtension.Editor.Parsing
 
 				int startIndex = intersectingTokens.First.Value.StartIndex;
 				int intersectionLength = intersectingTokens.Sum(t => t.Token.Length);
-				LinkedList<Token> newTokens = _tokenizer.TokenizeUpTo(_textBuffer.GetText(startIndex), intersectionLength + change.Delta);
+				LinkedList<Token> newTokens = _tokenizer.Tokenize(_textBuffer.GetText(startIndex), intersectionLength + change.Delta);
 				int newTokenListLength = newTokens.Sum(t => t.Length);
 
-				while (startIndex + intersectionLength + change.Delta < _textBuffer.Length && intersectionLength + change.Delta < newTokenListLength)
+				while (intersectionLength + change.Delta != newTokenListLength)
 				{
 					while (startIndex + intersectionLength + change.Delta < _textBuffer.Length && intersectionLength + change.Delta < newTokenListLength)
 					{
@@ -46,7 +46,7 @@ namespace Microsoft.ClojureExtension.Editor.Parsing
 						intersectionLength += incorrectToken.Token.Length;
 					}
 
-					LinkedList<Token> moreNewTokens = _tokenizer.TokenizeUpTo(_textBuffer.GetText(startIndex + newTokenListLength), intersectionLength + change.Delta - newTokenListLength);
+					LinkedList<Token> moreNewTokens = _tokenizer.Tokenize(_textBuffer.GetText(startIndex + newTokenListLength), intersectionLength + change.Delta - newTokenListLength);
 					foreach (Token t in moreNewTokens) newTokens.AddLast(t);
 					newTokenListLength += moreNewTokens.Sum(t => t.Length);
 				}
