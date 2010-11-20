@@ -28,7 +28,7 @@ namespace Microsoft.ClojureExtension.Editor.Classification
 			_clojureTypes[Parsing.TokenType.HexNumber] = typeService.GetClassificationType("ClojureNumber");
 			_clojureTypes[Parsing.TokenType.Comment] = typeService.GetClassificationType("ClojureComment");
 			_clojureTypes[Parsing.TokenType.Keyword] = typeService.GetClassificationType("ClojureKeyword");
-			//_clojureTypes[Parsing.TokenType.Character] = typeService.GetClassificationType("ClojureCharacter");
+			_clojureTypes[Parsing.TokenType.Character] = typeService.GetClassificationType("ClojureCharacter");
 			_clojureTypes[Parsing.TokenType.BuiltIn] = typeService.GetClassificationType("ClojureBuiltIn");
 			_clojureTypes[Parsing.TokenType.Boolean] = typeService.GetClassificationType("ClojureBoolean");
 			_clojureTypes[Parsing.TokenType.ListStart] = typeService.GetClassificationType("ClojureList");
@@ -37,7 +37,6 @@ namespace Microsoft.ClojureExtension.Editor.Classification
 			_clojureTypes[Parsing.TokenType.VectorEnd] = typeService.GetClassificationType("ClojureVector");
 			_clojureTypes[Parsing.TokenType.MapStart] = typeService.GetClassificationType("ClojureMap");
 			_clojureTypes[Parsing.TokenType.MapEnd] = typeService.GetClassificationType("ClojureMap");
-			//_clojureTypes[Parsing.TokenType.TypeHint] = typeService.GetClassificationType("ClojureMetadataTypeHint");
 		}
 
 		public void TokenTagsChanged(object sender, TagsChangedEventArgs e)

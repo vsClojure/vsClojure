@@ -63,6 +63,11 @@ namespace Microsoft.ClojureExtension.Editor.Parsing
 				ReadChars(match.Length-1);
 				nextToken = new Token(TokenType.BuiltIn, match, _source.CurrentIndex - match.Length, match.Length);
 			}
+			else if (currentChar == '\\' && !IsNextCharWhitespace())
+			{
+				string character = ReadCharacter(currentChar);
+				nextToken = new Token(TokenType.Character, character, _source.CurrentIndex - character.Length, character.Length);
+			}
 			else if (IsPrefix(currentChar, "0x"))
 			{
 				ReadChars(1);
@@ -120,6 +125,44 @@ namespace Microsoft.ClojureExtension.Editor.Parsing
 			}
 
 			return nextToken;
+		}
+
+		private string ReadCharacter(char currentChar)
+		{
+			if (IsString(currentChar, "\\newline")) return currentChar + ReadChars(7);
+			else if (IsString(currentChar, "\\space")) return currentChar + ReadChars(5);
+			else if (IsString(currentChar, "\\tab")) return currentChar + ReadChars(3);
+
+			string firstCharacter = ReadChars(1);
+
+			if (firstCharacter == "u")
+			{
+				string nextFourCharacters = ReadChars(4);
+				if (IsCharacterDefinedByHexDigits(nextFourCharacters)) return currentChar + firstCharacter + nextFourCharacters;
+				_source.Push(nextFourCharacters);
+			}
+
+			return currentChar + firstCharacter;
+		}
+
+		private static bool IsCharacterDefinedByHexDigits(string str)
+		{
+			if (str.Length != 4) return false;
+			string hexChars = "abcdefABCDEF0123456789";
+
+			foreach (char c in str)
+				if (!hexChars.Contains(c.ToString()))
+					return false;
+
+			return true;
+		}
+
+		private bool IsNextCharWhitespace()
+		{
+			string nextChar = ReadChars(1);
+			bool nextCharIsWhitespace = string.IsNullOrEmpty(nextChar) && IsWhitespace(nextChar[0]);
+			_source.Push(nextChar);
+			return nextCharIsWhitespace;
 		}
 
 		private bool IsPrefix(char currentChar, string stringToMatch)
@@ -310,7 +353,7 @@ namespace Microsoft.ClojureExtension.Editor.Parsing
 
 		private static bool IsTerminatingChar(char c)
 		{
-			return c == ')' || c == '}' || c == ']' || Char.IsWhiteSpace(c) || c == ';' || c == '"';
+			return c == ')' || c == '}' || c == ']' || IsWhitespace(c) || c == ';' || c == '"';
 		}
 
 		private static bool IsDataStructureStart(char c)

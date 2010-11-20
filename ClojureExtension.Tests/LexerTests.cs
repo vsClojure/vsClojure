@@ -330,5 +330,95 @@ namespace ClojureExtension.Tests
 			Assert.AreEqual(TokenType.String, token.Type);
 			Assert.AreEqual("\"str\"", token.Text);
 		}
+
+		[TestMethod]
+		public void Next_ShouldReadBackslashNewLineAsCharacter()
+		{
+			Lexer lexer = new Lexer(new PushBackCharacterStream(new StringReader("\\newline")));
+			Token token = lexer.Next();
+			Assert.AreEqual(TokenType.Character, token.Type);
+			Assert.AreEqual("\\newline", token.Text);
+		}
+
+		[TestMethod]
+		public void Next_ShouldReadBackslashTabAsCharacter()
+		{
+			Lexer lexer = new Lexer(new PushBackCharacterStream(new StringReader("\\tab")));
+			Token token = lexer.Next();
+			Assert.AreEqual(TokenType.Character, token.Type);
+			Assert.AreEqual("\\tab", token.Text);
+		}
+
+		[TestMethod]
+		public void Next_ShouldReadBackslashSpaceAsCharacter()
+		{
+			Lexer lexer = new Lexer(new PushBackCharacterStream(new StringReader("\\space")));
+			Token token = lexer.Next();
+			Assert.AreEqual(TokenType.Character, token.Type);
+			Assert.AreEqual("\\space", token.Text);
+		}
+
+		[TestMethod]
+		public void Next_ShouldReadBackslashUFollowedByFourHexDigitsAsCharacter()
+		{
+			Lexer lexer = new Lexer(new PushBackCharacterStream(new StringReader("\\uF04A")));
+			Token token = lexer.Next();
+			Assert.AreEqual(TokenType.Character, token.Type);
+			Assert.AreEqual("\\uF04A", token.Text);
+		}
+
+		[TestMethod]
+		public void Next_ShouldReadBackslashUAsChar()
+		{
+			Lexer lexer = new Lexer(new PushBackCharacterStream(new StringReader("\\u")));
+			Token token = lexer.Next();
+			Assert.AreEqual(TokenType.Character, token.Type);
+			Assert.AreEqual("\\u", token.Text);
+		}
+
+		[TestMethod]
+		public void Next_ShouldReadBackslashAAsChar()
+		{
+			Lexer lexer = new Lexer(new PushBackCharacterStream(new StringReader("\\a")));
+			Token token = lexer.Next();
+			Assert.AreEqual(TokenType.Character, token.Type);
+			Assert.AreEqual("\\a", token.Text);
+		}
+
+		[TestMethod]
+		public void Next_ShouldReadBackslashABackSlashFAsTwoCharacters()
+		{
+			Lexer lexer = new Lexer(new PushBackCharacterStream(new StringReader("\\a\\f")));
+			Token token = lexer.Next();
+			Assert.AreEqual(TokenType.Character, token.Type);
+			Assert.AreEqual("\\a", token.Text);
+			token = lexer.Next();
+			Assert.AreEqual(TokenType.Character, token.Type);
+			Assert.AreEqual("\\f", token.Text);
+		}
+
+		[TestMethod]
+		public void Next_ShouldReadBackslashUFollowedByTwoHexDigitsAsSingleUCharacterFollowedByANumber()
+		{
+			Lexer lexer = new Lexer(new PushBackCharacterStream(new StringReader("\\u19")));
+			Token token = lexer.Next();
+			Assert.AreEqual(TokenType.Character, token.Type);
+			Assert.AreEqual("\\u", token.Text);
+			token = lexer.Next();
+			Assert.AreEqual(TokenType.Number, token.Type);
+			Assert.AreEqual("19", token.Text);
+		}
+
+		[TestMethod]
+		public void Next_ShouldReadBackslashUFollowedByThreeHexDigitsAndAZAsSingleUCharacterFollowedByASymbol()
+		{
+			Lexer lexer = new Lexer(new PushBackCharacterStream(new StringReader("\\uAF9Z")));
+			Token token = lexer.Next();
+			Assert.AreEqual(TokenType.Character, token.Type);
+			Assert.AreEqual("\\u", token.Text);
+			token = lexer.Next();
+			Assert.AreEqual(TokenType.Symbol, token.Type);
+			Assert.AreEqual("AF9Z", token.Text);
+		}
 	}
 }

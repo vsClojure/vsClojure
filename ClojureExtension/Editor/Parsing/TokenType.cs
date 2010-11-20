@@ -18,7 +18,7 @@
 		Keyword,
 		Boolean,
 		Nil,
-		BuiltIn
-		//TypeHint
+		BuiltIn,
+		Character
 	}
 }
