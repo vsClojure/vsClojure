@@ -5,8 +5,9 @@ namespace Microsoft.ClojureExtension.Editor.Parsing
 {
 	public static class TokenListExtensions
 	{
-		public static IndexTokenNode FindTokenAtIndex(this LinkedList<Token> list, int index)
+		public static IndexTokenNode FindTokenBeforeIndex(this LinkedList<Token> list, int index)
 		{
+			if (list.Count == 0) return null;
 			int currentIndex = 0;
 			LinkedListNode<Token> currentToken = list.First;
 
@@ -16,7 +17,24 @@ namespace Microsoft.ClojureExtension.Editor.Parsing
 				currentToken = currentToken.Next;
 			}
 
-			if (currentToken == null) throw new Exception("Could not find node at index: " + index);
+			if (currentToken == null && currentIndex > 0)
+			{
+				int lastTokenIndex = currentIndex - list.Last.Value.Length;
+				return new IndexTokenNode(new IndexToken(lastTokenIndex, list.Last.Value), list.Last);
+			}
+
+			if (currentIndex == index && currentToken.Previous != null)
+			{
+				currentIndex -= currentToken.Previous.Value.Length;
+				currentToken = currentToken.Previous;
+			}
+
+			if (currentToken.Previous != null)
+			{
+				currentIndex -= currentToken.Previous.Value.Length;
+				currentToken = currentToken.Previous;
+			}
+
 			return new IndexTokenNode(new IndexToken(currentIndex, currentToken.Value), currentToken);
 		}
 

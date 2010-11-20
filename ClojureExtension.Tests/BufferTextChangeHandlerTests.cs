@@ -267,6 +267,22 @@ namespace ClojureExtension.Tests
 			AssertAreEqual(_tokenizedBufferEntity.CurrentState, _tokenizer.Tokenize(afterText));
 		}
 
+		[TestMethod]
+		public void ShouldConvertUCharacterTokenFollowedByThreeNumbersIntoACharacterWhenAddingAFourthNumber()
+		{
+			_tokenizedBufferEntity.CurrentState = new LinkedList<Token>();
+			_tokenizedBufferEntity.CurrentState.AddLast(new Token(TokenType.Character, "\\u", 0, 2));
+			_tokenizedBufferEntity.CurrentState.AddLast(new Token(TokenType.Number, "123", 2, 3));
+			_tokenizedBufferEntity.CurrentState.AddLast(new Token(TokenType.Whitespace, " ", 5, 1));
+
+			string afterText = "\\u1234 ";
+			_textBuffer.Stub(t => t.GetText(0)).IgnoreArguments().WhenCalled(t => t.ReturnValue = afterText.Substring((int)t.Arguments[0])).Return("");
+			_textBuffer.Stub(t => t.Length).Return(afterText.Length);
+
+			_bufferTextChangeHandler.OnTextChanged(new List<TextChangeData>() { new TextChangeData(5, 1) });
+			AssertAreEqual(_tokenizedBufferEntity.CurrentState, _tokenizer.Tokenize(afterText));
+		}
+
 		private void AssertAreEqual(LinkedList<Token> listOne, LinkedList<Token> listTwo)
 		{
 			LinkedListNode<Token> currentListOneNode = listOne.First;

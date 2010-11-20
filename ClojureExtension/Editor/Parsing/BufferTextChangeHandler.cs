@@ -29,7 +29,7 @@ namespace Microsoft.ClojureExtension.Editor.Parsing
 
 		private void ModifyTokensInBuffer(TextChangeData change)
 		{
-			IndexTokenNode firstToken = _tokenizedBuffer.CurrentState.FindTokenAtIndex(change.Position - 1);
+			IndexTokenNode firstToken = _tokenizedBuffer.CurrentState.FindTokenBeforeIndex(change.Position);
 			Lexer lexer = new Lexer(new PushBackCharacterStream(new StringReader(_textBuffer.GetText(firstToken.IndexToken.StartIndex))));
 			int oldBufferStartIndex = firstToken.IndexToken.StartIndex + change.Delta;
 			int newBufferStartIndex = firstToken.IndexToken.StartIndex;
@@ -38,7 +38,7 @@ namespace Microsoft.ClojureExtension.Editor.Parsing
 			Token newToken = lexer.Next();
 			LinkedListNode<Token> oldToken = firstToken.Node;
 
-			while (newBufferStartIndex + newToken.Length != oldBufferStartIndex + oldToken.Value.Length)
+			while (newBufferStartIndex + newToken.Length != oldBufferStartIndex + oldToken.Value.Length || oldBufferStartIndex < change.Position)
 			{
 				if (newBufferStartIndex + newToken.Length < oldBufferStartIndex + oldToken.Value.Length)
 				{
