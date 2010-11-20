@@ -420,5 +420,29 @@ namespace ClojureExtension.Tests
 			Assert.AreEqual(TokenType.Symbol, token.Type);
 			Assert.AreEqual("AF9Z", token.Text);
 		}
+
+		[TestMethod]
+		public void Next_ShouldReturnSymbolFollowedByCharacter()
+		{
+			Lexer lexer = new Lexer(new PushBackCharacterStream(new StringReader("asdf\\s")));
+			Token token = lexer.Next();
+			Assert.AreEqual(TokenType.Symbol, token.Type);
+			Assert.AreEqual("asdf", token.Text);
+			token = lexer.Next();
+			Assert.AreEqual(TokenType.Character, token.Type);
+			Assert.AreEqual("\\s", token.Text);
+		}
+
+		[TestMethod]
+		public void Next_ShouldReturnNumberFollowedByCharacter()
+		{
+			Lexer lexer = new Lexer(new PushBackCharacterStream(new StringReader("123\\s")));
+			Token token = lexer.Next();
+			Assert.AreEqual(TokenType.Number, token.Type);
+			Assert.AreEqual("123", token.Text);
+			token = lexer.Next();
+			Assert.AreEqual(TokenType.Character, token.Type);
+			Assert.AreEqual("\\s", token.Text);
+		}
 	}
 }

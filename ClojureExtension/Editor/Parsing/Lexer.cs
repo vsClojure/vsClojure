@@ -353,7 +353,7 @@ namespace Microsoft.ClojureExtension.Editor.Parsing
 
 		private static bool IsTerminatingChar(char c)
 		{
-			return c == ')' || c == '}' || c == ']' || IsWhitespace(c) || c == ';' || c == '"';
+			return c == ')' || c == '}' || c == ']' || IsWhitespace(c) || c == ';' || c == '"' || c == '\\';
 		}
 
 		private static bool IsDataStructureStart(char c)
