@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using Microsoft.ClojureExtension.Editor.Parsing;
 using Microsoft.ClojureExtension.Utilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -20,8 +17,7 @@ namespace ClojureExtension.Tests
 			tokenizedBuffer.CurrentState.AddLast(new Token(TokenType.Symbol, "sym2", 4, 4));
 			tokenizedBuffer.CurrentState.AddLast(new Token(TokenType.Symbol, "sym3", 8, 4));
 
-			TokenList tokenList = new TokenList(tokenizedBuffer);
-			LinkedList<BufferMappedTokenData> intersectingTokens = tokenList.Intersection(5, 7);
+			LinkedList<IndexToken> intersectingTokens = tokenizedBuffer.CurrentState.Intersection(5, 7);
 
 			Assert.AreEqual(2, intersectingTokens.Count);
 			Assert.AreEqual("sym2", intersectingTokens.First.Value.Token.Text);
@@ -37,8 +33,7 @@ namespace ClojureExtension.Tests
 			tokenizedBuffer.CurrentState.AddLast(new Token(TokenType.Symbol, "sym2", 4, 4));
 			tokenizedBuffer.CurrentState.AddLast(new Token(TokenType.Symbol, "sym3", 8, 4));
 
-			TokenList tokenList = new TokenList(tokenizedBuffer);
-			LinkedList<BufferMappedTokenData> intersectingTokens = tokenList.Intersection(3, 1);
+			LinkedList<IndexToken> intersectingTokens = tokenizedBuffer.CurrentState.Intersection(3, 1);
 
 			Assert.AreEqual(1, intersectingTokens.Count);
 			Assert.AreEqual("sym1", intersectingTokens.First.Value.Token.Text);
@@ -53,8 +48,7 @@ namespace ClojureExtension.Tests
 			tokenizedBuffer.CurrentState.AddLast(new Token(TokenType.Symbol, "sym2", 4, 4));
 			tokenizedBuffer.CurrentState.AddLast(new Token(TokenType.Symbol, "sym3", 8, 4));
 
-			TokenList tokenList = new TokenList(tokenizedBuffer);
-			LinkedList<BufferMappedTokenData> intersectingTokens = tokenList.Intersection(4, 1);
+			LinkedList<IndexToken> intersectingTokens = tokenizedBuffer.CurrentState.Intersection(4, 1);
 
 			Assert.AreEqual(1, intersectingTokens.Count);
 			Assert.AreEqual("sym2", intersectingTokens.First.Value.Token.Text);
@@ -69,8 +63,7 @@ namespace ClojureExtension.Tests
 			tokenizedBuffer.CurrentState.AddLast(new Token(TokenType.Symbol, "sym2", 4, 4));
 			tokenizedBuffer.CurrentState.AddLast(new Token(TokenType.Symbol, "sym3", 8, 4));
 
-			TokenList tokenList = new TokenList(tokenizedBuffer);
-			LinkedList<BufferMappedTokenData> intersectingTokens = tokenList.Intersection(10, 1);
+			LinkedList<IndexToken> intersectingTokens = tokenizedBuffer.CurrentState.Intersection(10, 1);
 
 			Assert.AreEqual(1, intersectingTokens.Count);
 			Assert.AreEqual("sym3", intersectingTokens.First.Value.Token.Text);
@@ -85,8 +78,7 @@ namespace ClojureExtension.Tests
 			tokenizedBuffer.CurrentState.AddLast(new Token(TokenType.Symbol, "sym2", 4, 4));
 			tokenizedBuffer.CurrentState.AddLast(new Token(TokenType.Symbol, "sym3", 8, 4));
 
-			TokenList tokenList = new TokenList(tokenizedBuffer);
-			LinkedList<BufferMappedTokenData> intersectingTokens = tokenList.Intersection(4, 8);
+			LinkedList<IndexToken> intersectingTokens = tokenizedBuffer.CurrentState.Intersection(4, 8);
 
 			Assert.AreEqual(2, intersectingTokens.Count);
 			Assert.AreEqual("sym2", intersectingTokens.First.Value.Token.Text);
@@ -102,8 +94,7 @@ namespace ClojureExtension.Tests
 			tokenizedBuffer.CurrentState.AddLast(new Token(TokenType.Symbol, "sym2", 4, 4));
 			tokenizedBuffer.CurrentState.AddLast(new Token(TokenType.Symbol, "sym3", 8, 4));
 
-			TokenList tokenList = new TokenList(tokenizedBuffer);
-			LinkedList<BufferMappedTokenData> intersectingTokens = tokenList.Intersection(4, 100);
+			LinkedList<IndexToken> intersectingTokens = tokenizedBuffer.CurrentState.Intersection(4, 100);
 
 			Assert.AreEqual(2, intersectingTokens.Count);
 			Assert.AreEqual("sym2", intersectingTokens.First.Value.Token.Text);
@@ -119,8 +110,7 @@ namespace ClojureExtension.Tests
 			tokenizedBuffer.CurrentState.AddLast(new Token(TokenType.Symbol, "sym2", 4, 4));
 			tokenizedBuffer.CurrentState.AddLast(new Token(TokenType.Symbol, "sym3", 8, 4));
 
-			TokenList tokenList = new TokenList(tokenizedBuffer);
-			LinkedList<BufferMappedTokenData> intersectingTokens = tokenList.Intersection(4, 0);
+			LinkedList<IndexToken> intersectingTokens = tokenizedBuffer.CurrentState.Intersection(4, 0);
 
 			Assert.AreEqual(0, intersectingTokens.Count);
 		}

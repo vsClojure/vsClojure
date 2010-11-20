@@ -175,11 +175,11 @@ namespace ClojureExtension.Tests
 			Lexer lexer = new Lexer(stream);
 			Token token = lexer.Next();
 			Assert.AreEqual(TokenType.Comment, token.Type);
-			Assert.AreEqual("; test text", token.Text);
+			Assert.AreEqual("; test text  ", token.Text);
 
 			token = lexer.Next();
 			Assert.AreEqual(TokenType.Whitespace, token.Type);
-			Assert.AreEqual("  \r\n", token.Text);
+			Assert.AreEqual("\r\n", token.Text);
 		}
 
 		[TestMethod]

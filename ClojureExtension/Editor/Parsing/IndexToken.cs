@@ -2,22 +2,15 @@
 
 namespace Microsoft.ClojureExtension.Editor.Parsing
 {
-	public class BufferMappedTokenData
+	public class IndexToken
 	{
 		private readonly int _startIndex;
 		private readonly Token _token;
-		private readonly LinkedListNode<Token> _node;
 
-		public BufferMappedTokenData(int startIndex, Token token, LinkedListNode<Token> node)
+		public IndexToken(int startIndex, Token token)
 		{
 			_startIndex = startIndex;
 			_token = token;
-			_node = node;
-		}
-
-		public LinkedListNode<Token> Node
-		{
-			get { return _node; }
 		}
 
 		public Token Token

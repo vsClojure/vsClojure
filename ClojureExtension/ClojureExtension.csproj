@@ -99,6 +99,7 @@
     <Compile Include="Editor\Classification\ClojureClassifier.cs" />
     <Compile Include="Editor\Classification\ClojureClassifierProvider.cs" />
     <Compile Include="Editor\Parsing\BufferTextChangeHandler.cs" />
+    <Compile Include="Editor\Parsing\IndexTokenNode.cs" />
     <Compile Include="Editor\Parsing\ITextBufferAdapter.cs" />
     <Compile Include="Editor\Parsing\TextBufferAdapter.cs" />
     <Compile Include="Editor\Parsing\TextChangeData.cs" />
@@ -108,8 +109,8 @@
     <Compile Include="Editor\Parsing\Lexer.cs" />
     <Compile Include="Editor\Parsing\PushBackCharacterStream.cs" />
     <Compile Include="Editor\Parsing\Token.cs" />
-    <Compile Include="Editor\Parsing\BufferMappedTokenData.cs" />
-    <Compile Include="Editor\Parsing\TokenList.cs" />
+    <Compile Include="Editor\Parsing\IndexToken.cs" />
+    <Compile Include="Editor\Parsing\TokenListExtensions.cs" />
     <Compile Include="Editor\Parsing\TokenType.cs" />
     <Compile Include="Editor\Tagger\ClojureTagProvider.cs" />
     <Compile Include="Editor\Tagger\ClojureTokenTag.cs" />

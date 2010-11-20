@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using Microsoft.ClojureExtension.Utilities;
 
 namespace Microsoft.ClojureExtension.Editor.Parsing
@@ -9,66 +9,49 @@ namespace Microsoft.ClojureExtension.Editor.Parsing
 	{
 		private readonly ITextBufferAdapter _textBuffer;
 		private readonly Entity<LinkedList<Token>> _tokenizedBuffer;
-		private readonly TokenList _tokenList;
-		private readonly Tokenizer _tokenizer;
 		public event EventHandler<TokenChangedEventArgs> TokenChanged;
 
-		public BufferTextChangeHandler(
-			ITextBufferAdapter textBuffer,
-			Entity<LinkedList<Token>> tokenizedBuffer,
-			TokenList tokenList,
-			Tokenizer tokenizer)
+		public BufferTextChangeHandler(ITextBufferAdapter textBuffer, Entity<LinkedList<Token>> tokenizedBuffer)
 		{
 			_textBuffer = textBuffer;
 			_tokenizedBuffer = tokenizedBuffer;
-			_tokenList = tokenList;
-			_tokenizer = tokenizer;
 		}
 
 		public void OnTextChanged(List<TextChangeData> changes)
 		{
 			foreach (var change in changes)
 			{
-				LinkedList<BufferMappedTokenData> intersectingTokens = _tokenList.Intersection(change.Position - 1, change.Length + 1);
-				if (intersectingTokens.Count == 0) continue;
+				IndexTokenNode firstToken = _tokenizedBuffer.CurrentState.FindTokenAtIndex(change.Position - 1);
+				Lexer lexer = new Lexer(new PushBackCharacterStream(new StringReader(_textBuffer.GetText(firstToken.IndexToken.StartIndex))));
+				int oldBufferStartIndex = firstToken.IndexToken.StartIndex + change.Delta;
+				int newBufferStartIndex = firstToken.IndexToken.StartIndex;
+				LinkedList<LinkedListNode<Token>> oldTokens = new LinkedList<LinkedListNode<Token>>();
+				LinkedList<IndexToken> newTokens = new LinkedList<IndexToken>();
+				Token newToken = lexer.Next();
+				LinkedListNode<Token> oldToken = firstToken.Node;
 
-				int startIndex = intersectingTokens.First.Value.StartIndex;
-				int intersectionLength = intersectingTokens.Sum(t => t.Token.Length);
-				LinkedList<Token> newTokens = _tokenizer.Tokenize(_textBuffer.GetText(startIndex), intersectionLength + change.Delta);
-				int newTokenListLength = newTokens.Sum(t => t.Length);
-
-				while (intersectionLength + change.Delta != newTokenListLength)
+				while (newBufferStartIndex + newToken.Length != oldBufferStartIndex + oldToken.Value.Length)
 				{
-					while (startIndex + intersectionLength + change.Delta < _textBuffer.Length && intersectionLength + change.Delta < newTokenListLength)
+					if (newBufferStartIndex + newToken.Length < oldBufferStartIndex + oldToken.Value.Length)
 					{
-						BufferMappedTokenData incorrectToken = NextToken(intersectingTokens);
-						intersectingTokens.AddLast(incorrectToken);
-						intersectionLength += incorrectToken.Token.Length;
+						newTokens.AddLast(new IndexToken(newBufferStartIndex, newToken));
+						newBufferStartIndex += newToken.Length;
+						newToken = lexer.Next();
 					}
-
-					LinkedList<Token> moreNewTokens = _tokenizer.Tokenize(_textBuffer.GetText(startIndex + newTokenListLength), intersectionLength + change.Delta - newTokenListLength);
-					foreach (Token t in moreNewTokens) newTokens.AddLast(t);
-					newTokenListLength += moreNewTokens.Sum(t => t.Length);
+					else
+					{
+						oldTokens.AddLast(oldToken);
+						oldBufferStartIndex += oldToken.Value.Length;
+						oldToken = oldToken.Next;
+					}
 				}
 
-				foreach (var newToken in newTokens) _tokenizedBuffer.CurrentState.AddBefore(intersectingTokens.First.Value.Node, newToken);
-				foreach (var oldToken in intersectingTokens) _tokenizedBuffer.CurrentState.Remove(oldToken.Node);
-
-				int currentLength = 0;
-
-				foreach (var newToken in newTokens)
-				{
-					TokenChanged(this, new TokenChangedEventArgs(new BufferMappedTokenData(startIndex + currentLength, newToken, null)));
-					currentLength += newToken.Length;
-				}
+				oldTokens.AddLast(oldToken);
+				newTokens.AddLast(new IndexToken(newBufferStartIndex, newToken));
+				foreach (var t in newTokens) _tokenizedBuffer.CurrentState.AddBefore(firstToken.Node, t.Token);
+				foreach (var t in oldTokens) _tokenizedBuffer.CurrentState.Remove(t);
+				foreach (var t in newTokens) TokenChanged(this, new TokenChangedEventArgs(t));
 			}
-		}
-
-		private BufferMappedTokenData NextToken(LinkedList<BufferMappedTokenData> intersectingTokens)
-		{
-			BufferMappedTokenData lastToken = intersectingTokens.Last.Value;
-			int nextTokenIndex = lastToken.StartIndex + lastToken.Token.Length;
-			return new BufferMappedTokenData(nextTokenIndex, lastToken.Node.Next.Value, lastToken.Node.Next);
 		}
 	}
 }

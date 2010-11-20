@@ -207,14 +207,14 @@ namespace Microsoft.ClojureExtension.Editor.Parsing
 
 		private string ReadComment()
 		{
-			return PutBackTrailingWhitespace(ReadToEndOfLineIncludingReturnCharacters());
+			return PutBackTrailingReturnCharacters(ReadToEndOfLineIncludingReturnCharacters());
 		}
 
-		private string PutBackTrailingWhitespace(string text)
+		private string PutBackTrailingReturnCharacters(string text)
 		{
 			for (int i=text.Length-1; i>=0; i--)
 			{
-				if (Char.IsWhiteSpace(text[i]))
+				if (text[i] == '\r' || text[i] == '\n')
 				{
 					_source.Push(text[i]);
 				}

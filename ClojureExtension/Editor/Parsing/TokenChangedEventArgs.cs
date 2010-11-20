@@ -4,16 +4,16 @@ namespace Microsoft.ClojureExtension.Editor.Parsing
 {
 	public class TokenChangedEventArgs : EventArgs
 	{
-		private readonly BufferMappedTokenData _bufferMappedTokenData;
+		private readonly IndexToken _indexToken;
 
-		public TokenChangedEventArgs(BufferMappedTokenData bufferMappedTokenData)
+		public TokenChangedEventArgs(IndexToken indexToken)
 		{
-			_bufferMappedTokenData = bufferMappedTokenData;
+			_indexToken = indexToken;
 		}
 
-		public BufferMappedTokenData BufferMappedTokenData
+		public IndexToken IndexToken
 		{
-			get { return _bufferMappedTokenData; }
+			get { return _indexToken; }
 		}
 	}
 }

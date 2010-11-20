@@ -20,15 +20,12 @@ namespace Microsoft.ClojureExtension.Editor.Tagger
 
 			ClojureTokenTagger tagger = new ClojureTokenTagger(
 				new Tokenizer(),
-				new TokenList(tokenizedBuffer),
 				buffer,
 				tokenizedBuffer);
 
-			BufferTextChangeHandler textChangeHandler = new BufferTextChangeHandler(
-				new TextBufferAdapter(buffer),
-				tokenizedBuffer,
-				new TokenList(tokenizedBuffer),
-				new Tokenizer());
+        	BufferTextChangeHandler textChangeHandler = new BufferTextChangeHandler(
+        		new TextBufferAdapter(buffer),
+        		tokenizedBuffer);
 
 			TextChangeAdapter textChangeAdapter = new TextChangeAdapter(textChangeHandler);
         	buffer.Changed += textChangeAdapter.OnTextChange;
