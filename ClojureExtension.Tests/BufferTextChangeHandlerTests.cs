@@ -239,6 +239,34 @@ namespace ClojureExtension.Tests
 			AssertAreEqual(_tokenizedBufferEntity.CurrentState, _tokenizer.Tokenize(afterText));
 		}
 
+		[TestMethod]
+		public void ShouldAddTokensWhenNoTokensExist()
+		{
+			string beforeText = "";
+			_tokenizedBufferEntity.CurrentState = _tokenizer.Tokenize(beforeText);
+
+			string afterText = "def asdf asdf";
+			_textBuffer.Stub(t => t.GetText(0)).IgnoreArguments().WhenCalled(t => t.ReturnValue = afterText.Substring((int)t.Arguments[0])).Return("");
+			_textBuffer.Stub(t => t.Length).Return(afterText.Length);
+
+			_bufferTextChangeHandler.OnTextChanged(new List<TextChangeData>() { new TextChangeData(0, 1) });
+			AssertAreEqual(_tokenizedBufferEntity.CurrentState, _tokenizer.Tokenize(afterText));
+		}
+
+		[TestMethod]
+		public void ShouldRemoveAllTokensWhenChangeDeletesEverything()
+		{
+			string beforeText = "def asdf asdf";
+			_tokenizedBufferEntity.CurrentState = _tokenizer.Tokenize(beforeText);
+
+			string afterText = "";
+			_textBuffer.Stub(t => t.GetText(0)).IgnoreArguments().Return("");
+			_textBuffer.Stub(t => t.Length).Return(afterText.Length);
+
+			_bufferTextChangeHandler.OnTextChanged(new List<TextChangeData>() { new TextChangeData(0, -beforeText.Length) });
+			AssertAreEqual(_tokenizedBufferEntity.CurrentState, _tokenizer.Tokenize(afterText));
+		}
+
 		private void AssertAreEqual(LinkedList<Token> listOne, LinkedList<Token> listTwo)
 		{
 			LinkedListNode<Token> currentListOneNode = listOne.First;
