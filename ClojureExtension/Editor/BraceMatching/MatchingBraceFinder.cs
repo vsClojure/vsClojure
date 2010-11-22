@@ -17,8 +17,6 @@ namespace Microsoft.ClojureExtension.Editor.BraceMatching
 		{
 			IndexTokenNode tokenNode = _tokenizedBuffer.CurrentState.FindTokenAtIndex(caretPosition);
 
-			if (!tokenNode.IndexToken.Token.Type.IsBraceStart()) tokenNode = tokenNode.Previous();
-
 			if (tokenNode.IndexToken.Token.Type.IsBrace())
 			{
 				IndexToken matchingBrace = FindMatchingBrace(tokenNode);

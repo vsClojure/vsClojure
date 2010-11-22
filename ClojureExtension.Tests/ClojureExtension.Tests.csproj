@@ -46,10 +46,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BufferTextChangeHandlerTests.cs" />
-    <Compile Include="LexerTests.cs" />
+    <Compile Include="Editor\BraceMatching\BraceMatchingFinderTests.cs" />
+    <Compile Include="Editor\Parsing\BufferTextChangeHandlerTests.cs" />
+    <Compile Include="Editor\Parsing\LexerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TokenListTests.cs" />
+    <Compile Include="Editor\Parsing\TokenListTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ClojureExtension\ClojureExtension.csproj">
