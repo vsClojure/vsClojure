@@ -10,6 +10,7 @@ PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
 ***************************************************************************/
 
 using System;
+using System.ComponentModel.Composition;
 using System.ComponentModel.Design;
 using System.Linq;
 using System.Reflection;
@@ -17,13 +18,20 @@ using System.Runtime.InteropServices;
 using EnvDTE;
 using EnvDTE80;
 using Microsoft.ClojureExtension.Configuration;
+using Microsoft.ClojureExtension.Editor;
+using Microsoft.ClojureExtension.Editor.Parsing;
 using Microsoft.ClojureExtension.Project;
 using Microsoft.ClojureExtension.Project.Hierarchy;
 using Microsoft.ClojureExtension.Repl;
 using Microsoft.ClojureExtension.Repl.Operations;
+using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Project;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.VisualStudio.Text;
+using Microsoft.VisualStudio.Text.Classification;
+using Microsoft.VisualStudio.Text.Editor;
+using Microsoft.VisualStudio.Utilities;
 
 namespace Microsoft.ClojureExtension
 {
@@ -41,14 +49,19 @@ namespace Microsoft.ClojureExtension
 
         protected override void Initialize()
         {
-            base.Initialize();
-            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
-            CreateSettingsStore();
-            IntializeMenuItems();
-            RegisterProjectFactory(new ClojureProjectFactory(this));
+        	base.Initialize();
+        	AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
+        	CreateSettingsStore();
+        	IntializeMenuItems();
+        	RegisterProjectFactory(new ClojureProjectFactory(this));
+
+        	var componentModel = (IComponentModel) GetService(typeof (SComponentModel));
+			ITextDocumentFactoryService factory = componentModel.GetService<ITextDocumentFactoryService>();
+        	factory.TextDocumentCreated += (o, e) => { if (e.TextDocument.FilePath.EndsWith(".clj")) new DocumentLoader(new Tokenizer()).CreateTokenizedBuffer(e.TextDocument.TextBuffer); };
+        	factory.TextDocumentDisposed += (o, e) => new DocumentLoader(new Tokenizer()).RemoveTokenizedBuffer(e.TextDocument.TextBuffer);
         }
 
-        private void CreateSettingsStore()
+    	private void CreateSettingsStore()
         {
             IVsWritableSettingsStore settingsStore;
             var settingsManager = (IVsSettingsManager) GetService(typeof (SVsSettingsManager));

@@ -11,25 +11,16 @@ namespace Microsoft.ClojureExtension.Editor.Tagger
     [Export(typeof (ITaggerProvider))]
     [ContentType("Clojure")]
     [TagType(typeof (ClojureTokenTag))]
-    internal sealed class ClojureTagProvider : ITaggerProvider
+    public class ClojureTagProvider : ITaggerProvider
     {
         public ITagger<T> CreateTagger<T>(ITextBuffer buffer) where T : ITag
         {
-			Entity<LinkedList<Token>> tokenizedBuffer = new Entity<LinkedList<Token>>();
-			tokenizedBuffer.CurrentState = new LinkedList<Token>();
-
-			ClojureTokenTagger tagger = new ClojureTokenTagger(
-				new Tokenizer(),
-				buffer,
-				tokenizedBuffer);
-
-        	BufferTextChangeHandler textChangeHandler = new BufferTextChangeHandler(
-        		new TextBufferAdapter(buffer),
-        		tokenizedBuffer);
-
+        	Entity<LinkedList<Token>> tokenizedBuffer = DocumentLoader.TokenizedBuffers[buffer];
+			ClojureTokenTagger tagger = new ClojureTokenTagger(buffer, tokenizedBuffer);
+        	BufferTextChangeHandler textChangeHandler = new BufferTextChangeHandler(new TextBufferAdapter(buffer), tokenizedBuffer);
 			TextChangeAdapter textChangeAdapter = new TextChangeAdapter(textChangeHandler);
         	buffer.Changed += textChangeAdapter.OnTextChange;
-        	textChangeHandler.TokenChanged += tagger.OnTokenChange;
+			textChangeHandler.TokenChanged += tagger.OnTokenChange;
 			return tagger as ITagger<T>;
         }
     }
