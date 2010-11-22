@@ -3,7 +3,7 @@ using Microsoft.ClojureExtension.Editor.Parsing;
 using Microsoft.ClojureExtension.Utilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ClojureExtension.Tests
+namespace ClojureExtension.Tests.Editor.Parsing
 {
 	[TestClass]
 	public class TokenListTests

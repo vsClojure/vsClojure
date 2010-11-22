@@ -5,7 +5,7 @@ using Microsoft.ClojureExtension.Utilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Rhino.Mocks;
 
-namespace ClojureExtension.Tests
+namespace ClojureExtension.Tests.Editor.Parsing
 {
 	[TestClass]
 	public class BufferTextChangeHandlerTests
