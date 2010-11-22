@@ -46,7 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Editor\BraceMatching\BraceMatchingFinderTests.cs" />
+    <Compile Include="Editor\BraceMatching\MatchingBraceFinderTests.cs" />
     <Compile Include="Editor\Parsing\BufferTextChangeHandlerTests.cs" />
     <Compile Include="Editor\Parsing\LexerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

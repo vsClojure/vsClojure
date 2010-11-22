@@ -17,10 +17,10 @@ namespace Microsoft.ClojureExtension.Editor.BraceMatching
 		public ITagger<T> CreateTagger<T>(ITextView textView, ITextBuffer buffer) where T : ITag
 		{
 			Entity<LinkedList<Token>> tokenizedBuffer = DocumentLoader.TokenizedBuffers[buffer];
-			BraceMatcher matcher = new BraceMatcher(textView, new MatchingBraceFinder(tokenizedBuffer));
-			textView.TextBuffer.Changed += (o, e) => matcher.InvalidateAllTags();
-			textView.Caret.PositionChanged += (o, e) => matcher.InvalidateAllTags();
-			return matcher as ITagger<T>;
+			BraceMatchingTagger matchingTagger = new BraceMatchingTagger(textView, new MatchingBraceFinder(new TextBufferAdapter(buffer), tokenizedBuffer));
+			textView.TextBuffer.Changed += (o, e) => matchingTagger.InvalidateAllTags();
+			textView.Caret.PositionChanged += (o, e) => matchingTagger.InvalidateAllTags();
+			return matchingTagger as ITagger<T>;
 		}
 	}
 }

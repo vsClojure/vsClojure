@@ -6,13 +6,13 @@ using Microsoft.VisualStudio.Text.Tagging;
 
 namespace Microsoft.ClojureExtension.Editor.BraceMatching
 {
-	public class BraceMatcher : ITagger<TextMarkerTag>
+	public class BraceMatchingTagger : ITagger<TextMarkerTag>
 	{
 		private readonly ITextView _textView;
 		private readonly MatchingBraceFinder _matchingBraceFinder;
 		public event EventHandler<SnapshotSpanEventArgs> TagsChanged;
 
-		public BraceMatcher(ITextView textView, MatchingBraceFinder matchingBraceFinder)
+		public BraceMatchingTagger(ITextView textView, MatchingBraceFinder matchingBraceFinder)
 		{
 			_textView = textView;
 			_matchingBraceFinder = matchingBraceFinder;
