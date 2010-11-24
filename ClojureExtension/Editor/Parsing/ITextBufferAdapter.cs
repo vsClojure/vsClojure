@@ -4,5 +4,6 @@
 	{
 		string GetText(int startPosition);
 		int Length { get; }
+		void SetText(string text);
 	}
 }

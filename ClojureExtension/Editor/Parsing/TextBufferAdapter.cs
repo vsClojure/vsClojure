@@ -16,6 +16,11 @@ namespace Microsoft.ClojureExtension.Editor.Parsing
 			return _buffer.CurrentSnapshot.GetText().Substring(startPosition);
 		}
 
+		public void SetText(string text)
+		{
+			_buffer.Replace(new Span(0, _buffer.CurrentSnapshot.Length), text);
+		}
+
 		public int Length
 		{
 			get { return _buffer.CurrentSnapshot.Length; }

@@ -90,6 +90,7 @@
     <Compile Include="Configuration\LaunchType.cs" />
     <Compile Include="Configuration\SettingsStore.cs" />
     <Compile Include="Configuration\SettingsStoreProvider.cs" />
+    <Compile Include="Editor\AutoFormat\AutoFormatter.cs" />
     <Compile Include="Editor\AutoIndent\ClojureSmartIndent.cs" />
     <Compile Include="Editor\AutoIndent\SmartIndentProvider.cs" />
     <Compile Include="Editor\BraceMatching\MatchingBraceFinder.cs" />
