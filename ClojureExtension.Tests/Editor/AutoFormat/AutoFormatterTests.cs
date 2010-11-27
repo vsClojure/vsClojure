@@ -201,7 +201,7 @@ namespace ClojureExtension.Tests.Editor.AutoFormat
 		}
 
 		[TestMethod]
-		public void ShouldNotMoveCommentsFromOneLineBelowUpToPreviousLine()
+		public void ShouldMoveCommentOneLineBelowEndOfExpressionToTwoLinesBelow()
 		{
 			string beforeText = "(1)\r\n;asdf";
 			string afterText = "(1)\r\n\r\n;asdf";
@@ -209,10 +209,10 @@ namespace ClojureExtension.Tests.Editor.AutoFormat
 		}
 
 		[TestMethod]
-		public void ShouldNotKeepLineBreakBeforeEndingBrace()
+		public void ShouldKeepLineBreakBeforeEndingBrace()
 		{
 			string beforeText = "[1 2\r\n]";
-			string afterText = "[1 2]";
+			string afterText = "[1 2\r\n ]";
 			ValidateFormatting(beforeText, afterText);
 		}
 
@@ -228,20 +228,24 @@ namespace ClojureExtension.Tests.Editor.AutoFormat
 		public void ShouldCreateExtraLineAfterTopLevelExpressionFollowedByComment()
 		{
 			string beforeText = "();asdf\r\n()";
-			string afterText = "();asdf\r\n\r\n()";
+			string afterText = "() ;asdf\r\n\r\n()";
 			ValidateFormatting(beforeText, afterText);
 		}
 
 		[TestMethod]
-		public void Test()
+		public void ShouldNotPutEndBraceOnSameLineAsComment()
 		{
-			CreateTokensAndTextBuffer(File.ReadAllText(@"C:\Users\Jon\Desktop\ClojureCLR\clojure-clr\Clojure\Clojure.Source\clojure\core.clj"));
-			_formatter.Format();
-
-			File.WriteAllText("D:\\test.txt", _textBufferState);
+			string beforeText = "(;asdf\r\n)";
+			string afterText = "( ;asdf\r\n    )";
+			ValidateFormatting(beforeText, afterText);
 		}
 
-		// Do not allow end braces to be on their own line.
-		// Unrelated Note: Got an error message when I tried to edit at the end of a file.
+		[TestMethod]
+		public void ShouldNotIndentCommentIfItStartsAtBeginningofLine()
+		{
+			string beforeText = "(\r\n;asdf\r\n)";
+			string afterText = "(\r\n;asdf\r\n    )";
+			ValidateFormatting(beforeText, afterText);
+		}
 	}
 }
