@@ -19,6 +19,7 @@
 		Boolean,
 		Nil,
 		BuiltIn,
-		Character
+		Character,
+		IgnoreReaderMacro
 	}
 }

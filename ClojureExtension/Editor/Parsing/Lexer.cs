@@ -62,6 +62,11 @@ namespace Microsoft.ClojureExtension.Editor.Parsing
 				string keyword = ReadKeyword();
 				nextToken = new Token(TokenType.Keyword, keyword, _source.CurrentIndex - keyword.Length, keyword.Length);
 			}
+			else if (IsString(currentChar, "#_"))
+			{
+				ReadChars(1);
+				nextToken = new Token(TokenType.IgnoreReaderMacro, "#_", _source.CurrentIndex - 2, 2);
+			}
 			else if (BuiltInFunctions.Find(f => IsString(currentChar, f)) != null)
 			{
 				string match = BuiltInFunctions.Find(f => IsString(currentChar, f));

@@ -8,14 +8,14 @@ namespace ClojureExtension.Tests.Editor.Parsing
 	public class LexerTests
 	{
 		[TestMethod]
-		public void Next_ShouldReturnNullWhenAtEndOfStream()
+		public void ShouldReturnNullWhenAtEndOfStream()
 		{
 			Lexer lexer = new Lexer(new PushBackCharacterStream(new StringReader("")));
 			Assert.IsNull(lexer.Next());
 		}
 
 		[TestMethod]
-		public void Next_ShouldReturnNumberTokenTypeWhenInputIsNumber()
+		public void ShouldReturnNumberTokenTypeWhenInputIsNumber()
 		{
 			var stream = new PushBackCharacterStream(new StringReader("123"));
 			Lexer lexer = new Lexer(stream);
@@ -26,7 +26,7 @@ namespace ClojureExtension.Tests.Editor.Parsing
 		}
 
 		[TestMethod]
-		public void Next_ShouldReturnNumberTokenTypeWhenInputIsInvalidNumber()
+		public void ShouldReturnNumberTokenTypeWhenInputIsInvalidNumber()
 		{
 			var stream = new PushBackCharacterStream(new StringReader("123asdf"));
 			Lexer lexer = new Lexer(stream);
@@ -36,7 +36,7 @@ namespace ClojureExtension.Tests.Editor.Parsing
 		}
 
 		[TestMethod]
-		public void Next_ShouldReturnListStartTokenTypeWhenInputIsAnOpenParen()
+		public void ShouldReturnListStartTokenTypeWhenInputIsAnOpenParen()
 		{
 			Lexer lexer = new Lexer(new PushBackCharacterStream(new StringReader("(")));
 			Token token = lexer.Next();
@@ -45,7 +45,7 @@ namespace ClojureExtension.Tests.Editor.Parsing
 		}
 
 		[TestMethod]
-		public void Next_ShouldReturnListEndTokenTypeWhenInputIsAClosedParen()
+		public void ShouldReturnListEndTokenTypeWhenInputIsAClosedParen()
 		{
 			Lexer lexer = new Lexer(new PushBackCharacterStream(new StringReader(")")));
 			Token token = lexer.Next();
@@ -54,7 +54,7 @@ namespace ClojureExtension.Tests.Editor.Parsing
 		}
 
 		[TestMethod]
-		public void Next_ShouldReturnVectorStartTokenTypeWhenInputIsAnOpenBracket()
+		public void ShouldReturnVectorStartTokenTypeWhenInputIsAnOpenBracket()
 		{
 			Lexer lexer = new Lexer(new PushBackCharacterStream(new StringReader("[")));
 			Token token = lexer.Next();
@@ -63,7 +63,7 @@ namespace ClojureExtension.Tests.Editor.Parsing
 		}
 
 		[TestMethod]
-		public void Next_ShouldReturnVectorEndTokenTypeWhenInputIsAClosedBracket()
+		public void ShouldReturnVectorEndTokenTypeWhenInputIsAClosedBracket()
 		{
 			Lexer lexer = new Lexer(new PushBackCharacterStream(new StringReader("]")));
 			Token token = lexer.Next();
@@ -72,7 +72,7 @@ namespace ClojureExtension.Tests.Editor.Parsing
 		}
 
 		[TestMethod]
-		public void Next_ShouldReturnMapStartTokenTypeWhenInputIsAnOpenCurlyBrace()
+		public void ShouldReturnMapStartTokenTypeWhenInputIsAnOpenCurlyBrace()
 		{
 			Lexer lexer = new Lexer(new PushBackCharacterStream(new StringReader("{")));
 			Token token = lexer.Next();
@@ -81,7 +81,7 @@ namespace ClojureExtension.Tests.Editor.Parsing
 		}
 
 		[TestMethod]
-		public void Next_ShouldReturnMapEndTokenTypeWhenInputIsAClosedCurlyBrace()
+		public void ShouldReturnMapEndTokenTypeWhenInputIsAClosedCurlyBrace()
 		{
 			Lexer lexer = new Lexer(new PushBackCharacterStream(new StringReader("}")));
 			Token token = lexer.Next();
@@ -90,7 +90,7 @@ namespace ClojureExtension.Tests.Editor.Parsing
 		}
 
 		[TestMethod]
-		public void Next_ShouldReturnStringForProperlyTerminatingString()
+		public void ShouldReturnStringForProperlyTerminatingString()
 		{
 			Lexer lexer = new Lexer(new PushBackCharacterStream(new StringReader("\"asdf\"")));
 			Token token = lexer.Next();
@@ -99,7 +99,7 @@ namespace ClojureExtension.Tests.Editor.Parsing
 		}
 
 		[TestMethod]
-		public void Next_ShouldReturnStringForRunOnString()
+		public void ShouldReturnStringForRunOnString()
 		{
 			Lexer lexer = new Lexer(new PushBackCharacterStream(new StringReader("\"asdfasdf")));
 			Token token = lexer.Next();
@@ -108,7 +108,7 @@ namespace ClojureExtension.Tests.Editor.Parsing
 		}
 
 		[TestMethod]
-		public void Next_ShouldReturnStringThatDoesNotTerminateOnBackslashQuote()
+		public void ShouldReturnStringThatDoesNotTerminateOnBackslashQuote()
 		{
 			Lexer lexer = new Lexer(new PushBackCharacterStream(new StringReader("\"asdf\\\"asdf\"")));
 			Token token = lexer.Next();
@@ -117,7 +117,7 @@ namespace ClojureExtension.Tests.Editor.Parsing
 		}
 
 		[TestMethod]
-		public void Next_ShouldReturnWhitespaceForTabsSpacesCommasAndReturnCharacters()
+		public void ShouldReturnWhitespaceForTabsSpacesCommasAndReturnCharacters()
 		{
 			string input = "  \t \r\n , ";
 			Lexer lexer = new Lexer(new PushBackCharacterStream(new StringReader(input)));
@@ -127,7 +127,7 @@ namespace ClojureExtension.Tests.Editor.Parsing
 		}
 
 		[TestMethod]
-		public void Next_ShouldReturnNumberFollowByWhitespaceAndAString()
+		public void ShouldReturnNumberFollowByWhitespaceAndAString()
 		{
 			var stream = new PushBackCharacterStream(new StringReader("123 \"asdf\""));
 			Lexer lexer = new Lexer(stream);
@@ -148,7 +148,7 @@ namespace ClojureExtension.Tests.Editor.Parsing
 		}
 
 		[TestMethod]
-		public void Next_ShouldReturnRealNumber()
+		public void ShouldReturnRealNumber()
 		{
 			var stream = new PushBackCharacterStream(new StringReader("123.321"));
 			Lexer lexer = new Lexer(stream);
@@ -158,7 +158,7 @@ namespace ClojureExtension.Tests.Editor.Parsing
 		}
 
 		[TestMethod]
-		public void Next_ShouldReturnHexNumber()
+		public void ShouldReturnHexNumber()
 		{
 			var stream = new PushBackCharacterStream(new StringReader("0x123A"));
 			Lexer lexer = new Lexer(stream);
@@ -169,7 +169,7 @@ namespace ClojureExtension.Tests.Editor.Parsing
 		}
 
 		[TestMethod]
-		public void Next_ShouldReturnCommentWithTrailingWhitespace()
+		public void ShouldReturnCommentWithTrailingWhitespace()
 		{
 			var stream = new PushBackCharacterStream(new StringReader("; test text  \r\n"));
 			Lexer lexer = new Lexer(stream);
@@ -183,7 +183,7 @@ namespace ClojureExtension.Tests.Editor.Parsing
 		}
 
 		[TestMethod]
-		public void Next_ShouldReturnCommentThatExtendsToEndOfInput()
+		public void ShouldReturnCommentThatExtendsToEndOfInput()
 		{
 			var stream = new PushBackCharacterStream(new StringReader("; test"));
 			Lexer lexer = new Lexer(stream);
@@ -193,7 +193,7 @@ namespace ClojureExtension.Tests.Editor.Parsing
 		}
 
 		[TestMethod]
-		public void Next_ShouldReturnCommentToEndOfLineOnly()
+		public void ShouldReturnCommentToEndOfLineOnly()
 		{
 			var stream = new PushBackCharacterStream(new StringReader("; test\r\n123"));
 			Lexer lexer = new Lexer(stream);
@@ -203,7 +203,7 @@ namespace ClojureExtension.Tests.Editor.Parsing
 		}
 
 		[TestMethod]
-		public void Next_ShouldReturnSymbol()
+		public void ShouldReturnSymbol()
 		{
 			var stream = new PushBackCharacterStream(new StringReader("test"));
 			Lexer lexer = new Lexer(stream);
@@ -213,7 +213,7 @@ namespace ClojureExtension.Tests.Editor.Parsing
 		}
 
 		[TestMethod]
-		public void Next_ShouldReturnSymbolWhenItHasADot()
+		public void ShouldReturnSymbolWhenItHasADot()
 		{
 			var stream = new PushBackCharacterStream(new StringReader("namespace.test"));
 			Lexer lexer = new Lexer(stream);
@@ -223,7 +223,7 @@ namespace ClojureExtension.Tests.Editor.Parsing
 		}
 
 		[TestMethod]
-		public void Next_ShouldReturnSymbolImmediatelyFollowedByComment()
+		public void ShouldReturnSymbolImmediatelyFollowedByComment()
 		{
 			var stream = new PushBackCharacterStream(new StringReader("test;comment"));
 			Lexer lexer = new Lexer(stream);
@@ -237,7 +237,7 @@ namespace ClojureExtension.Tests.Editor.Parsing
 		}
 
 		[TestMethod]
-		public void Next_ShouldReturnTwoSymbolsSeparatedByWhitespace()
+		public void ShouldReturnTwoSymbolsSeparatedByWhitespace()
 		{
 			var stream = new PushBackCharacterStream(new StringReader("symbol1 symbol2"));
 			Lexer lexer = new Lexer(stream);
@@ -254,7 +254,7 @@ namespace ClojureExtension.Tests.Editor.Parsing
 		}
 
 		[TestMethod]
-		public void Next_ShouldReturnKeyword()
+		public void ShouldReturnKeyword()
 		{
 			var stream = new PushBackCharacterStream(new StringReader(":asdf"));
 			Lexer lexer = new Lexer(stream);
@@ -264,7 +264,7 @@ namespace ClojureExtension.Tests.Editor.Parsing
 		}
 
 		[TestMethod]
-		public void Next_ShouldReturnKeywordWithNoName()
+		public void ShouldReturnKeywordWithNoName()
 		{
 			var stream = new PushBackCharacterStream(new StringReader(":"));
 			Lexer lexer = new Lexer(stream);
@@ -274,7 +274,7 @@ namespace ClojureExtension.Tests.Editor.Parsing
 		}
 
 		[TestMethod]
-		public void Next_ShouldReturnKeywordFollowByListStart()
+		public void ShouldReturnKeywordFollowByListStart()
 		{
 			var stream = new PushBackCharacterStream(new StringReader(":asdf("));
 			Lexer lexer = new Lexer(stream);
@@ -285,7 +285,7 @@ namespace ClojureExtension.Tests.Editor.Parsing
 		}
 
 		[TestMethod]
-		public void Next_ShouldReturnBooleanWhenTrueIsInput()
+		public void ShouldReturnBooleanWhenTrueIsInput()
 		{
 			var stream = new PushBackCharacterStream(new StringReader("true"));
 			Lexer lexer = new Lexer(stream);
@@ -296,7 +296,7 @@ namespace ClojureExtension.Tests.Editor.Parsing
 		}
 
 		[TestMethod]
-		public void Next_ShouldReturnBooleanWhenFalseIsInput()
+		public void ShouldReturnBooleanWhenFalseIsInput()
 		{
 			var stream = new PushBackCharacterStream(new StringReader("false"));
 			Lexer lexer = new Lexer(stream);
@@ -307,7 +307,7 @@ namespace ClojureExtension.Tests.Editor.Parsing
 		}
 
 		[TestMethod]
-		public void Next_ShouldReturnNil()
+		public void ShouldReturnNil()
 		{
 			var stream = new PushBackCharacterStream(new StringReader("nil"));
 			Lexer lexer = new Lexer(stream);
@@ -318,7 +318,7 @@ namespace ClojureExtension.Tests.Editor.Parsing
 		}
 
 		[TestMethod]
-		public void Next_ShouldStopParsingSymbolWhenDoubleQuoteFound()
+		public void ShouldStopParsingSymbolWhenDoubleQuoteFound()
 		{
 			var stream = new PushBackCharacterStream(new StringReader("asdf\"str\""));
 			Lexer lexer = new Lexer(stream);
@@ -332,7 +332,7 @@ namespace ClojureExtension.Tests.Editor.Parsing
 		}
 
 		[TestMethod]
-		public void Next_ShouldReadBackslashNewLineAsCharacter()
+		public void ShouldReadBackslashNewLineAsCharacter()
 		{
 			Lexer lexer = new Lexer(new PushBackCharacterStream(new StringReader("\\newline")));
 			Token token = lexer.Next();
@@ -341,7 +341,7 @@ namespace ClojureExtension.Tests.Editor.Parsing
 		}
 
 		[TestMethod]
-		public void Next_ShouldReadBackslashTabAsCharacter()
+		public void ShouldReadBackslashTabAsCharacter()
 		{
 			Lexer lexer = new Lexer(new PushBackCharacterStream(new StringReader("\\tab")));
 			Token token = lexer.Next();
@@ -350,7 +350,7 @@ namespace ClojureExtension.Tests.Editor.Parsing
 		}
 
 		[TestMethod]
-		public void Next_ShouldReadBackslashSpaceAsCharacter()
+		public void ShouldReadBackslashSpaceAsCharacter()
 		{
 			Lexer lexer = new Lexer(new PushBackCharacterStream(new StringReader("\\space")));
 			Token token = lexer.Next();
@@ -359,7 +359,7 @@ namespace ClojureExtension.Tests.Editor.Parsing
 		}
 
 		[TestMethod]
-		public void Next_ShouldReadBackslashUFollowedByFourHexDigitsAsCharacter()
+		public void ShouldReadBackslashUFollowedByFourHexDigitsAsCharacter()
 		{
 			Lexer lexer = new Lexer(new PushBackCharacterStream(new StringReader("\\uF04A")));
 			Token token = lexer.Next();
@@ -368,7 +368,7 @@ namespace ClojureExtension.Tests.Editor.Parsing
 		}
 
 		[TestMethod]
-		public void Next_ShouldReadBackslashUAsChar()
+		public void ShouldReadBackslashUAsChar()
 		{
 			Lexer lexer = new Lexer(new PushBackCharacterStream(new StringReader("\\u")));
 			Token token = lexer.Next();
@@ -377,7 +377,7 @@ namespace ClojureExtension.Tests.Editor.Parsing
 		}
 
 		[TestMethod]
-		public void Next_ShouldReadBackslashAAsChar()
+		public void ShouldReadBackslashAAsChar()
 		{
 			Lexer lexer = new Lexer(new PushBackCharacterStream(new StringReader("\\a")));
 			Token token = lexer.Next();
@@ -386,7 +386,7 @@ namespace ClojureExtension.Tests.Editor.Parsing
 		}
 
 		[TestMethod]
-		public void Next_ShouldReadBackslashABackSlashFAsTwoCharacters()
+		public void ShouldReadBackslashABackSlashFAsTwoCharacters()
 		{
 			Lexer lexer = new Lexer(new PushBackCharacterStream(new StringReader("\\a\\f")));
 			Token token = lexer.Next();
@@ -398,7 +398,7 @@ namespace ClojureExtension.Tests.Editor.Parsing
 		}
 
 		[TestMethod]
-		public void Next_ShouldReadBackslashUFollowedByTwoHexDigitsAsSingleUCharacterFollowedByANumber()
+		public void ShouldReadBackslashUFollowedByTwoHexDigitsAsSingleUCharacterFollowedByANumber()
 		{
 			Lexer lexer = new Lexer(new PushBackCharacterStream(new StringReader("\\u19")));
 			Token token = lexer.Next();
@@ -410,7 +410,7 @@ namespace ClojureExtension.Tests.Editor.Parsing
 		}
 
 		[TestMethod]
-		public void Next_ShouldReadBackslashUFollowedByThreeHexDigitsAndAZAsSingleUCharacterFollowedByASymbol()
+		public void ShouldReadBackslashUFollowedByThreeHexDigitsAndAZAsSingleUCharacterFollowedByASymbol()
 		{
 			Lexer lexer = new Lexer(new PushBackCharacterStream(new StringReader("\\uAF9Z")));
 			Token token = lexer.Next();
@@ -422,7 +422,7 @@ namespace ClojureExtension.Tests.Editor.Parsing
 		}
 
 		[TestMethod]
-		public void Next_ShouldReturnSymbolFollowedByCharacter()
+		public void ShouldReturnSymbolFollowedByCharacter()
 		{
 			Lexer lexer = new Lexer(new PushBackCharacterStream(new StringReader("asdf\\s")));
 			Token token = lexer.Next();
@@ -434,7 +434,7 @@ namespace ClojureExtension.Tests.Editor.Parsing
 		}
 
 		[TestMethod]
-		public void Next_ShouldReturnNumberFollowedByCharacter()
+		public void ShouldReturnNumberFollowedByCharacter()
 		{
 			Lexer lexer = new Lexer(new PushBackCharacterStream(new StringReader("123\\s")));
 			Token token = lexer.Next();
@@ -461,6 +461,15 @@ namespace ClojureExtension.Tests.Editor.Parsing
 			Token token = lexer.Next();
 			Assert.AreEqual(TokenType.Symbol, token.Type);
 			Assert.AreEqual("&", token.Text);
+		}
+
+		[TestMethod]
+		public void ShouldReturnIgnoreReaderMacro()
+		{
+			Lexer lexer = new Lexer(new PushBackCharacterStream(new StringReader("#_(defn")));
+			Token token = lexer.Next();
+			Assert.AreEqual(TokenType.IgnoreReaderMacro, token.Type);
+			Assert.AreEqual("#_", token.Text);
 		}
 	}
 }
