@@ -90,8 +90,8 @@ namespace ClojureExtension.Tests.Editor.AutoFormat
 		[TestMethod]
 		public void ShouldSeperateElementsBySingleSpaceIfTheyContainNoLineBreaks()
 		{
-			string beforeText = "println    println";
-			string afterText = "println println";
+			string beforeText = "(println    println)";
+			string afterText = "(println println)";
 			ValidateFormatting(beforeText, afterText);
 		}
 
@@ -148,6 +148,38 @@ namespace ClojureExtension.Tests.Editor.AutoFormat
 		{
 			string beforeText = "()  \r\n\r\n\r\n()";
 			string afterText = "()\r\n\r\n()";
+			ValidateFormatting(beforeText, afterText);
+		}
+
+		[TestMethod]
+		public void ShouldAllowNoLinesBetweenCommentsAndStartOfTopLevelExpression()
+		{
+			string beforeText = "()  \r\n\r\n\r\n;asdf\r\n()";
+			string afterText = "()\r\n\r\n;asdf\r\n()";
+			ValidateFormatting(beforeText, afterText);
+		}
+
+		[TestMethod]
+		public void ShouldRemoveAllLinesButOneBetweenCommentAndTopLevelExpression()
+		{
+			string beforeText = "()  \r\n\r\n\r\n;asdf\r\n\r\n\r\n()";
+			string afterText = "()\r\n\r\n;asdf\r\n\r\n()";
+			ValidateFormatting(beforeText, afterText);
+		}
+
+		[TestMethod]
+		public void ShouldNotForceSpacesBetweenUnknownTokens()
+		{
+			string beforeText = "(^{} 1)";
+			string afterText = "(^{} 1)";
+			ValidateFormatting(beforeText, afterText);
+		}
+
+		[TestMethod]
+		public void ShouldRemoveExtraSpaceBetweenUnknownTokens()
+		{
+			string beforeText = "(^  {} 1)";
+			string afterText = "(^ {} 1)";
 			ValidateFormatting(beforeText, afterText);
 		}
 

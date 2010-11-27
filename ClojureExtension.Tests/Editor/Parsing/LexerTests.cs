@@ -444,5 +444,23 @@ namespace ClojureExtension.Tests.Editor.Parsing
 			Assert.AreEqual(TokenType.Character, token.Type);
 			Assert.AreEqual("\\s", token.Text);
 		}
+
+		[TestMethod]
+		public void ShouldReturnSymbolStartingWithAmpersand()
+		{
+			Lexer lexer = new Lexer(new PushBackCharacterStream(new StringReader("&123asdf")));
+			Token token = lexer.Next();
+			Assert.AreEqual(TokenType.Symbol, token.Type);
+			Assert.AreEqual("&123asdf", token.Text);
+		}
+
+		[TestMethod]
+		public void ShouldReturnSymbolWithOnlyASingleAmpersand()
+		{
+			Lexer lexer = new Lexer(new PushBackCharacterStream(new StringReader("&")));
+			Token token = lexer.Next();
+			Assert.AreEqual(TokenType.Symbol, token.Type);
+			Assert.AreEqual("&", token.Text);
+		}
 	}
 }

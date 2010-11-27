@@ -1,9 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
 using Microsoft.ClojureExtension.Editor.Parsing;
 using Microsoft.ClojureExtension.Utilities;
-using Microsoft.VisualStudio.Text.Editor;
 
 namespace Microsoft.ClojureExtension.Editor.AutoFormat
 {
@@ -37,14 +35,20 @@ namespace Microsoft.ClojureExtension.Editor.AutoFormat
 					string whitespace = nextToken.Value.Text;
 					whitespace = whitespace.Contains("\r\n") ? "\r\n" : !currentToken.Value.Type.IsBraceStart() ? " " : "";
 
-					if (whitespace == "\r\n")
+					if (whitespace == "\r\n" && currentToken.Value.Type != TokenType.Comment)
 					{
 						int indentAmount = IndentSize*dataStructureStack.Count;
 						if (dataStructureStack.Count > 0 && dataStructureStack.Peek().Type != TokenType.ListStart) indentAmount = IndentSize*(dataStructureStack.Count - 1) + 1;
 						for (int i = 0; i < indentAmount; i++) whitespace += " ";
 					}
 
+					if (currentToken.Value.Type == TokenType.Comment && dataStructureStack.Count == 0)
+					{
+						whitespace = nextToken.Value.Text.Contains("\r\n\r\n") ? "\r\n\r\n" : whitespace;
+					}
+
 					if (nextToken.Next == null || nextToken.Next.Value.Type.IsBraceEnd()) whitespace = "";
+					if (nextToken.Next != null && dataStructureStack.Count == 0 && currentToken.Value.Type != TokenType.Comment) whitespace = "\r\n\r\n";
 					output.Append(whitespace);
 				}
 

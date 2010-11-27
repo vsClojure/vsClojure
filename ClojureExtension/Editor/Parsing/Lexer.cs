@@ -6,11 +6,16 @@ namespace Microsoft.ClojureExtension.Editor.Parsing
 {
 	public class Lexer
 	{
-		private static List<string> _builtInFunctions = new List<string>()
+		private static readonly List<string> BuiltInFunctions = new List<string>()
 		{
 			"def", "if", "do", "let", "quote", "var", "fn", "loop",
 			"recur", "throw", "try", "monitor-enter", "monitor-exit",
 			"new", "set!", "."
+		};
+
+		private static readonly List<char> ValidNonLetterSymbolPrefixes = new List<char>()
+		{
+			'*', '+', '!', '-', '_', '?', '>', '<', '=', '$', '&'
 		};
 
 		private readonly PushBackCharacterStream _source;
@@ -57,9 +62,9 @@ namespace Microsoft.ClojureExtension.Editor.Parsing
 				string keyword = ReadKeyword();
 				nextToken = new Token(TokenType.Keyword, keyword, _source.CurrentIndex - keyword.Length, keyword.Length);
 			}
-			else if (_builtInFunctions.Find(f => IsString(currentChar, f)) != null)
+			else if (BuiltInFunctions.Find(f => IsString(currentChar, f)) != null)
 			{
-				string match = _builtInFunctions.Find(f => IsString(currentChar, f));
+				string match = BuiltInFunctions.Find(f => IsString(currentChar, f));
 				ReadChars(match.Length-1);
 				nextToken = new Token(TokenType.BuiltIn, match, _source.CurrentIndex - match.Length, match.Length);
 			}
@@ -113,7 +118,7 @@ namespace Microsoft.ClojureExtension.Editor.Parsing
 				ReadChars(2);
 				nextToken = new Token(TokenType.Nil, "nil", _source.CurrentIndex - 3, 3);
 			}
-			else if (Char.IsLetter(currentChar))
+			else if (IsSymbolPrefix(currentChar))
 			{
 				_source.Push(currentChar);
 				string str = ReadSymbol();
@@ -359,6 +364,11 @@ namespace Microsoft.ClojureExtension.Editor.Parsing
 		private static bool IsDataStructureStart(char c)
 		{
 			return c == '(' || c == '{' || c == '[';
+		}
+
+		private static bool IsSymbolPrefix(char c)
+		{
+			return Char.IsLetter(c) || ValidNonLetterSymbolPrefixes.Contains(c);
 		}
 	}
 }
