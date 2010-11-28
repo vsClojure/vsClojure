@@ -51,14 +51,28 @@ namespace Microsoft.ClojureExtension
         {
         	base.Initialize();
         	AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
+
         	CreateSettingsStore();
         	IntializeMenuItems();
         	RegisterProjectFactory(new ClojureProjectFactory(this));
 
-        	var componentModel = (IComponentModel) GetService(typeof (SComponentModel));
-			ITextDocumentFactoryService factory = componentModel.GetService<ITextDocumentFactoryService>();
-        	factory.TextDocumentCreated += (o, e) => { if (e.TextDocument.FilePath.EndsWith(".clj")) new DocumentLoader(new Tokenizer()).CreateTokenizedBuffer(e.TextDocument.TextBuffer); };
-        	factory.TextDocumentDisposed += (o, e) => new DocumentLoader(new Tokenizer()).RemoveTokenizedBuffer(e.TextDocument.TextBuffer);
+			var componentModel = (IComponentModel)GetService(typeof(SComponentModel));
+			TokenizedBufferBuilder tokenizedBufferBuilder = new TokenizedBufferBuilder(new Tokenizer());
+			EditorCommandFactory editorCommandFactory = new EditorCommandFactory((OleMenuCommandService)GetService(typeof(IMenuCommandService)));
+
+			ITextDocumentFactoryService documentFactoryService = componentModel.GetService<ITextDocumentFactoryService>();
+			documentFactoryService.TextDocumentDisposed += (o, e) => tokenizedBufferBuilder.RemoveTokenizedBuffer(e.TextDocument.TextBuffer);
+			documentFactoryService.TextDocumentCreated += (o, e) =>
+			{
+				if (e.TextDocument.FilePath.EndsWith(".clj")) tokenizedBufferBuilder.CreateTokenizedBuffer(e.TextDocument.TextBuffer);
+			};
+
+			ITextEditorFactoryService editorFactoryService = componentModel.GetService<ITextEditorFactoryService>();
+        	editorFactoryService.TextViewCreated += (o, e) => e.TextView.GotAggregateFocus += (sender, args) =>
+        	{
+        		editorCommandFactory.UnwireEditorCommands();
+        		editorCommandFactory.WireCommandsTo(e.TextView);
+        	};
         }
 
     	private void CreateSettingsStore()

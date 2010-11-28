@@ -102,6 +102,7 @@
     <Compile Include="Editor\Classification\ClassificationType.cs" />
     <Compile Include="Editor\Classification\ClojureClassifier.cs" />
     <Compile Include="Editor\Classification\ClojureClassifierProvider.cs" />
+    <Compile Include="Editor\EditorCommandFactory.cs" />
     <Compile Include="Editor\Parsing\BufferTextChangeHandler.cs" />
     <Compile Include="Editor\Parsing\IndexTokenNode.cs" />
     <Compile Include="Editor\Parsing\ITextBufferAdapter.cs" />
@@ -120,7 +121,7 @@
     <Compile Include="Editor\Tagger\ClojureTagProvider.cs" />
     <Compile Include="Editor\Tagger\ClojureTokenTag.cs" />
     <Compile Include="Editor\Tagger\ClojureTokenTagger.cs" />
-    <Compile Include="Editor\DocumentLoader.cs" />
+    <Compile Include="Editor\TokenizedBufferBuilder.cs" />
     <Compile Include="Project\ClojureConfigProvider.cs" />
     <Compile Include="Project\ClojureProjectConfig.cs" />
     <Compile Include="Project\Hierarchy\GetFrameworkFromSelectedProject.cs" />
@@ -180,6 +181,7 @@
   <ItemGroup>
     <VSCTCompile Include="ClojurePackage.xml">
       <ResourceName>Menus.ctmenu</ResourceName>
+      <SubType>Designer</SubType>
     </VSCTCompile>
   </ItemGroup>
   <ItemGroup>

@@ -5,12 +5,12 @@ using Microsoft.VisualStudio.Text;
 
 namespace Microsoft.ClojureExtension.Editor
 {
-	public class DocumentLoader
+	public class TokenizedBufferBuilder
 	{
 		private readonly Tokenizer _tokenizer;
 		public static Dictionary<ITextBuffer, Entity<LinkedList<Token>>> TokenizedBuffers = new Dictionary<ITextBuffer, Entity<LinkedList<Token>>>();
 
-		public DocumentLoader(Tokenizer tokenizer)
+		public TokenizedBufferBuilder(Tokenizer tokenizer)
 		{
 			_tokenizer = tokenizer;
 		}

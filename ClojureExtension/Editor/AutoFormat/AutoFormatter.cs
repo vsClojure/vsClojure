@@ -29,14 +29,14 @@ namespace Microsoft.ClojureExtension.Editor.AutoFormat
 			while (_currentToken != null)
 			{
 				string tokenText = _currentToken.Value.Text;
-				bool moreThanOneLineBreak = tokenText.Replace(" ", "").Contains("\r\n\r\n");
-				bool hasAtLeastOneLineBreak = tokenText.Replace(" ", "").Contains("\r\n");
-
 				if (_currentToken.Value.Type.IsBraceStart()) _dataStructureStack.Push(_currentToken.Value);
 				if (_currentToken.Value.Type.IsBraceEnd() && _dataStructureStack.Count > 0 && _dataStructureStack.Peek().Type.MatchingBraceType() == _currentToken.Value.Type) _dataStructureStack.Pop();
 
 				if (_currentToken.Value.Type == TokenType.Whitespace)
 				{
+					bool moreThanOneLineBreak = tokenText.Replace(" ", "").Contains("\r\n\r\n");
+					bool hasAtLeastOneLineBreak = tokenText.Replace(" ", "").Contains("\r\n");
+
 					if (_currentToken.Previous == null) tokenText = "";
 					else if (_currentToken.Next == null) tokenText = "";
 					else if (_currentToken.Next.Value.Type == TokenType.Comment && !tokenText.Contains("\r\n")) tokenText = " ";

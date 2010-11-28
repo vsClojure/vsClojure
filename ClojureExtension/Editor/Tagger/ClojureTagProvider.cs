@@ -15,7 +15,7 @@ namespace Microsoft.ClojureExtension.Editor.Tagger
     {
         public ITagger<T> CreateTagger<T>(ITextBuffer buffer) where T : ITag
         {
-        	Entity<LinkedList<Token>> tokenizedBuffer = DocumentLoader.TokenizedBuffers[buffer];
+        	Entity<LinkedList<Token>> tokenizedBuffer = TokenizedBufferBuilder.TokenizedBuffers[buffer];
 			ClojureTokenTagger tagger = new ClojureTokenTagger(buffer, tokenizedBuffer);
         	BufferTextChangeHandler textChangeHandler = new BufferTextChangeHandler(new TextBufferAdapter(buffer), tokenizedBuffer);
 			TextChangeAdapter textChangeAdapter = new TextChangeAdapter(textChangeHandler);
