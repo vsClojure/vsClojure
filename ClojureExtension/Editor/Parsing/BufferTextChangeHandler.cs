@@ -38,7 +38,7 @@ namespace Microsoft.ClojureExtension.Editor.Parsing
 			Token newToken = lexer.Next();
 			LinkedListNode<Token> oldToken = firstToken.Node;
 
-			while (newBufferStartIndex + newToken.Length != oldBufferStartIndex + oldToken.Value.Length || oldBufferStartIndex < change.Position)
+			while (newBufferStartIndex + newToken.Length != oldBufferStartIndex + oldToken.Value.Length || oldBufferStartIndex + oldToken.Value.Length < change.Position + change.LengthOfChangedText)
 			{
 				if (newBufferStartIndex + newToken.Length < oldBufferStartIndex + oldToken.Value.Length)
 				{

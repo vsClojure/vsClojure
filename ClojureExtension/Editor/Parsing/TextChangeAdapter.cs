@@ -18,7 +18,12 @@ namespace Microsoft.ClojureExtension.Editor.Parsing
 		public void OnTextChange(object sender, TextContentChangedEventArgs args)
 		{
 			List<TextChangeData> changeData = new List<TextChangeData>();
-			foreach (var change in args.Changes) changeData.Add(new TextChangeData(change.OldPosition, change.Delta));
+
+			foreach (var change in args.Changes)
+			{
+				changeData.Add(new TextChangeData(change.OldPosition, change.Delta, change.NewLength));
+			}
+
 			_bufferTextChangeHandler.OnTextChanged(changeData);
 		}
 	}

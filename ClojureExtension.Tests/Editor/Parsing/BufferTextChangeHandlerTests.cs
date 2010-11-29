@@ -283,6 +283,20 @@ namespace ClojureExtension.Tests.Editor.Parsing
 			AssertAreEqual(_tokenizedBufferEntity.CurrentState, _tokenizer.Tokenize(afterText));
 		}
 
+		[TestMethod]
+		public void ShouldAllowForChangesToNotStartAtBeginningOfChangePosition()
+		{
+			string beforeText = "(def asdf '(asdf asdf  asdf asdf))";
+			_tokenizedBufferEntity.CurrentState = _tokenizer.Tokenize(beforeText);
+
+			string afterText = "(def asdf '(asdf asdf asdf asdf))";
+			_textBuffer.Stub(t => t.GetText(0)).IgnoreArguments().WhenCalled(t => t.ReturnValue = afterText.Substring((int)t.Arguments[0])).Return("");
+			_textBuffer.Stub(t => t.Length).Return(afterText.Length);
+
+			_bufferTextChangeHandler.OnTextChanged(new List<TextChangeData>() { new TextChangeData(0, -1, afterText.Length) });
+			AssertAreEqual(_tokenizedBufferEntity.CurrentState, _tokenizer.Tokenize(afterText));
+		}
+
 		private void AssertAreEqual(LinkedList<Token> listOne, LinkedList<Token> listTwo)
 		{
 			LinkedListNode<Token> currentListOneNode = listOne.First;

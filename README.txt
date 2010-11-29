@@ -18,9 +18,8 @@ Building:
 	4.) Create a folder named "ManagedPackageFramework" in the solution directory.
 	5.) Copy the ManagedPackageFramework source to the new folder. 
 	6.) Open the vsClojure solution.
-	7.) Download the Antlr 3 runtime (http://www.antlr.org/).
-	8.) Reference the Antlr 3 runtime assemblies from the ClojureExtension project.
-
+	7.) Build
+	
 Running:
 
 	1.) Download or build ClojureCLR (http://github.com/richhickey/clojure-clr).

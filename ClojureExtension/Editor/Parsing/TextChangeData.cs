@@ -6,31 +6,28 @@ namespace Microsoft.ClojureExtension.Editor.Parsing
 	{
 		private readonly int _position;
 		private readonly int _delta;
+		private readonly int _lengthOfChangedText;
 
-		public TextChangeData(int position, int delta)
+		public TextChangeData(int position, int delta) : this(position, delta, Math.Abs(delta))
+		{
+			
+		}
+
+		public TextChangeData(int position, int delta, int lengthOfChangedText)
 		{
 			_position = position;
 			_delta = delta;
+			_lengthOfChangedText = lengthOfChangedText;
 		}
 
-		public int Length
+		public int LengthOfChangedText
 		{
-			get { return Math.Abs(Delta); }
+			get { return _lengthOfChangedText; }
 		}
 
 		public int Position
 		{
 			get { return _position; }
-		}
-
-		public bool IsDelete
-		{
-			get { return Delta < 0; }
-		}
-
-		public bool IsInsert
-		{
-			get { return Delta > 0; }
 		}
 
 		public int Delta
