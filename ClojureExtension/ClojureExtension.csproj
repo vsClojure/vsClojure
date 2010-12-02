@@ -92,6 +92,7 @@
     <Compile Include="Configuration\SettingsStoreProvider.cs" />
     <Compile Include="Editor\AutoFormat\AutoFormatter.cs" />
     <Compile Include="Editor\AutoIndent\ClojureSmartIndent.cs" />
+    <Compile Include="Editor\AutoIndent\SmartIndentAdapter.cs" />
     <Compile Include="Editor\AutoIndent\SmartIndentProvider.cs" />
     <Compile Include="Editor\BraceMatching\MatchingBraceFinder.cs" />
     <Compile Include="Editor\BraceMatching\BraceMatchingTagger.cs" />
@@ -103,6 +104,8 @@
     <Compile Include="Editor\Classification\ClojureClassifier.cs" />
     <Compile Include="Editor\Classification\ClojureClassifierProvider.cs" />
     <Compile Include="Editor\EditorCommandFactory.cs" />
+    <Compile Include="Editor\Options\EditorOptions.cs" />
+    <Compile Include="Editor\Options\EditorOptionsBuilder.cs" />
     <Compile Include="Editor\Parsing\BufferTextChangeHandler.cs" />
     <Compile Include="Editor\Parsing\IndexTokenNode.cs" />
     <Compile Include="Editor\Parsing\ITextBufferAdapter.cs" />

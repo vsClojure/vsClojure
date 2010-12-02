@@ -30,151 +30,169 @@ namespace ClojureExtension.Tests.Editor.Parsing
 		}
 
 		[TestMethod]
-		public void ShouldReplaceTokenThatHasBeenModifiedByAddingOneLetterAtStart()
+		public void ShouldDeleteTokenFromFront()
 		{
-			string beforeText = "(declare sym1)\r\n(declare sym2)\r\n(println sym1 \"asdf\")\r\n(println \"fdsadf\")";
-			string afterText = "(declare asym1)\r\n(declare sym2)\r\n(println sym1 \"asdf\")\r\n(println \"fdsadf\")";
-			ValidateTokenization(beforeText, afterText);
+			ValidateTokenization("one two", "two");
 		}
 
 		[TestMethod]
-		public void ShouldReplaceTokenThatHasBeenModifiedByAddingOneLetterAtTheEnd()
+		public void ShouldAddTokenToFront()
 		{
-			string beforeText = "(declare sym1)\r\n(declare sym2)\r\n(println sym1 \"asdf\")\r\n(println \"fdsadf\")";
-			string afterText = "(declare sym1a)\r\n(declare sym2)\r\n(println sym1 \"asdf\")\r\n(println \"fdsadf\")";
-			ValidateTokenization(beforeText, afterText);
+			ValidateTokenization("one", "two one");
 		}
 
 		[TestMethod]
-		public void ShouldReplaceTokenThatHasBeenModifiedByAddingOneLetterAtToTheRightOfATokenOfLengthOne()
+		public void ShouldDeleteLastToken()
 		{
-			string beforeText = "(declare z sym1)\r\n(declare sym2)\r\n(println sym1 \"asdf\")\r\n(println \"fdsadf\")";
-			string afterText = "(declare ze sym1)\r\n(declare sym2)\r\n(println sym1 \"asdf\")\r\n(println \"fdsadf\")";
-			ValidateTokenization(beforeText, afterText);
+			ValidateTokenization("one two", "one");
 		}
 
 		[TestMethod]
-		public void ShouldReplaceTokenThatHasBeenModifiedByAddingOneLetterAtToTheLeftOfATokenOfLengthOne()
+		public void ShouldDeleteMiddleToken()
 		{
-			string beforeText = "(declare z sym1)\r\n(declare sym2)\r\n(println sym1 \"asdf\")\r\n(println \"fdsadf\")";
-			string afterText = "(declare ez sym1)\r\n(declare sym2)\r\n(println sym1 \"asdf\")\r\n(println \"fdsadf\")";
-			ValidateTokenization(beforeText, afterText);
+			ValidateTokenization("one two three", "one three");
 		}
 
 		[TestMethod]
-		public void ShouldInsertNewTokenThatHasBeenAddedInWhitespace()
+		public void ShouldInsertTokenBetweenTwoTokens()
 		{
-			string beforeText = "(declare sym1)\r\n(declare sym2)\r\n(println sym1 \"asdf\")\r\n(println \"fdsadf\")";
-			string afterText = "(declare asdf sym1)\r\n(declare sym2)\r\n(println sym1 \"asdf\")\r\n(println \"fdsadf\")";
-			ValidateTokenization(beforeText, afterText);
+			ValidateTokenization("one three", "one two three");
 		}
 
 		[TestMethod]
-		public void ShouldModifyTokenThatHasHadFirstCharacterDeleted()
+		public void ShouldDeleteFirstTokenOfLengthOne()
 		{
-			string beforeText = "(declare sym1)\r\n(declare sym2)\r\n(println sym1 \"asdf\")\r\n(println \"fdsadf\")";
-			string afterText = "(declare ym1)\r\n(declare sym2)\r\n(println sym1 \"asdf\")\r\n(println \"fdsadf\")";
-			ValidateTokenization(beforeText, afterText);
+			ValidateTokenization("(one)", "one)");
 		}
 
 		[TestMethod]
-		public void ShouldModifyTokenThatHasHadLastCharacterDeleted()
+		public void ShouldDeleteLastTokenOfLengthOne()
 		{
-			string beforeText = "(declare sym1)\r\n(declare sym2)\r\n(println sym1 \"asdf\")\r\n(println \"fdsadf\")";
-			string afterText = "(declare sym)\r\n(declare sym2)\r\n(println sym1 \"asdf\")\r\n(println \"fdsadf\")";
-			ValidateTokenization(beforeText, afterText);
+			ValidateTokenization("(one)", "(one");
 		}
 
 		[TestMethod]
-		public void ShouldModifyTokenThatHasHadMiddleCharactersDeleted()
+		public void ShouldDeleteMiddleTokenOfLengthOne()
 		{
-			string beforeText = "(declare sym1)\r\n(declare sym2)\r\n(println sym1 \"asdf\")\r\n(println \"fdsadf\")";
-			string afterText = "(declare s1)\r\n(declare sym2)\r\n(println sym1 \"asdf\")\r\n(println \"fdsadf\")";
-			ValidateTokenization(beforeText, afterText);
+			ValidateTokenization("(o)", "()");
 		}
 
 		[TestMethod]
-		public void ShouldCombineTokensThatHaveHadWhitespaceInBetweenDeleted()
+		public void ShouldInsertCharacterToFrontOfFirstToken()
 		{
-			string beforeText = "(declare sym1)\r\n(declare sym2)\r\n(println sym1 \"asdf\")\r\n(println \"fdsadf\")";
-			string afterText = "(declaresym1)\r\n(declare sym2)\r\n(println sym1 \"asdf\")\r\n(println \"fdsadf\")";
-			ValidateTokenization(beforeText, afterText);
+			ValidateTokenization("one two", "aone two");
 		}
 
 		[TestMethod]
-		public void ShouldRemoveTokensThatHaveBeenDeleted()
+		public void ShouldAppendCharacterToFirstToken()
 		{
-			string beforeText = "(declare sym1)\r\n(declare sym2)\r\n(println sym1 \"asdf\")\r\n(println \"fdsadf\")";
-			string afterText = "(declare)\r\n(declare sym2)\r\n(println sym1 \"asdf\")\r\n(println \"fdsadf\")";
-			ValidateTokenization(beforeText, afterText);
+			ValidateTokenization("one two", "onea two");
 		}
 
 		[TestMethod]
-		public void ShouldModifyAllFollowingTokensWhenDoubleQuoteAdded()
+		public void ShouldInsertCharacterIntoMiddleOfToken()
 		{
-			string beforeText = "(declare sym1)\r\n(declare sym2)\r\n(println sym1 \"asdf\")\r\n(println \"fdsadf\")";
-			string afterText = "(declare \"sym1)\r\n(declare sym2)\r\n(println sym1 \"asdf\")\r\n(println \"fdsadf\")";
-			ValidateTokenization(beforeText, afterText);
+			ValidateTokenization("one two", "onne two");
 		}
 
 		[TestMethod]
-		public void ShouldModifyAllFollowingTokensWhenDoubleQuoteAdded_RealLifeExample()
+		public void ShouldAppendCharacterToTokenOfLengthOne()
 		{
-			string beforeText = "(def unquote) (def unquote-splicing) (def ^{:arglists '([& items]) :doc \"Creates a new list containing the items.\" :added \"1.0\"} list (. clojure.lang.PersistentList creator))";
-			string afterText = "(def \"unquote) (def unquote-splicing) (def ^{:arglists '([& items]) :doc \"Creates a new list containing the items.\" :added \"1.0\"} list (. clojure.lang.PersistentList creator))";
-			ValidateTokenization(beforeText, afterText);
+			ValidateTokenization("o two", "on two");
+		}
+
+		[TestMethod]
+		public void ShouldPrependCharacterToTokenOfLengthOne()
+		{
+			ValidateTokenization("o two", "lo two");
+		}
+
+		[TestMethod]
+		public void ShouldAppendCharacterToEmptyBuffer()
+		{
+			ValidateTokenization("", "a");
+		}
+
+		[TestMethod]
+		public void ShouldRemoveLastCharacterFromBuffer()
+		{
+			ValidateTokenization("a", "");
+		}
+
+		[TestMethod]
+		public void ShouldPrependCharacterToLastToken()
+		{
+			ValidateTokenization("one two", "one atwo");
+		}
+
+		[TestMethod]
+		public void ShouldAppendCharacterToLastToken()
+		{
+			ValidateTokenization("one two", "one twoa");
+		}
+
+		[TestMethod]
+		public void ShouldInsertCharacterIntoMiddleOfLastToken()
+		{
+			ValidateTokenization("one two", "one tawo");
+		}
+
+		[TestMethod]
+		public void ShouldAppendCharacterToEndOfTokenThatTouchesAnotherToken()
+		{
+			ValidateTokenization("one two)", "one twoa)");
+		}
+
+		[TestMethod]
+		public void ShouldPrependCharacterToBeginningOfTokenThatTouchesAnotherToken()
+		{
+			ValidateTokenization("one (two", "one (atwo");
+		}
+
+		[TestMethod]
+		public void ShouldSplitTokenIntoTwo()
+		{
+			ValidateTokenization("onetwo", "one two");
+		}
+
+		[TestMethod]
+		public void ShouldCombineTokens()
+		{
+			ValidateTokenization("one two", "onetwo");
+		}
+
+		[TestMethod]
+		public void ShouldCascadeStringTokenWhenAddingDoubleQuote()
+		{
+			ValidateTokenization("one two three four", "one \"two three four");
+		}
+
+		[TestMethod]
+		public void ShouldCascadeChangeWhenRemovingDoubleQuote()
+		{
+			ValidateTokenization("one \"two three \"four", "one two three \"four");
+		}
+
+		[TestMethod]
+		public void ShouldCascadeComment()
+		{
+			ValidateTokenization("one two three", "one ;two three");
 		}
 
 		[TestMethod]
 		public void ShouldModifyComment()
 		{
-			string beforeText = "; ";
-			string afterText = "; asdf";
-			ValidateTokenization(beforeText, afterText);
-		}
-
-		[TestMethod]
-		public void ShouldModifyAllFollowingTokensWhenDoubleQuoteRemoved()
-		{
-			string beforeText = "(def \"un \"C\" :add \"1.0\"} list";
-			string afterText = "(def un \"C\" :add \"1.0\"} list";
-			ValidateTokenization(beforeText, afterText);
-		}
-
-		[TestMethod]
-		public void ShouldRemoveFirstTokenWhenOneCharacterLongTokenDeletedFromStart()
-		{
-			string beforeText = "(def";
-			string afterText = "def";
-			ValidateTokenization(beforeText, afterText);
-		}
-
-		[TestMethod]
-		public void ShouldAddTokensWhenNoTokensExist()
-		{
-			string beforeText = "";
-			string afterText = "def asdf asdf";
-			ValidateTokenization(beforeText, afterText);
-		}
-
-		[TestMethod]
-		public void ShouldRemoveAllTokensWhenChangeDeletesEverything()
-		{
-			string beforeText = "def asdf asdf";
-			string afterText = "";
-			ValidateTokenization(beforeText, afterText);
+			ValidateTokenization("; ", "; one");
 		}
 
 		[TestMethod]
 		public void ShouldConvertUCharacterTokenFollowedByThreeNumbersIntoACharacterWhenAddingAFourthNumber()
 		{
-			string beforeText = "\\u123 ";
-			string afterText = "\\u1234 ";
-			ValidateTokenization(beforeText, afterText);
+			ValidateTokenization("\\u123 ", "\\u1234 ");
 		}
 
 		[TestMethod]
-		public void ShouldAllowForChangesToNotStartAtBeginningOfChangePosition()
+		public void ShouldAllowForChangesToNotStartAtBeginningOfChangeData()
 		{
 			string beforeText = "(def asdf '(asdf asdf  asdf asdf))";
 			string afterText = "(def asdf '(asdf asdf asdf asdf))";

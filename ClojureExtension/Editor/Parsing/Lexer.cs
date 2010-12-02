@@ -341,6 +341,7 @@ namespace Microsoft.ClojureExtension.Editor.Parsing
 			var parsedString = new StringBuilder();
 			char currentChar = _source.Next();
 			parsedString.Append(currentChar);
+			if (!_source.HasMore) return parsedString.ToString();
 			currentChar = _source.Next();
 			bool previousCharWasBackslash = false;
 

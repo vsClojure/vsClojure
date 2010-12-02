@@ -471,5 +471,14 @@ namespace ClojureExtension.Tests.Editor.Parsing
 			Assert.AreEqual(TokenType.IgnoreReaderMacro, token.Type);
 			Assert.AreEqual("#_", token.Text);
 		}
+
+		[TestMethod]
+		public void ShouldReturnStringTokenWhenInputIsOnlyADoubleQuote()
+		{
+			Lexer lexer = new Lexer(new PushBackCharacterStream(new StringReader("\"")));
+			Token token = lexer.Next();
+			Assert.AreEqual(TokenType.String, token.Type);
+			Assert.AreEqual("\"", token.Text);
+		}
 	}
 }

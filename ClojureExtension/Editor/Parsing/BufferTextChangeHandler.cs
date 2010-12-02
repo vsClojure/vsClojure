@@ -33,14 +33,17 @@ namespace Microsoft.ClojureExtension.Editor.Parsing
 			Lexer lexer = new Lexer(new PushBackCharacterStream(new StringReader(_textBuffer.GetText(firstToken.IndexToken.StartIndex))));
 			int oldBufferStartIndex = firstToken.IndexToken.StartIndex + change.Delta;
 			int newBufferStartIndex = firstToken.IndexToken.StartIndex;
+			int endPosition = change.Position + change.LengthOfChangedText;
 			LinkedList<LinkedListNode<Token>> oldTokens = new LinkedList<LinkedListNode<Token>>();
 			LinkedList<IndexToken> newTokens = new LinkedList<IndexToken>();
 			Token newToken = lexer.Next();
-			LinkedListNode<Token> oldToken = firstToken.Node;
+			IndexTokenNode oldToken = firstToken;
 
-			while (newBufferStartIndex + newToken.Length != oldBufferStartIndex + oldToken.Value.Length || oldBufferStartIndex + oldToken.Value.Length < change.Position + change.LengthOfChangedText)
+			while (newBufferStartIndex + newToken.Length != oldBufferStartIndex + oldToken.IndexToken.Token.Length
+				|| (change.Delta < 0 && oldToken.IndexToken.StartIndex + oldToken.IndexToken.Token.Length < endPosition)
+				|| (change.Delta > 0 && newBufferStartIndex + newToken.Length < endPosition))
 			{
-				if (newBufferStartIndex + newToken.Length < oldBufferStartIndex + oldToken.Value.Length)
+				if (newBufferStartIndex + newToken.Length < oldBufferStartIndex + oldToken.IndexToken.Token.Length)
 				{
 					newTokens.AddLast(new IndexToken(newBufferStartIndex, newToken));
 					newBufferStartIndex += newToken.Length;
@@ -48,13 +51,13 @@ namespace Microsoft.ClojureExtension.Editor.Parsing
 				}
 				else
 				{
-					oldTokens.AddLast(oldToken);
-					oldBufferStartIndex += oldToken.Value.Length;
-					oldToken = oldToken.Next;
+					oldTokens.AddLast(oldToken.Node);
+					oldBufferStartIndex += oldToken.IndexToken.Token.Length;
+					oldToken = oldToken.Next();
 				}
 			}
 
-			oldTokens.AddLast(oldToken);
+			oldTokens.AddLast(oldToken.Node);
 			newTokens.AddLast(new IndexToken(newBufferStartIndex, newToken));
 			foreach (var t in newTokens) _tokenizedBuffer.CurrentState.AddBefore(firstToken.Node, t.Token);
 			foreach (var t in oldTokens) _tokenizedBuffer.CurrentState.Remove(t);

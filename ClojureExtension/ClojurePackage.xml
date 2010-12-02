@@ -22,9 +22,7 @@
 				<Parent guid="clojureGroups" id="clojureProjectMenuGroup" />
 				<CommandFlag>DynamicVisibility</CommandFlag>
 				<Strings>
-					<CommandName>
-						Clojure.StartProjectRepl
-					</CommandName>
+					<CommandName>Clojure.StartProjectRepl</CommandName>
 					<ButtonText>Start Clojure Repl</ButtonText>
 				</Strings>
 			</Button>
@@ -32,9 +30,7 @@
 				<Parent guid="clojureGroups" id="clojureFileMenuGroup" />
 				<CommandFlag>DynamicVisibility</CommandFlag>
 				<Strings>
-					<CommandName>
-						Clojure.StartProjectRepl
-					</CommandName>
+					<CommandName>Clojure.StartProjectRepl</CommandName>
 					<ButtonText>Start Clojure Repl</ButtonText>
 				</Strings>
 			</Button>
@@ -42,33 +38,23 @@
 				<Parent guid="clojureGroups" id="clojureProjectMenuGroup" />
 				<CommandFlag>DynamicVisibility</CommandFlag>
 				<Strings>
-					<CommandName>
-						Clojure.LoadProjectIntoRepl
-					</CommandName>
-					<ButtonText>
-						Load Project into Repl
-					</ButtonText>
+					<CommandName>Clojure.LoadProjectIntoRepl</CommandName>
+					<ButtonText>Load Project into Repl</ButtonText>
 				</Strings>
 			</Button>
 			<Button guid="clojureGroups" id="loadFileIntoActiveRepl" priority="0" type="Button">
 				<Parent guid="clojureGroups" id="clojureFileMenuGroup" />
 				<CommandFlag>DynamicVisibility</CommandFlag>
 				<Strings>
-					<CommandName>
-						Clojure.LoadFileIntoRepl
-					</CommandName>
-					<ButtonText>
-						Load File(s) into Repl
-					</ButtonText>
+					<CommandName>Clojure.LoadFileIntoRepl</CommandName>
+					<ButtonText>Load File(s) into Repl</ButtonText>
 				</Strings>
 			</Button>
 			<Button guid="clojureGroups" id="loadActiveDocumentIntoRepl" priority="0" type="Button">
 				<Parent guid="clojureGroups" id="clojureCodeWindowMenuGroup" />
 				<CommandFlag>DynamicVisibility</CommandFlag>
 				<Strings>
-					<CommandName>
-						Clojure.LoadActiveDocumentIntoRepl
-					</CommandName>
+					<CommandName>Clojure.LoadActiveDocumentIntoRepl</CommandName>
 					<ButtonText>Load File Into Repl</ButtonText>
 				</Strings>
 			</Button>
@@ -76,12 +62,8 @@
 				<Parent guid="clojureGroups" id="clojureCodeWindowMenuGroup" />
 				<CommandFlag>DynamicVisibility</CommandFlag>
 				<Strings>
-					<CommandName>
-						Clojure.SwitchReplNamespaceToActiveDocument
-					</CommandName>
-					<ButtonText>
-						Switch to File's Namespace
-					</ButtonText>
+					<CommandName>Clojure.SwitchReplNamespaceToActiveDocument</CommandName>
+					<ButtonText>Switch to File's Namespace</ButtonText>
 				</Strings>
 			</Button>
 			<Button guid="clojureGroups" id="formatFile" priority="0" type="Button">

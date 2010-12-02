@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Editor\AutoFormat\AutoFormatterTests.cs" />
+    <Compile Include="Editor\AutoIndent\ClojureSmartIndentTests.cs" />
     <Compile Include="Editor\BraceMatching\MatchingBraceFinderTests.cs" />
     <Compile Include="Editor\Parsing\BufferTextChangeHandlerTests.cs" />
     <Compile Include="Editor\Parsing\LexerTests.cs" />
@@ -59,6 +60,7 @@
       <Name>ClojureExtension</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

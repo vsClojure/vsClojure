@@ -71,7 +71,7 @@ namespace Microsoft.ClojureExtension
         	editorFactoryService.TextViewCreated += (o, e) => e.TextView.GotAggregateFocus += (sender, args) =>
         	{
         		editorCommandFactory.UnwireEditorCommands();
-        		editorCommandFactory.WireCommandsTo(e.TextView);
+				if (e.TextView.TextSnapshot.ContentType.TypeName.ToLower() == "clojure") editorCommandFactory.WireCommandsTo(e.TextView);
         	};
         }
 
