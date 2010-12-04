@@ -51,7 +51,7 @@ namespace Microsoft.ClojureExtension.Editor.AutoIndent
 				previousIndentAmount = startOfLineText.Length - lineWhitespaceWithoutIndent.Length;
 			}
 
-			if (firstOpenBrace.Node.Value.Type == TokenType.ListStart) return previousIndentAmount + previousLineLength + 4;
+			if (firstOpenBrace.Node.Value.Type == TokenType.ListStart) return previousIndentAmount + previousLineLength + options.IndentSize;
 			return previousIndentAmount + previousLineLength + 1;
 		}
 	}

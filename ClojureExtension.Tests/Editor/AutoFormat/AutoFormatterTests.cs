@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using Microsoft.ClojureExtension.Editor.AutoFormat;
+using Microsoft.ClojureExtension.Editor.AutoIndent;
+using Microsoft.ClojureExtension.Editor.Options;
 using Microsoft.ClojureExtension.Editor.Parsing;
 using Microsoft.ClojureExtension.Utilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -23,7 +25,14 @@ namespace ClojureExtension.Tests.Editor.AutoFormat
 			_tokenizer = new Tokenizer();
 			_tokenizedBufferEntity = new Entity<LinkedList<Token>>();
 			_textBuffer = MockRepository.GenerateStub<ITextBufferAdapter>();
-			_formatter = new AutoFormatter(_textBuffer, _tokenizedBufferEntity);
+			var editorOptionsProvider = MockRepository.GenerateStub<IProvider<EditorOptions>>();
+			editorOptionsProvider.Stub(e => e.Get()).Return(new EditorOptions(4));
+
+			_formatter = new AutoFormatter(
+				_textBuffer,
+				_tokenizedBufferEntity,
+				new ClojureSmartIndentAdapter(
+					new ClojureSmartIndent(_tokenizedBufferEntity), editorOptionsProvider));
 		}
 
 		private void CreateTokensAndTextBuffer(string text)
@@ -117,14 +126,6 @@ namespace ClojureExtension.Tests.Editor.AutoFormat
 		{
 			string beforeText = "[\r\n1";
 			string afterText = "[\r\n 1";
-			ValidateFormatting(beforeText, afterText);
-		}
-
-		[TestMethod]
-		public void ShouldNotDecreaseIndentWhenEncounteringEndBraceWithoutStart()
-		{
-			string beforeText = "(println ]\r\n\r\n1";
-			string afterText = "(println]\r\n    1";
 			ValidateFormatting(beforeText, afterText);
 		}
 

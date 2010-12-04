@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
+using Microsoft.ClojureExtension.Editor.AutoIndent;
 using Microsoft.ClojureExtension.Editor.Parsing;
 using Microsoft.ClojureExtension.Utilities;
 
@@ -10,14 +10,19 @@ namespace Microsoft.ClojureExtension.Editor.AutoFormat
 	{
 		private readonly ITextBufferAdapter _textBuffer;
 		private readonly Entity<LinkedList<Token>> _tokenizedBuffer;
+		private readonly ClojureSmartIndentAdapter _smartIndent;
 		private Stack<Token> _dataStructureStack;
 		private LinkedListNode<Token> _currentToken;
-		private const int IndentSize = 4;
+		private int _currentUnmodifiedBufferIndex;
 
-		public AutoFormatter(ITextBufferAdapter textBuffer, Entity<LinkedList<Token>> tokenizedBuffer)
+		public AutoFormatter(
+			ITextBufferAdapter textBuffer,
+			Entity<LinkedList<Token>> tokenizedBuffer,
+			ClojureSmartIndentAdapter smartIndent)
 		{
 			_textBuffer = textBuffer;
 			_tokenizedBuffer = tokenizedBuffer;
+			_smartIndent = smartIndent;
 		}
 
 		public void Format()
@@ -44,15 +49,16 @@ namespace Microsoft.ClojureExtension.Editor.AutoFormat
 					else if (_dataStructureStack.Count == 0 && _currentToken.Previous.Value.Type != TokenType.Comment) tokenText = "\r\n\r\n";
 					else if (_dataStructureStack.Count == 0) tokenText = moreThanOneLineBreak ? "\r\n\r\n" : hasAtLeastOneLineBreak ? "\r\n" : "";
 					else if (_currentToken.Next.Value.Type == TokenType.Comment && !tokenText.EndsWith(" ")) tokenText = "\r\n";
-					else if (tokenText.Contains("\r\n")) tokenText = "\r\n" + GetIndent();
+					else if (tokenText.Contains("\r\n")) tokenText = "\r\n" + " ".Repeat(_smartIndent.GetIndent(_currentUnmodifiedBufferIndex));
 					else if (_currentToken.Next.Value.Type.IsBraceEnd()) tokenText = "";
 					else if (_currentToken.Previous.Value.Type.IsBraceStart()) tokenText = "";
 					else tokenText = " ";
 				}
 				else if (_currentToken.Next != null && _currentToken.Next.Value.Type == TokenType.Comment) tokenText += " ";
 
-				output.Append(tokenText);
+				_currentUnmodifiedBufferIndex += _currentToken.Value.Length;
 				_currentToken = _currentToken.Next;
+				output.Append(tokenText);
 			}
 
 			_textBuffer.SetText(output.ToString());
@@ -69,15 +75,6 @@ namespace Microsoft.ClojureExtension.Editor.AutoFormat
 			}
 
 			return false;
-		}
-
-		private string GetIndent()
-		{
-			string indent = "";
-			int indentAmount = IndentSize*_dataStructureStack.Count;
-			if (_dataStructureStack.Count > 0 && _dataStructureStack.Peek().Type != TokenType.ListStart) indentAmount = IndentSize*(_dataStructureStack.Count - 1) + 1;
-			for (int i = 0; i < indentAmount; i++) indent += " ";
-			return indent;
 		}
 	}
 }

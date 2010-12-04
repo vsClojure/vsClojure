@@ -18,9 +18,7 @@ namespace Microsoft.ClojureExtension.Editor.Options
 
 		public EditorOptions Get()
 		{
-			return new EditorOptions(
-				_editorOptions.GetOptionValue<int>(new IndentSize().Key),
-				_editorOptions.GetOptionValue<bool>(new ConvertTabsToSpaces().Key));
+			return new EditorOptions(_editorOptions.GetOptionValue<int>(new IndentSize().Key));
 		}
 	}
 }

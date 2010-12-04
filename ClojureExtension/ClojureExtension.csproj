@@ -92,6 +92,7 @@
     <Compile Include="Configuration\SettingsStoreProvider.cs" />
     <Compile Include="Editor\AutoFormat\AutoFormatter.cs" />
     <Compile Include="Editor\AutoIndent\ClojureSmartIndent.cs" />
+    <Compile Include="Editor\AutoIndent\ClojureSmartIndentAdapter.cs" />
     <Compile Include="Editor\AutoIndent\SmartIndentAdapter.cs" />
     <Compile Include="Editor\AutoIndent\SmartIndentProvider.cs" />
     <Compile Include="Editor\BraceMatching\MatchingBraceFinder.cs" />
@@ -158,6 +159,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\Entity.cs" />
     <Compile Include="Utilities\IProvider.cs" />
+    <Compile Include="Utilities\StringExtensions.cs" />
     <EmbeddedResource Include="Resources\ClojureImageList.bmp" />
     <Content Include="Project\Launching\Runners\ClojureConsoleRunner.exe">
       <IncludeInVSIX>true</IncludeInVSIX>

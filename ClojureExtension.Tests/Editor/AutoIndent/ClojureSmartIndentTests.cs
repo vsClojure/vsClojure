@@ -24,7 +24,7 @@ namespace ClojureExtension.Tests.Editor.AutoIndent
 			_tokenizer = new Tokenizer();
 			_tokenizedBufferEntity = new Entity<LinkedList<Token>>();
 			_clojureSmartIndent = new ClojureSmartIndent(_tokenizedBufferEntity);
-			_defaultOptions = new EditorOptions(4, true);
+			_defaultOptions = new EditorOptions(4);
 		}
 
 		[TestMethod]
