@@ -79,7 +79,7 @@ namespace Microsoft.ClojureExtension
 
 					IEditorOptions editorOptions = componentModel.GetService<IEditorOptionsFactoryService>().GetOptions(e.TextView);
 					editorOptions.SetOptionValue(new ConvertTabsToSpaces().Key, true);
-					editorOptions.SetOptionValue(new IndentSize().Key, 4);
+					editorOptions.SetOptionValue(new IndentSize().Key, 2);
 				};
 		}
 

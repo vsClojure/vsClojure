@@ -25,14 +25,7 @@ namespace ClojureExtension.Tests.Editor.AutoFormat
 			_tokenizer = new Tokenizer();
 			_tokenizedBufferEntity = new Entity<LinkedList<Token>>();
 			_textBuffer = MockRepository.GenerateStub<ITextBufferAdapter>();
-			var editorOptionsProvider = MockRepository.GenerateStub<IProvider<EditorOptions>>();
-			editorOptionsProvider.Stub(e => e.Get()).Return(new EditorOptions(4));
-
-			_formatter = new AutoFormatter(
-				_textBuffer,
-				_tokenizedBufferEntity,
-				new ClojureSmartIndentAdapter(
-					new ClojureSmartIndent(_tokenizedBufferEntity), editorOptionsProvider));
+			_formatter = new AutoFormatter(_textBuffer, _tokenizedBufferEntity);
 		}
 
 		private void CreateTokensAndTextBuffer(string text)
@@ -45,7 +38,7 @@ namespace ClojureExtension.Tests.Editor.AutoFormat
 		private void ValidateFormatting(string beforeText, string afterText)
 		{
 			CreateTokensAndTextBuffer(beforeText);
-			_formatter.Format();
+			_formatter.Format(new EditorOptions(4));
 			Assert.AreEqual(afterText, _textBufferState);
 		}
 
@@ -246,6 +239,30 @@ namespace ClojureExtension.Tests.Editor.AutoFormat
 		{
 			string beforeText = "(\r\n;asdf\r\n)";
 			string afterText = "(\r\n;asdf\r\n    )";
+			ValidateFormatting(beforeText, afterText);
+		}
+
+		[TestMethod]
+		public void ShouldIndentNextLineToLastOpenDatastructureIndexPlusIndentAmount()
+		{
+			string beforeText = "(def\r\n{\r\n:asdf 1\r\n:fdsa 2})";
+			string afterText = "(def\r\n    {\r\n     :asdf 1\r\n     :fdsa 2})";
+			ValidateFormatting(beforeText, afterText);
+		}
+
+		[TestMethod]
+		public void Test()
+		{
+			string beforeText = "(\r\n)asdf\r\n}";
+			string afterText = "(\r\n    )\r\n\r\nasdf\r\n\r\n}";
+			ValidateFormatting(beforeText, afterText);
+		}
+
+		[TestMethod]
+		public void Test2()
+		{
+			string beforeText = "(\r\n    } as) asdf";
+			string afterText = "(\r\n    } as)\r\n\r\nasdf";
 			ValidateFormatting(beforeText, afterText);
 		}
 	}

@@ -28,13 +28,8 @@ namespace Microsoft.ClojureExtension.Editor
 		{
 			var editorOptionsBuilder = new EditorOptionsBuilder(_editorOptionsFactoryService.GetOptions(view));
 			var tokenizedBuffer = TokenizedBufferBuilder.TokenizedBuffers[view.TextBuffer];
-
-			AutoFormatter formatter = new AutoFormatter(
-				new TextBufferAdapter(view.TextBuffer),
-				tokenizedBuffer,
-				new ClojureSmartIndentAdapter(new ClojureSmartIndent(tokenizedBuffer), editorOptionsBuilder));
-
-			_menuCommandService.AddCommand(new MenuCommand((sender, args) => formatter.Format(), new CommandID(Guids.GuidClojureExtensionCmdSet, 15)));
+			AutoFormatter formatter = new AutoFormatter(new TextBufferAdapter(view.TextBuffer), tokenizedBuffer);
+			_menuCommandService.AddCommand(new MenuCommand((sender, args) => formatter.Format(editorOptionsBuilder.Get()), new CommandID(Guids.GuidClojureExtensionCmdSet, 15)));
 		}
 
 		public void UnwireEditorCommands()
