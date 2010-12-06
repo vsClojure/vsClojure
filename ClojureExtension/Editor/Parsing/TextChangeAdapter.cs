@@ -21,7 +21,7 @@ namespace Microsoft.ClojureExtension.Editor.Parsing
 
 			foreach (var change in args.Changes)
 			{
-				changeData.Add(new TextChangeData(change.OldPosition, change.Delta, change.NewLength));
+				changeData.Add(new TextChangeData(change.OldPosition, change.Delta, change.OldSpan.Length));
 			}
 
 			_bufferTextChangeHandler.OnTextChanged(changeData);
