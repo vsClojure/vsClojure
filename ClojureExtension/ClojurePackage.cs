@@ -29,6 +29,7 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
+using Microsoft.VisualStudio.Text.Tagging;
 
 namespace Microsoft.ClojureExtension
 {
@@ -70,16 +71,20 @@ namespace Microsoft.ClojureExtension
 
 			ITextEditorFactoryService editorFactoryService = componentModel.GetService<ITextEditorFactoryService>();
 
-			editorFactoryService.TextViewCreated += (o, e) => e.TextView.GotAggregateFocus +=
-				(sender, args) =>
+			editorFactoryService.TextViewCreated +=
+				(o, e) =>
 				{
-					editorCommandFactory.UnwireEditorCommands();
-					if (e.TextView.TextSnapshot.ContentType.TypeName.ToLower() != "clojure") return;
-					editorCommandFactory.WireCommandsTo(e.TextView);
+					e.TextView.GotAggregateFocus +=
+						(sender, args) =>
+						{
+							editorCommandFactory.UnwireEditorCommands();
+							if (e.TextView.TextSnapshot.ContentType.TypeName.ToLower() != "clojure") return;
+							editorCommandFactory.WireCommandsTo(e.TextView);
 
-					IEditorOptions editorOptions = componentModel.GetService<IEditorOptionsFactoryService>().GetOptions(e.TextView);
-					editorOptions.SetOptionValue(new ConvertTabsToSpaces().Key, true);
-					editorOptions.SetOptionValue(new IndentSize().Key, 2);
+							IEditorOptions editorOptions = componentModel.GetService<IEditorOptionsFactoryService>().GetOptions(e.TextView);
+							editorOptions.SetOptionValue(new ConvertTabsToSpaces().Key, true);
+							editorOptions.SetOptionValue(new IndentSize().Key, 2);
+						};
 				};
 		}
 
