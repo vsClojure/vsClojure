@@ -10,6 +10,8 @@ PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
 ***************************************************************************/
 
 using System;
+using System.Drawing;
+using System.Windows.Forms;
 using Microsoft.VisualStudio.Project;
 using Microsoft.VisualStudio.Project.Automation;
 
@@ -51,6 +53,13 @@ namespace Microsoft.ClojureExtension.Project
 
 			return automationObject;
 		}
+
+		public override object GetIconHandle(bool open)
+		{
+			Bitmap image = (Bitmap) ClojureProjectNode.ImageList.Images[1];
+			return image.GetHicon();
+		}
+
 		#endregion
 
 		#region Private implementation
