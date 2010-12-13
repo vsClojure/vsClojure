@@ -62,7 +62,7 @@ namespace Microsoft.ClojureExtension.Editor.AutoFormat
 				else _currentLineIndex += tokenText.Length;
 
 				if (_currentToken.Value.Type.IsBraceStart()) _indentStack.Push(_currentLineIndex - tokenText.Count(' '));
-				else if (_indentStack.Count > 0 && _currentToken.Value.Type.IsBraceEnd()) _indentStack.Pop();
+				else if (_indentStack.Count > _dataStructureStack.Count) _indentStack.Pop();
 
 				_currentToken = _currentToken.Next;
 				output.Append(tokenText);

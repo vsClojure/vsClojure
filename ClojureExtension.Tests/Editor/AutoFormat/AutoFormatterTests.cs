@@ -251,7 +251,7 @@ namespace ClojureExtension.Tests.Editor.AutoFormat
 		}
 
 		[TestMethod]
-		public void Test()
+		public void ShouldSeparateTopLevelExpressionsEvenWhenTheyAreNotSeparatedByWhitespace()
 		{
 			string beforeText = "(\r\n)asdf\r\n}";
 			string afterText = "(\r\n    )\r\n\r\nasdf\r\n\r\n}";
@@ -259,11 +259,17 @@ namespace ClojureExtension.Tests.Editor.AutoFormat
 		}
 
 		[TestMethod]
-		public void Test2()
+		public void ShouldSeparateTopLevelExpressionsEvenWhenTheyAreOnTheSameLine()
 		{
 			string beforeText = "(\r\n    } as) asdf";
 			string afterText = "(\r\n    } as)\r\n\r\nasdf";
 			ValidateFormatting(beforeText, afterText);
+		}
+
+		[TestMethod]
+		public void ShouldIgnoreUnmatchedBracesWhenDeterminingIndent()
+		{
+			ValidateFormatting("[}\r\n[", "[}\r\n [");
 		}
 	}
 }
