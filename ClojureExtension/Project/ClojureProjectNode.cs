@@ -51,6 +51,11 @@ namespace Microsoft.ClojureExtension.Project
         private static ImageList imageList;
         private VSProject vsProject;
 
+    	public ClojurePackage Package
+    	{
+			get { return package; }
+    	}
+
         #endregion
 
         #region Constructors

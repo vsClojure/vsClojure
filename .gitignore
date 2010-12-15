@@ -6,3 +6,5 @@ bin/
 obj/
 *.user
 *.suo
+Debug/
+Release/
