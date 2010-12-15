@@ -8,17 +8,14 @@ Description:
 
 Status:
 
-	In development - Not ready for use.
+	In development - Beta release coming soon.
 
 Building:
 
 	1.) Install the Visual Studio 2010 SDK.
 	2.) Clone the vsClojure repository.
-	3.) Download the Managed Package Framework (http://mpfproj.codeplex.com/).
-	4.) Create a folder named "ManagedPackageFramework" in the solution directory.
-	5.) Copy the ManagedPackageFramework source to the new folder. 
-	6.) Open the vsClojure solution.
-	7.) Build
+	3.) Open the vsClojure solution.
+	4.) Build
 	
 Running:
 
