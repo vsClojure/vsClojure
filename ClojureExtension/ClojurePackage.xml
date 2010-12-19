@@ -77,6 +77,12 @@
 		</Buttons>
 	</Commands>
 
+	<KeyBindings>
+		<KeyBinding guid="clojureGroups" id="loadActiveDocumentIntoRepl" editor="guidVSStd97" key1="L" mod1="Alt" />
+		<KeyBinding guid="clojureGroups" id="switchReplNamespaceToActiveDocument" editor="guidVSStd97" key1="S" mod1="Alt"/>
+		<KeyBinding guid="clojureGroups" id="formatFile" editor="guidVSStd97" key1="F" mod1="Alt" />
+	</KeyBindings>
+	
 	<Symbols>
 		<GuidSymbol name="clojurePackage" value="{40953a10-3425-499c-8162-a90059792d13}" />
 		<GuidSymbol name="clojureGroups" value="{44f0b6b9-595a-426f-88d1-468f7af14242}">
