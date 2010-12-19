@@ -10,6 +10,7 @@ PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
 ***************************************************************************/
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Linq;
 using System.Reflection;
@@ -23,13 +24,13 @@ using Microsoft.ClojureExtension.Project;
 using Microsoft.ClojureExtension.Project.Hierarchy;
 using Microsoft.ClojureExtension.Repl;
 using Microsoft.ClojureExtension.Repl.Operations;
+using Microsoft.ClojureExtension.Utilities;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Project;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
-using Microsoft.VisualStudio.Text.Tagging;
 
 namespace Microsoft.ClojureExtension
 {
@@ -48,19 +49,52 @@ namespace Microsoft.ClojureExtension
 		protected override void Initialize()
 		{
 			base.Initialize();
-			AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
-
+			RegisterProjectFactory(new ClojureProjectFactory(this));
+			AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainAssemblyResolve;
+			HideAllClojureEditorMenuCommands();
 			CreateSettingsStore();
 			IntializeMenuItems();
-			RegisterProjectFactory(new ClojureProjectFactory(this));
+			EnableTokenizationOfNewClojureBuffers();
+			SetupNewClojureBuffersWithSpacingOptions();
+			EnableMenuCommandsOnNewClojureBuffers();
+		}
 
+		private void EnableMenuCommandsOnNewClojureBuffers()
+		{
+			var componentModel = (IComponentModel) GetService(typeof (SComponentModel));
+			ITextEditorFactoryService editorFactoryService = componentModel.GetService<ITextEditorFactoryService>();
+			EditorCommandFactory editorCommandFactory = new EditorCommandFactory(componentModel.GetService<IEditorOptionsFactoryService>());
+			OleMenuCommandService menuCommandService = (OleMenuCommandService) GetService(typeof (IMenuCommandService));
+
+			editorFactoryService.TextViewCreated +=
+				(o, e) =>
+				{
+					if (e.TextView.TextSnapshot.ContentType.TypeName.ToLower() != "clojure") return;
+					List<MenuCommand> menuCommands = editorCommandFactory.CreateMenuCommands(e.TextView);
+					MenuCommandListWirer wirer = new MenuCommandListWirer(menuCommandService, menuCommands, () => true);
+					e.TextView.GotAggregateFocus += (sender, args) => wirer.TryToShowMenuCommands();
+				};
+		}
+
+		private void SetupNewClojureBuffersWithSpacingOptions()
+		{
+			var componentModel = (IComponentModel) GetService(typeof (SComponentModel));
+			ITextEditorFactoryService editorFactoryService = componentModel.GetService<ITextEditorFactoryService>();
+
+			editorFactoryService.TextViewCreated +=
+				(o, e) =>
+				{
+					if (e.TextView.TextSnapshot.ContentType.TypeName.ToLower() != "clojure") return;
+					IEditorOptions editorOptions = componentModel.GetService<IEditorOptionsFactoryService>().GetOptions(e.TextView);
+					editorOptions.SetOptionValue(new ConvertTabsToSpaces().Key, true);
+					editorOptions.SetOptionValue(new IndentSize().Key, 2);
+				};
+		}
+
+		private void EnableTokenizationOfNewClojureBuffers()
+		{
 			var componentModel = (IComponentModel) GetService(typeof (SComponentModel));
 			TokenizedBufferBuilder tokenizedBufferBuilder = new TokenizedBufferBuilder(new Tokenizer());
-
-			EditorCommandFactory editorCommandFactory = new EditorCommandFactory(
-				(OleMenuCommandService) GetService(typeof (IMenuCommandService)),
-				componentModel.GetService<IEditorOptionsFactoryService>());
-
 			ITextDocumentFactoryService documentFactoryService = componentModel.GetService<ITextDocumentFactoryService>();
 
 			documentFactoryService.TextDocumentDisposed +=
@@ -68,24 +102,17 @@ namespace Microsoft.ClojureExtension
 
 			documentFactoryService.TextDocumentCreated +=
 				(o, e) => { if (e.TextDocument.FilePath.EndsWith(".clj")) tokenizedBufferBuilder.CreateTokenizedBuffer(e.TextDocument.TextBuffer); };
+		}
 
-			ITextEditorFactoryService editorFactoryService = componentModel.GetService<ITextEditorFactoryService>();
-
-			editorFactoryService.TextViewCreated +=
-				(o, e) =>
-				{
-					e.TextView.GotAggregateFocus +=
-						(sender, args) =>
-						{
-							editorCommandFactory.UnwireEditorCommands();
-							if (e.TextView.TextSnapshot.ContentType.TypeName.ToLower() != "clojure") return;
-							editorCommandFactory.WireCommandsTo(e.TextView);
-
-							IEditorOptions editorOptions = componentModel.GetService<IEditorOptionsFactoryService>().GetOptions(e.TextView);
-							editorOptions.SetOptionValue(new ConvertTabsToSpaces().Key, true);
-							editorOptions.SetOptionValue(new IndentSize().Key, 2);
-						};
-				};
+		private void HideAllClojureEditorMenuCommands()
+		{
+			List<int> allCommandIds = new List<int>() {11, 12, 13, 14, 15};
+			DTE2 dte = (DTE2) GetService(typeof (DTE));
+			OleMenuCommandService menuCommandService = (OleMenuCommandService) GetService(typeof (IMenuCommandService));
+			List<MenuCommand> menuCommands = new List<MenuCommand>();
+			foreach (int commandId in allCommandIds) menuCommands.Add(new MenuCommand((o, s) => { }, new CommandID(Guids.GuidClojureExtensionCmdSet, commandId)));
+			MenuCommandListHider hider = new MenuCommandListHider(menuCommandService, menuCommands);
+			dte.Events.WindowEvents.WindowActivated += (o, e) => hider.HideMenuCommands();
 		}
 
 		private void CreateSettingsStore()
@@ -120,7 +147,7 @@ namespace Microsoft.ClojureExtension
 			get { return "ClojureProj"; }
 		}
 
-		private static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+		private static Assembly CurrentDomainAssemblyResolve(object sender, ResolveEventArgs args)
 		{
 			return AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(assembly => assembly.FullName == args.Name);
 		}

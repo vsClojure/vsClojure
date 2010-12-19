@@ -38,7 +38,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Clojure">
-      <HintPath>C:\Users\Jon\Desktop\ClojureCLR\clojure-clr\Clojure\Clojure.Main\bin\Debug\Clojure.dll</HintPath>
+      <HintPath>C:\Users\Jon\Desktop\clojure-clr-1.2.0\clojure-clr-1.2.0\Clojure.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />

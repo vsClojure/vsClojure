@@ -51,11 +51,19 @@ namespace Microsoft.ClojureExtension.Repl
 			interactiveText.PreviewTextInput += inputKeyHandler.PreviewTextInput;
 			interactiveText.PreviewKeyDown += inputKeyHandler.PreviewKeyDown;
 
+			MenuCommandListWirer menuCommandListWirer = new MenuCommandListWirer(
+				_menuCommandService,
+				CreateMenuCommands(replProcess, interactiveText),
+				() => _dte.ActiveDocument != null && _dte.ActiveDocument.FullName.ToLower().EndsWith(".clj") && replManager.SelectedItem == tabItem);
+
+			_dte.Events.WindowEvents.WindowActivated += (o, e) => menuCommandListWirer.TryToShowMenuCommands();
+
 			interactiveText.Loaded +=
 				(o, e) =>
 				{
 					if (outputReaderThread.IsAlive) return;
 					replProcess.Start();
+					replProcess.StandardInput.AutoFlush = true;
 					outputReaderThread.Start();
 					errorReaderThread.Start();
 				};
@@ -74,23 +82,19 @@ namespace Microsoft.ClojureExtension.Repl
 					replManager.Items.Remove(tabItem);
 				};
 
-			replManager.SelectionChanged +=
-				(sender, eventData) => { if (replManager.SelectedItem == tabItem) BuildAndWireMenuCommands(replProcess, interactiveText); };
-
+			replManager.SelectionChanged += (sender, eventData) => menuCommandListWirer.TryToShowMenuCommands();
 			replManager.Items.Add(tabItem);
 			replManager.SelectedItem = tabItem;
 		}
 
-		private void BuildAndWireMenuCommands(Process replProcess, TextBox interactiveText)
+		private List<MenuCommand> CreateMenuCommands(Process replProcess, TextBox interactiveText)
 		{
-			UnwireExistingMenuCommands();
-
 			LoadFilesIntoRepl loadSelectedFilesIntoRepl =
 				new LoadFilesIntoRepl(
 					new ReplWriter(replProcess, interactiveText),
 					new SelectedFilesProvider(_dte.ToolWindows.SolutionExplorer),
 					_replToolWindow);
-
+			
 			LoadFilesIntoRepl loadSelectedProjectIntoRepl =
 				new LoadFilesIntoRepl(
 					new ReplWriter(replProcess, interactiveText),
@@ -108,21 +112,13 @@ namespace Microsoft.ClojureExtension.Repl
 				new SwitchNamespaceToFile(
 					new ActiveFileProvider(_dte),
 					new ReplWriter(replProcess, interactiveText));
-
-			_menuCommandService.AddCommand(new MenuCommand((sender, args) => loadSelectedProjectIntoRepl.Execute(), new CommandID(Guids.GuidClojureExtensionCmdSet, 11)));
-			_menuCommandService.AddCommand(new MenuCommand((sender, args) => loadSelectedFilesIntoRepl.Execute(), new CommandID(Guids.GuidClojureExtensionCmdSet, 12)));
-			_menuCommandService.AddCommand(new MenuCommand((sender, args) => loadActiveFileIntoRepl.Execute(), new CommandID(Guids.GuidClojureExtensionCmdSet, 13)));
-			_menuCommandService.AddCommand(new MenuCommand((sender, args) => switchNamespaceToFile.Execute(), new CommandID(Guids.GuidClojureExtensionCmdSet, 14)));
-		}
-
-		private void UnwireExistingMenuCommands()
-		{
-			for (int i = 11; i < 15; i++)
-			{
-				MenuCommand menuCommand = _menuCommandService.FindCommand(new CommandID(Guids.GuidClojureExtensionCmdSet, i));
-				if (menuCommand == null) continue;
-				_menuCommandService.RemoveCommand(menuCommand);
-			}
+			
+			List<MenuCommand> menuCommands = new List<MenuCommand>();
+			menuCommands.Add(new MenuCommand((sender, args) => loadSelectedProjectIntoRepl.Execute(), new CommandID(Guids.GuidClojureExtensionCmdSet, 11)));
+			menuCommands.Add(new MenuCommand((sender, args) => loadSelectedFilesIntoRepl.Execute(), new CommandID(Guids.GuidClojureExtensionCmdSet, 12)));
+			menuCommands.Add(new MenuCommand((sender, args) => loadActiveFileIntoRepl.Execute(), new CommandID(Guids.GuidClojureExtensionCmdSet, 13)));
+			menuCommands.Add(new MenuCommand((sender, args) => switchNamespaceToFile.Execute(), new CommandID(Guids.GuidClojureExtensionCmdSet, 14)));
+			return menuCommands;
 		}
 
 		private static Process CreateReplProcess(string replPath, string projectPath)
@@ -136,8 +132,6 @@ namespace Microsoft.ClojureExtension.Repl
 			process.StartInfo.CreateNoWindow = true;
 			process.StartInfo.UseShellExecute = false;
 			process.StartInfo.EnvironmentVariables["clojure.load.path"] = projectPath;
-			process.Start();
-			process.StandardInput.AutoFlush = true;
 			return process;
 		}
 	}
