@@ -52,11 +52,21 @@ namespace Microsoft.ClojureExtension
 			RegisterProjectFactory(new ClojureProjectFactory(this));
 			AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainAssemblyResolve;
 			HideAllClojureEditorMenuCommands();
-			CreateSettingsStore();
-			IntializeMenuItems();
+			ShowClojureProjectMenuCommands();
 			EnableTokenizationOfNewClojureBuffers();
 			SetupNewClojureBuffersWithSpacingOptions();
 			EnableMenuCommandsOnNewClojureBuffers();
+		}
+
+		private void HideAllClojureEditorMenuCommands()
+		{
+			List<int> allCommandIds = new List<int>() { 11, 12, 13, 14, 15 };
+			DTE2 dte = (DTE2)GetService(typeof(DTE));
+			OleMenuCommandService menuCommandService = (OleMenuCommandService)GetService(typeof(IMenuCommandService));
+			List<MenuCommand> menuCommands = new List<MenuCommand>();
+			foreach (int commandId in allCommandIds) menuCommands.Add(new MenuCommand((o, s) => { }, new CommandID(Guids.GuidClojureExtensionCmdSet, commandId)));
+			MenuCommandListHider hider = new MenuCommandListHider(menuCommandService, menuCommands);
+			dte.Events.WindowEvents.WindowActivated += (o, e) => hider.HideMenuCommands();
 		}
 
 		private void EnableMenuCommandsOnNewClojureBuffers()
@@ -65,6 +75,7 @@ namespace Microsoft.ClojureExtension
 			ITextEditorFactoryService editorFactoryService = componentModel.GetService<ITextEditorFactoryService>();
 			EditorCommandFactory editorCommandFactory = new EditorCommandFactory(componentModel.GetService<IEditorOptionsFactoryService>());
 			OleMenuCommandService menuCommandService = (OleMenuCommandService) GetService(typeof (IMenuCommandService));
+			DTE2 dte = (DTE2)GetService(typeof(DTE));
 
 			editorFactoryService.TextViewCreated +=
 				(o, e) =>
@@ -72,7 +83,7 @@ namespace Microsoft.ClojureExtension
 					if (e.TextView.TextSnapshot.ContentType.TypeName.ToLower() != "clojure") return;
 					List<MenuCommand> menuCommands = editorCommandFactory.CreateMenuCommands(e.TextView);
 					MenuCommandListWirer wirer = new MenuCommandListWirer(menuCommandService, menuCommands, () => true);
-					e.TextView.GotAggregateFocus += (sender, args) => wirer.TryToShowMenuCommands();
+					dte.Events.WindowEvents.WindowActivated += (sender, args) => wirer.TryToShowMenuCommands();
 				};
 		}
 
@@ -104,26 +115,7 @@ namespace Microsoft.ClojureExtension
 				(o, e) => { if (e.TextDocument.FilePath.EndsWith(".clj")) tokenizedBufferBuilder.CreateTokenizedBuffer(e.TextDocument.TextBuffer); };
 		}
 
-		private void HideAllClojureEditorMenuCommands()
-		{
-			List<int> allCommandIds = new List<int>() {11, 12, 13, 14, 15};
-			DTE2 dte = (DTE2) GetService(typeof (DTE));
-			OleMenuCommandService menuCommandService = (OleMenuCommandService) GetService(typeof (IMenuCommandService));
-			List<MenuCommand> menuCommands = new List<MenuCommand>();
-			foreach (int commandId in allCommandIds) menuCommands.Add(new MenuCommand((o, s) => { }, new CommandID(Guids.GuidClojureExtensionCmdSet, commandId)));
-			MenuCommandListHider hider = new MenuCommandListHider(menuCommandService, menuCommands);
-			dte.Events.WindowEvents.WindowActivated += (o, e) => hider.HideMenuCommands();
-		}
-
-		private void CreateSettingsStore()
-		{
-			IVsWritableSettingsStore settingsStore;
-			var settingsManager = (IVsSettingsManager) GetService(typeof (SVsSettingsManager));
-			settingsManager.GetWritableSettingsStore((uint) __VsSettingsScope.SettingsScope_UserSettings, out settingsStore);
-			SettingsStoreProvider.Store = new SettingsStore("Clojure", settingsStore);
-		}
-
-		private void IntializeMenuItems()
+		private void ShowClojureProjectMenuCommands()
 		{
 			OleMenuCommandService menuCommandService = (OleMenuCommandService) GetService(typeof (IMenuCommandService));
 			ReplToolWindow replToolWindow = (ReplToolWindow) FindToolWindow(typeof (ReplToolWindow), 0, true);
