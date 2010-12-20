@@ -24,10 +24,7 @@ namespace Microsoft.ClojureExtension.Configuration
     {
         private string _defaultNamespace;
         private string _clojureFrameworkPath;
-        private string _startupNamespace;
-        private string _startupFunction;
-        private string _startupArguments;
-        private LaunchType _launchType;
+        private string _targetFile;
 
         public GeneralPropertyPage()
         {
@@ -48,67 +45,15 @@ namespace Microsoft.ClojureExtension.Configuration
             }
         }
 
-        [Category("Clojure")]
-        [DisplayName("Default Namespace")]
-        [Description("Default Namespace")]
-        public string DefaultNamespace
-        {
-            get { return _defaultNamespace; }
-            set
-            {
-                _defaultNamespace = value;
-                IsDirty = true;
-            }
-        }
-
         [Category("Running")]
-        [DisplayName("Startup Function")]
-        [Description("Startup Function")]
-        public string StartupFunction
+        [DisplayName("Startup File")]
+        [Description("Startup File")]
+        public string TargetFile
         {
-            get { return _startupFunction; }
+			get { return _targetFile; }
             set
             {
-                _startupFunction = value;
-                IsDirty = true;
-            }
-        }
-
-        [Category("Running")]
-        [DisplayName("Startup Namespace")]
-        [Description("Startup Namespace")]
-        public string StartupNamespace
-        {
-            get { return _startupNamespace; }
-            set
-            {
-                _startupNamespace = value;
-                IsDirty = true;
-            }
-        }
-
-        [Category("Running")]
-        [DisplayName("Startup Arguments")]
-        [Description("Startup Arguments")]
-        public string StartupArguments
-        {
-            get { return _startupArguments; }
-            set
-            {
-                _startupArguments = value;
-                IsDirty = true;
-            }
-        }
-
-        [Category("Running")]
-        [DisplayName("Launch As")]
-        [Description("Launch As")]
-        public LaunchType LaunchAs
-        {
-            get { return _launchType; }
-            set
-            {
-                _launchType = value;
+				_targetFile = value;
                 IsDirty = true;
             }
         }
@@ -138,20 +83,14 @@ namespace Microsoft.ClojureExtension.Configuration
         {
             _defaultNamespace = ProjectMgr.GetProjectProperty("RootNamespace", false);
             _clojureFrameworkPath = ProjectMgr.GetProjectProperty("ClojureFrameworkPath", false);
-            _startupNamespace = ProjectMgr.GetProjectProperty("StartupNamespace", false);
-            _startupFunction = ProjectMgr.GetProjectProperty("StartupFunction", false);
-            _startupArguments = ProjectMgr.GetProjectProperty("StartupArguments", false);
-            _launchType = (LaunchType)Enum.Parse(typeof(LaunchType), ProjectMgr.GetProjectProperty("LaunchType", false));
+			_targetFile = ProjectMgr.GetProjectProperty("StartupFile", false);
         }
 
         protected override int ApplyChanges()
         {
             ProjectMgr.SetProjectProperty("RootNamespace", _defaultNamespace);
             ProjectMgr.SetProjectProperty("ClojureFrameworkPath", _clojureFrameworkPath);
-            ProjectMgr.SetProjectProperty("StartupNamespace", _startupNamespace);
-            ProjectMgr.SetProjectProperty("StartupFunction", _startupFunction);
-            ProjectMgr.SetProjectProperty("StartupArguments", _startupArguments);
-            ProjectMgr.SetProjectProperty("LaunchType", _launchType.ToString());
+			ProjectMgr.SetProjectProperty("StartupFile", _targetFile);
             IsDirty = false;
             return VSConstants.S_OK;
         }

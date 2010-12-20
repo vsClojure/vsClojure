@@ -4,14 +4,10 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{8fe1995b-4b6d-4911-b563-a759467fdf53}</ProjectGuid>
-    <OutputType>Exe</OutputType>
     <RootNamespace>$(MSBuildProjectName)</RootNamespace>
     <AssemblyName>$(MSBuildProjectName)</AssemblyName>
-    <ClojureFrameworkPath></ClojureFrameworkPath>
-    <StartupNamespace>core</StartupNamespace>
-    <StartupFunction>main</StartupFunction>
-    <StartupArguments></StartupArguments>
-    <LaunchType>ConsoleApplication</LaunchType>
+    <ClojureFrameworkPath>$(LocalAppData)\Microsoft\VisualStudio\10.0Exp\Extensions\vsClojure\vsClojure\1.0\Runtimes\1.2.0</ClojureFrameworkPath>
+    <StartupFile>core.clj</StartupFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>

@@ -95,7 +95,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClojurePackage.cs" />
-    <Compile Include="Configuration\LaunchType.cs" />
     <Compile Include="Configuration\SettingsStore.cs" />
     <Compile Include="Configuration\SettingsStoreProvider.cs" />
     <Compile Include="Editor\AutoFormat\AutoFormatter.cs" />
@@ -170,21 +169,6 @@
     <Compile Include="Utilities\MenuCommandListWirer.cs" />
     <Compile Include="Utilities\StringExtensions.cs" />
     <EmbeddedResource Include="Resources\ClojureImageList.bmp" />
-    <Content Include="Project\Launching\Runners\ClojureConsoleRunner.exe">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="Project\Launching\Runners\ClojureConsoleRunner.pdb">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="Project\Launching\Runners\ClojureRunner.dll">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="Project\Launching\Runners\ClojureWindowsRunner.exe">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="Project\Launching\Runners\ClojureWindowsRunner.pdb">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
     <Content Include="Templates\ProjectItems\Clojure\clojure-file.clj">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
@@ -206,15 +190,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Project\Launching\Runners\ClojureConsoleRunner.exe.config">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="Project\Launching\Runners\ClojureRunner.dll.config">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="Project\Launching\Runners\ClojureWindowsRunner.exe.config">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
     </None>
