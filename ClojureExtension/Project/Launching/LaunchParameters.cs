@@ -7,25 +7,25 @@ namespace Microsoft.ClojureExtension.Project.Launching
 		private readonly string _runnerPath;
 		private readonly string _frameworkPath;
 		private readonly string _applicationPath;
-		private readonly string _targetFile;
+		private readonly string _startupFile;
 		private readonly string _remoteDebugMachine;
 		private readonly string _enableUnmanagedDebugging;
 		private readonly Guid _debugType;
 
-		public LaunchParameters(string runnerPath, string frameworkPath, string applicationPath, string targetFile, string remoteDebugMachine, string enableUnmanagedDebugging, Guid debugType)
+		public LaunchParameters(string runnerPath, string frameworkPath, string applicationPath, string startupFile, string remoteDebugMachine, string enableUnmanagedDebugging, Guid debugType)
 		{
 			_runnerPath = runnerPath;
 			_frameworkPath = frameworkPath;
 			_applicationPath = applicationPath;
-			_targetFile = targetFile;
+			_startupFile = startupFile;
 			_remoteDebugMachine = remoteDebugMachine;
 			_enableUnmanagedDebugging = enableUnmanagedDebugging;
 			_debugType = debugType;
 		}
 
-		public string TargetFile
+		public string StartupFile
 		{
-			get { return _targetFile; }
+			get { return _startupFile; }
 		}
 
 		public Guid DebugType

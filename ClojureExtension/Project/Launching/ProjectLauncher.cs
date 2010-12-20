@@ -31,7 +31,7 @@ namespace Microsoft.ClojureExtension.Project.Launching
             info.bstrCurDir = launchParameters.ApplicationPath;
             info.fSendStdoutToOutputWindow = 0;
             info.grfLaunch = grfLaunch;
-        	info.bstrArg = "-i " + launchParameters.TargetFile;
+        	info.bstrArg = "-i " + launchParameters.StartupFile;
             info.bstrRemoteMachine = launchParameters.RemoteDebugMachine;
             info.clsidCustom = launchParameters.DebugType;
 
