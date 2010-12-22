@@ -12,6 +12,7 @@ PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -22,6 +23,7 @@ using Microsoft.ClojureExtension.Editor;
 using Microsoft.ClojureExtension.Editor.Parsing;
 using Microsoft.ClojureExtension.Project;
 using Microsoft.ClojureExtension.Project.Hierarchy;
+using Microsoft.ClojureExtension.Project.Launching;
 using Microsoft.ClojureExtension.Repl;
 using Microsoft.ClojureExtension.Repl.Operations;
 using Microsoft.ClojureExtension.Utilities;
@@ -31,6 +33,7 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
+using Microsoft.Win32;
 
 namespace Microsoft.ClojureExtension
 {
@@ -56,13 +59,27 @@ namespace Microsoft.ClojureExtension
 			EnableTokenizationOfNewClojureBuffers();
 			SetupNewClojureBuffersWithSpacingOptions();
 			EnableMenuCommandsOnNewClojureBuffers();
+			EnableSettingOfRuntimePathForNewClojureProjects();
+		}
+
+		private void EnableSettingOfRuntimePathForNewClojureProjects()
+		{
+			DTE2 dte = (DTE2) GetService(typeof (DTE));
+			dte.Events.DTEEvents.OnStartupComplete +=
+				() =>
+				{
+					string codebaseRegistryLocation = ApplicationRegistryRoot + "\\Packages\\{" + PackageGuid + "}";
+					string runtimePath = Registry.GetValue(codebaseRegistryLocation, "CodeBase", "").ToString();
+					runtimePath = Path.GetDirectoryName(runtimePath) + "\\Runtimes\\";
+					Environment.SetEnvironmentVariable("VSCLOJURE_RUNTIMES_DIR", runtimePath, EnvironmentVariableTarget.User);
+				};
 		}
 
 		private void HideAllClojureEditorMenuCommands()
 		{
-			List<int> allCommandIds = new List<int>() { 11, 12, 13, 14, 15 };
-			DTE2 dte = (DTE2)GetService(typeof(DTE));
-			OleMenuCommandService menuCommandService = (OleMenuCommandService)GetService(typeof(IMenuCommandService));
+			List<int> allCommandIds = new List<int>() {11, 12, 13, 14, 15};
+			DTE2 dte = (DTE2) GetService(typeof (DTE));
+			OleMenuCommandService menuCommandService = (OleMenuCommandService) GetService(typeof (IMenuCommandService));
 			List<MenuCommand> menuCommands = new List<MenuCommand>();
 			foreach (int commandId in allCommandIds) menuCommands.Add(new MenuCommand((o, s) => { }, new CommandID(Guids.GuidClojureExtensionCmdSet, commandId)));
 			MenuCommandListHider hider = new MenuCommandListHider(menuCommandService, menuCommands);
@@ -75,7 +92,7 @@ namespace Microsoft.ClojureExtension
 			ITextEditorFactoryService editorFactoryService = componentModel.GetService<ITextEditorFactoryService>();
 			EditorCommandFactory editorCommandFactory = new EditorCommandFactory(componentModel.GetService<IEditorOptionsFactoryService>());
 			OleMenuCommandService menuCommandService = (OleMenuCommandService) GetService(typeof (IMenuCommandService));
-			DTE2 dte = (DTE2)GetService(typeof(DTE));
+			DTE2 dte = (DTE2) GetService(typeof (DTE));
 
 			editorFactoryService.TextViewCreated +=
 				(o, e) =>
@@ -121,6 +138,7 @@ namespace Microsoft.ClojureExtension
 			ReplToolWindow replToolWindow = (ReplToolWindow) FindToolWindow(typeof (ReplToolWindow), 0, true);
 			IVsWindowFrame replToolWindowFrame = (IVsWindowFrame) replToolWindow.Frame;
 			DTE2 dte = (DTE2) GetService(typeof (DTE));
+			IProvider<EnvDTE.Project> projectProvider = new SelectedProjectProvider(dte.Solution, dte.ToolWindows.SolutionExplorer);
 
 			menuCommandService.AddCommand(
 				new MenuCommand(
@@ -129,7 +147,7 @@ namespace Microsoft.ClojureExtension
 							replToolWindow.TabControl,
 							new ReplFactory(dte, replToolWindowFrame, menuCommandService),
 							replToolWindowFrame,
-							new GetFrameworkFromSelectedProject(new SelectedProjectProvider(dte.Solution, dte.ToolWindows.SolutionExplorer)),
+							() => new LaunchParametersBuilder((ProjectNode) projectProvider.Get().Object).Get().FrameworkPath,
 							new SelectedProjectProvider(dte.Solution, dte.ToolWindows.SolutionExplorer)).Execute(),
 					new CommandID(Guids.GuidClojureExtensionCmdSet, 10)));
 		}

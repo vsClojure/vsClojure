@@ -8,6 +8,7 @@
 		<Locale>1033</Locale>
 		<MoreInfoUrl>http://github.com/jmis/vsClojure</MoreInfoUrl>
 		<InstalledByMsi>false</InstalledByMsi>
+		<AllUsers>false</AllUsers>
 		<SupportedProducts>
 			<VisualStudio Version="10.0">
 				<Edition>Ultimate</Edition>
@@ -24,7 +25,6 @@
 		</Reference>
 		<Reference Id="Microsoft.VisualStudio.SDK" MinVersion="10.0">
 			<Name>Microsoft Visual Studio SDK</Name>
-			<MoreInfoUrl>http://www.jetbrains.com/resharper/</MoreInfoUrl>
 		</Reference>
 	</References>
 	<Content>
