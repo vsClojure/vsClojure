@@ -8,7 +8,6 @@
 		<Locale>1033</Locale>
 		<MoreInfoUrl>http://github.com/jmis/vsClojure</MoreInfoUrl>
 		<InstalledByMsi>false</InstalledByMsi>
-		<AllUsers>false</AllUsers>
 		<SupportedProducts>
 			<VisualStudio Version="10.0">
 				<Edition>Ultimate</Edition>
@@ -18,15 +17,8 @@
 			</VisualStudio>
 		</SupportedProducts>
 		<SupportedFrameworkRuntimeEdition MinVersion="4.0" MaxVersion="4.0" />
+		<AllUsers>false</AllUsers>
 	</Identifier>
-	<References>
-		<Reference Id="Microsoft.VisualStudio.MPF" MinVersion="10.0">
-			<Name>Visual Studio MPF</Name>
-		</Reference>
-		<Reference Id="Microsoft.VisualStudio.SDK" MinVersion="10.0">
-			<Name>Microsoft Visual Studio SDK</Name>
-		</Reference>
-	</References>
 	<Content>
 		<VsPackage>|%CurrentProject%;PkgdefProjectOutputGroup|</VsPackage>
 		<MefComponent>|%CurrentProject%|</MefComponent>

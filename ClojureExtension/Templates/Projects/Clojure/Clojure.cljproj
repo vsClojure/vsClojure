@@ -42,7 +42,7 @@
 			<ClojureNamespaces>@(Compile -> '%(RelativeDir)%(Filename)', ' ')</ClojureNamespaces>
 		</PropertyGroup>
 		<Copy SourceFiles="@(Compile)" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" DestinationFiles="@(Compile -> '$(OutDir)%(RelativeDir)%(Filename)%(Extension)')"/>
-		<Exec WorkingDirectory="$(OutDir)" Command="$(ClojureRuntimesDirectory)\$(ClojureVersion)\Clojure.Compile $(ClojureNamespaces.Replace('\', '.'))"/>
+		<Exec WorkingDirectory="$(OutDir)" Command="&quot;$(ClojureRuntimesDirectory)\$(ClojureVersion)\Clojure.Compile&quot; $(ClojureNamespaces.Replace('\', '.'))"/>
 		<RemoveDuplicates Inputs="@(Compile -> '$(OutDir)%(RelativeDir)')">
 			<Output TaskParameter="Filtered" ItemName="SourceDirectories"/>
 		</RemoveDuplicates>

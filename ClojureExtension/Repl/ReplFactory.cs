@@ -125,7 +125,7 @@ namespace Microsoft.ClojureExtension.Repl
 		{
 			Process process = new Process();
 			process.StartInfo = new ProcessStartInfo();
-			process.StartInfo.FileName = replPath + "\\Clojure.Main.exe";
+			process.StartInfo.FileName = "\"" + replPath + "\\Clojure.Main.exe\"";
 			process.StartInfo.RedirectStandardOutput = true;
 			process.StartInfo.RedirectStandardInput = true;
 			process.StartInfo.RedirectStandardError = true;

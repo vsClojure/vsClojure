@@ -52,8 +52,8 @@ namespace Microsoft.ClojureExtension
 		protected override void Initialize()
 		{
 			base.Initialize();
-			RegisterProjectFactory(new ClojureProjectFactory(this));
 			AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainAssemblyResolve;
+			RegisterProjectFactory(new ClojureProjectFactory(this));
 			HideAllClojureEditorMenuCommands();
 			ShowClojureProjectMenuCommands();
 			EnableTokenizationOfNewClojureBuffers();
@@ -64,15 +64,10 @@ namespace Microsoft.ClojureExtension
 
 		private void EnableSettingOfRuntimePathForNewClojureProjects()
 		{
-			DTE2 dte = (DTE2) GetService(typeof (DTE));
-			dte.Events.DTEEvents.OnStartupComplete +=
-				() =>
-				{
-					string codebaseRegistryLocation = ApplicationRegistryRoot + "\\Packages\\{" + PackageGuid + "}";
-					string runtimePath = Registry.GetValue(codebaseRegistryLocation, "CodeBase", "").ToString();
-					runtimePath = Path.GetDirectoryName(runtimePath) + "\\Runtimes\\";
-					Environment.SetEnvironmentVariable("VSCLOJURE_RUNTIMES_DIR", runtimePath, EnvironmentVariableTarget.User);
-				};
+			string codebaseRegistryLocation = ApplicationRegistryRoot + "\\Packages\\{" + PackageGuid + "}";
+			string runtimePath = Registry.GetValue(codebaseRegistryLocation, "CodeBase", "").ToString();
+			runtimePath = Path.GetDirectoryName(runtimePath) + "\\Runtimes\\";
+			Environment.SetEnvironmentVariable("VSCLOJURE_RUNTIMES_DIR", runtimePath, EnvironmentVariableTarget.User);
 		}
 
 		private void HideAllClojureEditorMenuCommands()
