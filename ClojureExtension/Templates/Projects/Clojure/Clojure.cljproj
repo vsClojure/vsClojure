@@ -8,7 +8,7 @@
 		<AssemblyName>$(MSBuildProjectName)</AssemblyName>
 		<ClojureRuntimesDirectory>$(VSCLOJURE_RUNTIMES_DIR)</ClojureRuntimesDirectory>
 		<ClojureVersion>1.2.0</ClojureVersion>
-		<StartupFile>core.clj</StartupFile>
+		<StartupFile>program.clj</StartupFile>
 	</PropertyGroup>
 	<PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
 		<DebugSymbols>true</DebugSymbols>
@@ -30,7 +30,7 @@
 		<Reference Include="System.Xml.Linq" />
 	</ItemGroup>
 	<ItemGroup>
-		<Compile Include="core.clj">
+		<Compile Include="program.clj">
 			<SubType>Code</SubType>
 		</Compile>
 	</ItemGroup>

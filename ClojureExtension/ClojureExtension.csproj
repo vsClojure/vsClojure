@@ -366,10 +366,10 @@
     <Content Include="Runtimes\1.2.0\Microsoft.Scripting.xml">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="Templates\ProjectItems\Clojure\clojure-file.clj">
+    <Content Include="Templates\ProjectItems\Clojure\Clojure File.clj">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="Templates\Projects\Clojure\core.clj">
+    <Content Include="Templates\Projects\Clojure\program.clj">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
   </ItemGroup>
