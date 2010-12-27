@@ -88,7 +88,7 @@ namespace Microsoft.ClojureExtension
 			EditorCommandFactory editorCommandFactory = new EditorCommandFactory(componentModel.GetService<IEditorOptionsFactoryService>());
 			OleMenuCommandService menuCommandService = (OleMenuCommandService) GetService(typeof (IMenuCommandService));
 			DTE2 dte = (DTE2) GetService(typeof (DTE));
-
+			
 			editorFactoryService.TextViewCreated +=
 				(o, e) =>
 				{
@@ -140,7 +140,7 @@ namespace Microsoft.ClojureExtension
 					(sender, args) =>
 						new StartReplUsingProjectVersion(
 							replToolWindow.TabControl,
-							new ReplFactory(dte, replToolWindowFrame, menuCommandService),
+							new ReplFactory(replToolWindowFrame, this),
 							replToolWindowFrame,
 							() => new LaunchParametersBuilder((ProjectNode) projectProvider.Get().Object).Get().FrameworkPath,
 							new SelectedProjectProvider(dte.Solution, dte.ToolWindows.SolutionExplorer)).Execute(),

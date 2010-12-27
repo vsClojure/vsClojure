@@ -1,28 +1,35 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Diagnostics;
-using System.Threading;
 using System.Windows.Controls;
 using System.Windows.Input;
+using EnvDTE;
 using EnvDTE80;
+using Microsoft.ClojureExtension.Editor;
+using Microsoft.ClojureExtension.Editor.Parsing;
 using Microsoft.ClojureExtension.Project.Hierarchy;
 using Microsoft.ClojureExtension.Repl.Operations;
 using Microsoft.ClojureExtension.Utilities;
+using Microsoft.VisualStudio.ComponentModelHost;
+using Microsoft.VisualStudio.Editor;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.VisualStudio.TextManager.Interop;
+using Process = System.Diagnostics.Process;
+using Thread = System.Threading.Thread;
 
 namespace Microsoft.ClojureExtension.Repl
 {
 	public class ReplFactory
 	{
-		private readonly DTE2 _dte;
 		private readonly IVsWindowFrame _replToolWindow;
-		private readonly IMenuCommandService _menuCommandService;
+		private readonly IServiceProvider _serviceProvider;
 
-		public ReplFactory(DTE2 dte, IVsWindowFrame replToolWindow, IMenuCommandService menuCommandService)
+		public ReplFactory(IVsWindowFrame replToolWindow, IServiceProvider serviceProvider)
 		{
-			_dte = dte;
 			_replToolWindow = replToolWindow;
-			_menuCommandService = menuCommandService;
+			_serviceProvider = serviceProvider;
 		}
 
 		public void CreateRepl(string replPath, string projectPath, TabControl replManager)
@@ -51,12 +58,14 @@ namespace Microsoft.ClojureExtension.Repl
 			interactiveText.PreviewTextInput += inputKeyHandler.PreviewTextInput;
 			interactiveText.PreviewKeyDown += inputKeyHandler.PreviewKeyDown;
 
-			MenuCommandListWirer menuCommandListWirer = new MenuCommandListWirer(
-				_menuCommandService,
-				CreateMenuCommands(replProcess, interactiveText),
-				() => _dte.ActiveDocument != null && _dte.ActiveDocument.FullName.ToLower().EndsWith(".clj") && replManager.SelectedItem == tabItem);
+			DTE2 dte = (DTE2) _serviceProvider.GetService(typeof (DTE));
 
-			_dte.Events.WindowEvents.WindowActivated += (o, e) => menuCommandListWirer.TryToShowMenuCommands();
+			MenuCommandListWirer menuCommandListWirer = new MenuCommandListWirer(
+				(OleMenuCommandService) _serviceProvider.GetService(typeof (IMenuCommandService)),
+				CreateMenuCommands(replProcess, interactiveText),
+				() => dte.ActiveDocument != null && dte.ActiveDocument.FullName.ToLower().EndsWith(".clj") && replManager.SelectedItem == tabItem);
+
+			dte.Events.WindowEvents.WindowActivated += (o, e) => menuCommandListWirer.TryToShowMenuCommands();
 
 			interactiveText.Loaded +=
 				(o, e) =>
@@ -89,35 +98,44 @@ namespace Microsoft.ClojureExtension.Repl
 
 		private List<MenuCommand> CreateMenuCommands(Process replProcess, TextBox interactiveText)
 		{
+			DTE2 dte = (DTE2) _serviceProvider.GetService(typeof (DTE));
+
 			LoadFilesIntoRepl loadSelectedFilesIntoRepl =
 				new LoadFilesIntoRepl(
 					new ReplWriter(replProcess, interactiveText),
-					new SelectedFilesProvider(_dte.ToolWindows.SolutionExplorer),
+					new SelectedFilesProvider(dte.ToolWindows.SolutionExplorer),
 					_replToolWindow);
-			
+
 			LoadFilesIntoRepl loadSelectedProjectIntoRepl =
 				new LoadFilesIntoRepl(
 					new ReplWriter(replProcess, interactiveText),
 					new ProjectFilesProvider(
-						new SelectedProjectProvider(_dte.Solution, _dte.ToolWindows.SolutionExplorer)),
+						new SelectedProjectProvider(dte.Solution, dte.ToolWindows.SolutionExplorer)),
 					_replToolWindow);
 
 			LoadFilesIntoRepl loadActiveFileIntoRepl =
 				new LoadFilesIntoRepl(
 					new ReplWriter(replProcess, interactiveText),
-					new ActiveFileProvider(_dte),
+					new ActiveFileProvider(dte),
 					_replToolWindow);
 
-			SwitchNamespaceToFile switchNamespaceToFile =
-				new SwitchNamespaceToFile(
-					new ActiveFileProvider(_dte),
-					new ReplWriter(replProcess, interactiveText));
-			
+			var componentModel = (IComponentModel)_serviceProvider.GetService(typeof(SComponentModel));
+
+			NamespaceParser namespaceParser = new NamespaceParser(NamespaceParser.NamespaceSymbols);
+
+			ActiveTextBufferStateProvider activeTextBufferStateProvider =
+					new ActiveTextBufferStateProvider(
+						componentModel.GetService<IVsEditorAdaptersFactoryService>(),
+						(IVsTextManager) _serviceProvider.GetService(typeof (SVsTextManager)));
+
+			ChangeReplNamespace changeReplNamespace =
+				new ChangeReplNamespace(new ReplWriter(replProcess, interactiveText));
+
 			List<MenuCommand> menuCommands = new List<MenuCommand>();
 			menuCommands.Add(new MenuCommand((sender, args) => loadSelectedProjectIntoRepl.Execute(), new CommandID(Guids.GuidClojureExtensionCmdSet, 11)));
 			menuCommands.Add(new MenuCommand((sender, args) => loadSelectedFilesIntoRepl.Execute(), new CommandID(Guids.GuidClojureExtensionCmdSet, 12)));
 			menuCommands.Add(new MenuCommand((sender, args) => loadActiveFileIntoRepl.Execute(), new CommandID(Guids.GuidClojureExtensionCmdSet, 13)));
-			menuCommands.Add(new MenuCommand((sender, args) => switchNamespaceToFile.Execute(), new CommandID(Guids.GuidClojureExtensionCmdSet, 14)));
+			menuCommands.Add(new MenuCommand((sender, args) => changeReplNamespace.Execute(namespaceParser.Execute(activeTextBufferStateProvider.Get())), new CommandID(Guids.GuidClojureExtensionCmdSet, 14)));
 			return menuCommands;
 		}
 

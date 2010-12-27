@@ -97,6 +97,7 @@
     <Compile Include="ClojurePackage.cs" />
     <Compile Include="Configuration\SettingsStore.cs" />
     <Compile Include="Configuration\SettingsStoreProvider.cs" />
+    <Compile Include="Editor\ActiveTextBufferStateProvider.cs" />
     <Compile Include="Editor\AutoFormat\AutoFormatter.cs" />
     <Compile Include="Editor\AutoIndent\ClojureSmartIndent.cs" />
     <Compile Include="Editor\AutoIndent\SmartIndentAdapter.cs" />
@@ -131,6 +132,7 @@
     <Compile Include="Editor\Tagger\ClojureTagProvider.cs" />
     <Compile Include="Editor\Tagger\ClojureTokenTag.cs" />
     <Compile Include="Editor\Tagger\ClojureTokenTagger.cs" />
+    <Compile Include="Editor\Parsing\NamespaceParser.cs" />
     <Compile Include="Editor\TokenizedBufferBuilder.cs" />
     <Compile Include="Project\ClojureConfigProvider.cs" />
     <Compile Include="Project\ClojureProjectConfig.cs" />
@@ -153,7 +155,7 @@
     <Compile Include="Project\ClojureProjectFactory.cs" />
     <Compile Include="Project\ClojureProjectFileNode.cs" />
     <Compile Include="Project\ClojureProjectNode.cs" />
-    <Compile Include="Repl\Operations\SwitchNamespaceToFile.cs" />
+    <Compile Include="Repl\Operations\ChangeReplNamespace.cs" />
     <Compile Include="Repl\ProcessOutputTunnel.cs" />
     <Compile Include="Repl\ReplState.cs" />
     <Compile Include="Repl\InputKeyHandler.cs" />
