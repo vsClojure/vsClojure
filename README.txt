@@ -8,7 +8,24 @@ Description:
 
 Status:
 
-	In development - Beta release coming soon.
+	Release 1.0.0 available
+
+Features:
+
+	1.) Clojure project type
+	2.) Building
+	3.) Running
+	4.) Syntax highlighting
+	5.) Brace matching
+	6.) Auto-indentation
+	7.) File formatting
+	8.) Integrated REPL
+		* CTRL + UP ARROW - Cycle up through the history.
+		* CTRL + DOWN ARROW - Cycle down through the history.
+
+Installing:
+
+	1.) Install vsClojure from the Visual Studio Gallery using the extension manager in Visual Studio.
 
 Building:
 
@@ -16,13 +33,6 @@ Building:
 	2.) Clone the vsClojure repository.
 	3.) Open the vsClojure solution.
 	4.) Build
-	
-Running:
-
-	1.) Build vsClojure.
-	2.) Install the VSIX created from the build.
-	3.) Restart Visual Studio.
-	4.) Create a new Clojure project.
 
 License:
 
