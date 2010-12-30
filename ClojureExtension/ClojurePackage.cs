@@ -16,6 +16,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Windows.Forms;
 using EnvDTE;
 using EnvDTE80;
 using Microsoft.ClojureExtension.Configuration;
@@ -45,6 +46,7 @@ namespace Microsoft.ClojureExtension
 	[ProvideProjectItem(typeof (ClojureProjectFactory), "Clojure Items", @"Templates\ProjectItems\Clojure", 500)]
 	[ProvideMenuResource("Menus.ctmenu", 1)]
 	[ProvideToolWindow(typeof (ReplToolWindow))]
+	[ProvideAutoLoad(UIContextGuids80.NoSolution)] 
 	public sealed class ClojurePackage : ProjectPackage
 	{
 		public const string PackageGuid = "40953a10-3425-499c-8162-a90059792d13";
@@ -54,12 +56,18 @@ namespace Microsoft.ClojureExtension
 			base.Initialize();
 			AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainAssemblyResolve;
 			RegisterProjectFactory(new ClojureProjectFactory(this));
-			HideAllClojureEditorMenuCommands();
-			ShowClojureProjectMenuCommands();
-			EnableTokenizationOfNewClojureBuffers();
-			SetupNewClojureBuffersWithSpacingOptions();
-			EnableMenuCommandsOnNewClojureBuffers();
-			EnableSettingOfRuntimePathForNewClojureProjects();
+			var dte = (DTE2)GetService(typeof(DTE));
+
+			dte.Events.DTEEvents.OnStartupComplete +=
+				() =>
+				{
+					HideAllClojureEditorMenuCommands();
+					ShowClojureProjectMenuCommands();
+					EnableTokenizationOfNewClojureBuffers();
+					SetupNewClojureBuffersWithSpacingOptions();
+					EnableMenuCommandsOnNewClojureBuffers();
+					EnableSettingOfRuntimePathForNewClojureProjects();
+				};
 		}
 
 		private void EnableSettingOfRuntimePathForNewClojureProjects()
@@ -67,7 +75,12 @@ namespace Microsoft.ClojureExtension
 			string codebaseRegistryLocation = ApplicationRegistryRoot + "\\Packages\\{" + PackageGuid + "}";
 			string runtimePath = Registry.GetValue(codebaseRegistryLocation, "CodeBase", "").ToString();
 			runtimePath = Path.GetDirectoryName(runtimePath) + "\\Runtimes\\";
-			Environment.SetEnvironmentVariable("VSCLOJURE_RUNTIMES_DIR", runtimePath, EnvironmentVariableTarget.User);
+
+			if (Environment.GetEnvironmentVariable("VSCLOJURE_RUNTIMES_DIR", EnvironmentVariableTarget.User) != runtimePath)
+			{
+				Environment.SetEnvironmentVariable("VSCLOJURE_RUNTIMES_DIR", runtimePath, EnvironmentVariableTarget.User);
+				MessageBox.Show("Setup of vsClojure complete.  Please restart Visual Studio.", "vsClojure Setup");
+			}
 		}
 
 		private void HideAllClojureEditorMenuCommands()
