@@ -8,3 +8,8 @@ Clojure Images -
 
 	Clojure Project (http://clojure.org/)
 	Eclipse Public License v1.0 (http://opensource.org/licenses/eclipse-1.0.php)
+
+Clojure CLR - 1.2.0 - https://github.com/downloads/richhickey/clojure-clr/clojure-clr-1.2.0.zip
+
+	clojure-clr (https://github.com/richhickey/clojure-clr)
+	Eclipse Public License v1.0 (http://opensource.org/licenses/eclipse-1.0.php)
