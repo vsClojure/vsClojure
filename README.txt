@@ -18,10 +18,13 @@ Features:
 	4.) Syntax highlighting
 	5.) Brace matching
 	6.) Auto-indentation
-	7.) File formatting
+	7.) File formatting (Editor menu command)
 	8.) Integrated REPL
-		* CTRL + UP ARROW - Cycle up through the history.
-		* CTRL + DOWN ARROW - Cycle down through the history.
+		* Start project REPL (Project menu command)
+		* Load all project files into REPL (Project menu command)
+		* Load active file into REPL (Editor menu command)
+		* Switch to active file's namespace (Editor menu command)
+		* History (CTRL + UP ARROW or CTRL + DOWN ARROW)
 
 Installing:
 
