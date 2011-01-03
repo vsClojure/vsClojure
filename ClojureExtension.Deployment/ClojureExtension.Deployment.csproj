@@ -1,0 +1,733 @@
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectTypeGuids>{82b43b9b-a64c-4715-b499-d71e9ca2bd60};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ProjectGuid>{39B60EDA-8630-44BE-9DEA-4AE8AF2A20E0}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ClojureExtension.Deployment</RootNamespace>
+    <AssemblyName>ClojureExtension.Deployment</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DeployExtension>True</DeployExtension>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DeployExtension>True</DeployExtension>
+  </PropertyGroup>
+  <PropertyGroup>
+    <UseCodebase>true</UseCodebase>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="ClojurePackage.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Key.snk" />
+    <Content Include="Runtimes\1.2.0\clj-source\ants.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\clr\io.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\core\protocols.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\core.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\core_clr.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\core_deftype.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\core_print.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\core_proxy.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\dm-test.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\genclass.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\gvec.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\main.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\pprint\cl_format.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\pprint\column_writer.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\pprint\dispatch.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\pprint\pprint_base.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\pprint\pretty_writer.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\pprint\utilities.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\pprint.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\repl.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\set.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\stacktrace.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\string.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\template.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\test\junit.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\test\tap.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\test.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\test_clojure\agents.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\test_clojure\atoms.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\test_clojure\clojure_set.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\test_clojure\clojure_xml.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\test_clojure\clojure_zip.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\test_clojure\clr\io.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\test_clojure\compilation.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\test_clojure\control.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\test_clojure\data_structures.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\test_clojure\def.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\test_clojure\evaluation.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\test_clojure\for.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\test_clojure\genclass\examples.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\test_clojure\genclass.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\test_clojure\helpers.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\test_clojure\java_interop.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\test_clojure\logic.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\test_clojure\macros.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\test_clojure\main.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\test_clojure\metadata.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\test_clojure\multimethods.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\test_clojure\ns_libs.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\test_clojure\numbers.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\test_clojure\other_functions.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\test_clojure\parallel.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\test_clojure\pprint\test_cl_format.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\test_clojure\pprint\test_helper.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\test_clojure\pprint\test_pretty.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\test_clojure\pprint.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\test_clojure\predicates.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\test_clojure\printer.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\test_clojure\protocols\examples.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\test_clojure\protocols\more_examples.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\test_clojure\protocols.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\test_clojure\reader.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\test_clojure\refs.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\test_clojure\repl\example.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\test_clojure\repl.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\test_clojure\rt.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\test_clojure\sequences.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\test_clojure\serialization.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\test_clojure\special.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\test_clojure\string.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\test_clojure\test.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\test_clojure\test_fixtures.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\test_clojure\transients.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\test_clojure\vars.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\test_clojure\vectors.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\test_clojure.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\walk.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clj-source\zip.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\Clojure.Compile.exe">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\Clojure.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\Clojure.Main.exe">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\test_clojure\agents.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\test_clojure\atoms.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\test_clojure\clojure_set.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\test_clojure\clojure_xml.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\test_clojure\clojure_zip.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\test_clojure\clr\io.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\test_clojure\compilation.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\test_clojure\control.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\test_clojure\data_structures.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\test_clojure\def.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\test_clojure\evaluation.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\test_clojure\for.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\test_clojure\genclass\examples.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\test_clojure\genclass.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\test_clojure\helpers.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\test_clojure\java_interop.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\test_clojure\logic.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\test_clojure\macros.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\test_clojure\main.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\test_clojure\metadata.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\test_clojure\multimethods.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\test_clojure\ns_libs.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\test_clojure\numbers.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\test_clojure\other_functions.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\test_clojure\parallel.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\test_clojure\pprint\test_cl_format.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\test_clojure\pprint\test_helper.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\test_clojure\pprint\test_pretty.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\test_clojure\pprint.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\test_clojure\predicates.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\test_clojure\printer.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\test_clojure\protocols\examples.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\test_clojure\protocols\more_examples.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\test_clojure\protocols.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\test_clojure\reader.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\test_clojure\refs.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\test_clojure\repl\example.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\test_clojure\repl.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\test_clojure\rt.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\test_clojure\sequences.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\test_clojure\serialization.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\test_clojure\special.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\test_clojure\string.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\test_clojure\test.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\test_clojure\test_fixtures.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\test_clojure\transients.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\test_clojure\vars.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\test_clojure\vectors.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\test_clojure.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <None Include="source.extension.vsixmanifest">
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="Runtimes\1.2.0\clojure\clr\io.clj.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\clr\io.clj.pdb">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\core.clj.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\core.clj.pdb">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\core\protocols.clj.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\core\protocols.clj.pdb">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\core_clr.clj.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\core_clr.clj.pdb">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\core_deftype.clj.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\core_deftype.clj.pdb">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\core_print.clj.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\core_print.clj.pdb">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\core_proxy.clj.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\core_proxy.clj.pdb">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\genclass.clj.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\genclass.clj.pdb">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\gvec.clj.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\gvec.clj.pdb">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\main.clj.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\main.clj.pdb">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\pprint.clj.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\pprint.clj.pdb">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\pprint\cl_format.clj.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\pprint\cl_format.clj.pdb">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\pprint\column_writer.clj.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\pprint\column_writer.clj.pdb">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\pprint\dispatch.clj.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\pprint\dispatch.clj.pdb">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\pprint\pprint_base.clj.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\pprint\pprint_base.clj.pdb">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\pprint\pretty_writer.clj.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\pprint\pretty_writer.clj.pdb">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\pprint\utilities.clj.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\pprint\utilities.clj.pdb">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\repl.clj.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\repl.clj.pdb">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\set.clj.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\set.clj.pdb">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\stacktrace.clj.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\stacktrace.clj.pdb">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\string.clj.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\string.clj.pdb">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\template.clj.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\template.clj.pdb">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\test.clj.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\test.clj.pdb">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\test\junit.clj.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\test\junit.clj.pdb">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\test\tap.clj.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\test\tap.clj.pdb">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\walk.clj.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\walk.clj.pdb">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\zip.clj.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\clojure\zip.clj.pdb">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\DLR-License.html">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\epl-v10.html">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\Microsoft.Dynamic.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\Microsoft.Dynamic.xml">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\Microsoft.Scripting.Core.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\Microsoft.Scripting.Core.xml">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\Microsoft.Scripting.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\Microsoft.Scripting.ExtensionAttribute.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Runtimes\1.2.0\Microsoft.Scripting.xml">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Templates\ProjectItems\Clojure\Clojure File.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Templates\Projects\Clojure\Clojure.cljproj">
+      <SubType>Designer</SubType>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Templates\Projects\Clojure\program.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="LICENSE.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <VSCTCompile Include="ClojurePackage.xml">
+      <ResourceName>Menus.ctmenu</ResourceName>
+      <SubType>Designer</SubType>
+    </VSCTCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Templates\Projects\Clojure\Clojure.ico">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="VSIXIcon.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="VSIXPreview.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ClojureExtension.Editor\ClojureExtension.Editor.csproj">
+      <Project>{4B160925-5079-4B41-BE21-458EBB74C9AB}</Project>
+      <Name>ClojureExtension.Editor</Name>
+      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3b</IncludeOutputGroupsInVSIX>
+      <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
+    </ProjectReference>
+    <ProjectReference Include="..\ClojureExtension.Parsing\ClojureExtension.Parsing.csproj">
+      <Project>{6A42095C-CC50-4E3E-9672-6185A6F7A8A7}</Project>
+      <Name>ClojureExtension.Parsing</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ClojureExtension.Project\ClojureExtension.Project.csproj">
+      <Project>{653A74C1-81F5-4B49-ACFA-BE99B5ADEFF6}</Project>
+      <Name>ClojureExtension.Project</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ClojureExtension.Repl\ClojureExtension.Repl.csproj">
+      <Project>{C9104D7A-6125-4E79-9AC1-1490D6DFA57C}</Project>
+      <Name>ClojureExtension.Repl</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ClojureExtension.Utilities\ClojureExtension.Utilities.csproj">
+      <Project>{360503CC-98C5-4C00-9934-55519FFC5C26}</Project>
+      <Name>ClojureExtension.Utilities</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="EnvDTE, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="envdte80, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.VisualStudio.ComponentModelHost, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.VisualStudio.CoreUtility, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.VisualStudio.OLE.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="Microsoft.VisualStudio.Project, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b7ed17bb64a9597f, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.VisualStudio.Shell.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.VisualStudio.Shell.Immutable.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.VisualStudio.Shell.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="Microsoft.VisualStudio.Shell.Interop.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Shell.Interop.8.0, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="Microsoft.VisualStudio.Shell.Interop.9.0, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="Microsoft.VisualStudio.Text.Data, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.VisualStudio.Text.Logic, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.VisualStudio.Text.UI, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.VisualStudio.Text.UI.Wpf, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ClojurePackage.resx">
+      <MergeWithCTO>true</MergeWithCTO>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v10.0\VSSDK\Microsoft.VsSDK.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

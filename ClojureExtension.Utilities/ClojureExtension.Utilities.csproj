@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{F417C00C-CE80-4E74-A611-8EC6CC04F37E}</ProjectGuid>
+    <ProjectGuid>{360503CC-98C5-4C00-9934-55519FFC5C26}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ClojureExtension.Tests</RootNamespace>
-    <AssemblyName>ClojureExtension.Tests</AssemblyName>
+    <RootNamespace>ClojureExtension.Utilities</RootNamespace>
+    <AssemblyName>ClojureExtension.Utilities</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -30,14 +30,13 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.VisualStudio.CoreUtility, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-    <Reference Include="Microsoft.VisualStudio.Text.Data, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-    <Reference Include="Rhino.Mocks, Version=3.6.0.0, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>RhinoMocks\Rhino.Mocks.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -47,28 +46,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Editor\AutoFormat\AutoFormatterTests.cs" />
-    <Compile Include="Editor\AutoIndent\ClojureSmartIndentTests.cs" />
-    <Compile Include="Editor\BraceMatching\MatchingBraceFinderTests.cs" />
-    <Compile Include="Editor\Parsing\BufferTextChangeHandlerTests.cs" />
-    <Compile Include="Editor\Parsing\LexerTests.cs" />
-    <Compile Include="Editor\Parsing\NamespaceParserTests.cs" />
+    <Compile Include="Entity.cs" />
+    <Compile Include="Guids.cs" />
+    <Compile Include="IProvider.cs" />
+    <Compile Include="MenuCommandListHider.cs" />
+    <Compile Include="MenuCommandListWirer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Editor\Parsing\TokenListTests.cs" />
+    <Compile Include="StringExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ClojureExtension.Editor\ClojureExtension.Editor.csproj">
-      <Project>{4B160925-5079-4B41-BE21-458EBB74C9AB}</Project>
-      <Name>ClojureExtension.Editor</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ClojureExtension.Parsing\ClojureExtension.Parsing.csproj">
-      <Project>{6A42095C-CC50-4E3E-9672-6185A6F7A8A7}</Project>
-      <Name>ClojureExtension.Parsing</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ClojureExtension.Utilities\ClojureExtension.Utilities.csproj">
-      <Project>{360503CC-98C5-4C00-9934-55519FFC5C26}</Project>
-      <Name>ClojureExtension.Utilities</Name>
-    </ProjectReference>
+    <None Include="Key.snk" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using ClojureExtension.Parsing;
 using Microsoft.ClojureExtension.Editor.AutoFormat;
 using Microsoft.ClojureExtension.Editor.AutoIndent;
 using Microsoft.ClojureExtension.Editor.Options;
