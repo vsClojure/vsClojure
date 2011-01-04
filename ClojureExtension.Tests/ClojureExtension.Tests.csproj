@@ -50,11 +50,11 @@
     <Compile Include="Editor\AutoFormat\AutoFormatterTests.cs" />
     <Compile Include="Editor\AutoIndent\ClojureSmartIndentTests.cs" />
     <Compile Include="Editor\BraceMatching\MatchingBraceFinderTests.cs" />
-    <Compile Include="Editor\Parsing\BufferTextChangeHandlerTests.cs" />
-    <Compile Include="Editor\Parsing\LexerTests.cs" />
-    <Compile Include="Editor\Parsing\NamespaceParserTests.cs" />
+    <Compile Include="Editor\InputHandling\BufferTextChangeHandlerTests.cs" />
+    <Compile Include="Parsing\LexerTests.cs" />
+    <Compile Include="Parsing\NamespaceParserTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Editor\Parsing\TokenListTests.cs" />
+    <Compile Include="Parsing\TokenListTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ClojureExtension.Editor\ClojureExtension.Editor.csproj">

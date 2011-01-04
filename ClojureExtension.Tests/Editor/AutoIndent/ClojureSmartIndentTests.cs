@@ -5,7 +5,6 @@ using System.Text;
 using ClojureExtension.Parsing;
 using Microsoft.ClojureExtension.Editor.AutoIndent;
 using Microsoft.ClojureExtension.Editor.Options;
-using Microsoft.ClojureExtension.Editor.Parsing;
 using Microsoft.ClojureExtension.Utilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

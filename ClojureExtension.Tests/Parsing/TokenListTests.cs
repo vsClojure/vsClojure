@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using ClojureExtension.Parsing;
-using Microsoft.ClojureExtension.Editor.Parsing;
 using Microsoft.ClojureExtension.Utilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ClojureExtension.Tests.Editor.Parsing
+namespace ClojureExtension.Tests.Parsing
 {
 	[TestClass]
 	public class TokenListTests

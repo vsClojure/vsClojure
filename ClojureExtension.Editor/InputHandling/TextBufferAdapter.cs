@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.Text;
 
-namespace Microsoft.ClojureExtension.Editor.Parsing
+namespace ClojureExtension.Editor.InputHandling
 {
 	public class TextBufferAdapter : ITextBufferAdapter
 	{

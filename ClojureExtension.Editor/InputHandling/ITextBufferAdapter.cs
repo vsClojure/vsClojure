@@ -1,4 +1,4 @@
-﻿namespace Microsoft.ClojureExtension.Editor.Parsing
+﻿namespace ClojureExtension.Editor.InputHandling
 {
 	public interface ITextBufferAdapter
 	{

@@ -1,9 +1,8 @@
 ﻿using System.IO;
 using ClojureExtension.Parsing;
-using Microsoft.ClojureExtension.Editor.Parsing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ClojureExtension.Tests.Editor.Parsing
+namespace ClojureExtension.Tests.Parsing
 {
 	[TestClass]
 	public class LexerTests

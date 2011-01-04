@@ -8,7 +8,6 @@ using ClojureExtension.Parsing;
 using EnvDTE;
 using EnvDTE80;
 using Microsoft.ClojureExtension.Editor;
-using Microsoft.ClojureExtension.Editor.Parsing;
 using Microsoft.ClojureExtension.Project.Hierarchy;
 using Microsoft.ClojureExtension.Repl.Operations;
 using Microsoft.ClojureExtension.Utilities;

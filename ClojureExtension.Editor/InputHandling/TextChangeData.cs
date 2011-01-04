@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Microsoft.ClojureExtension.Editor.Parsing
+namespace ClojureExtension.Editor.InputHandling
 {
 	public class TextChangeData
 	{

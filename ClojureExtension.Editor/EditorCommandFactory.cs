@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.Design;
+using ClojureExtension.Editor.InputHandling;
 using Microsoft.ClojureExtension.Editor.AutoFormat;
 using Microsoft.ClojureExtension.Editor.Options;
-using Microsoft.ClojureExtension.Editor.Parsing;
 using Microsoft.VisualStudio.Text.Editor;
 
 namespace Microsoft.ClojureExtension.Editor

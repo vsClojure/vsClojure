@@ -4,7 +4,7 @@ using System.IO;
 using ClojureExtension.Parsing;
 using Microsoft.ClojureExtension.Utilities;
 
-namespace Microsoft.ClojureExtension.Editor.Parsing
+namespace ClojureExtension.Editor.InputHandling
 {
 	public class BufferTextChangeHandler
 	{

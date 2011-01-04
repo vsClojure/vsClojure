@@ -1,5 +1,4 @@
 ﻿using ClojureExtension.Parsing;
-using Microsoft.ClojureExtension.Editor.Parsing;
 using Microsoft.VisualStudio.Text.Tagging;
 
 namespace Microsoft.ClojureExtension.Editor.Tagger
