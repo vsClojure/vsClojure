@@ -66,12 +66,28 @@
 					<ButtonText>Switch to File's Namespace</ButtonText>
 				</Strings>
 			</Button>
-			<Button guid="clojureGroups" id="formatFile" priority="0" type="Button">
+			<Button guid="advancedEditorCommands" id="formatDocument" priority="0" type="Button">
 				<Parent guid="clojureGroups" id="clojureCodeWindowMenuGroup" />
 				<CommandFlag>DynamicVisibility</CommandFlag>
 				<Strings>
-					<CommandName>Clojure.FormatFile</CommandName>
-					<ButtonText>Format File</ButtonText>
+					<CommandName>Edit.FormatDocument</CommandName>
+					<ButtonText>Format Document</ButtonText>
+				</Strings>
+			</Button>
+			<Button guid="advancedEditorCommands" id="blockComment" priority="0" type="Button">
+				<Parent guid="clojureGroups" id="clojureCodeWindowMenuGroup" />
+				<CommandFlag>DynamicVisibility</CommandFlag>
+				<Strings>
+					<CommandName>Edit.CommentSelection</CommandName>
+					<ButtonText>Comment Selection</ButtonText>
+				</Strings>
+			</Button>
+			<Button guid="advancedEditorCommands" id="blockUncomment" priority="0" type="Button">
+				<Parent guid="clojureGroups" id="clojureCodeWindowMenuGroup" />
+				<CommandFlag>DynamicVisibility</CommandFlag>
+				<Strings>
+					<CommandName>Edit.UncommentSelection</CommandName>
+					<ButtonText>Uncomment Selection</ButtonText>
 				</Strings>
 			</Button>
 		</Buttons>
@@ -80,7 +96,6 @@
 	<KeyBindings>
 		<KeyBinding guid="clojureGroups" id="loadActiveDocumentIntoRepl" editor="guidVSStd97" key1="L" mod1="Alt" />
 		<KeyBinding guid="clojureGroups" id="switchReplNamespaceToActiveDocument" editor="guidVSStd97" key1="S" mod1="Alt"/>
-		<KeyBinding guid="clojureGroups" id="formatFile" editor="guidVSStd97" key1="F" mod1="Alt" />
 	</KeyBindings>
 	
 	<Symbols>
@@ -94,7 +109,11 @@
 			<IDSymbol name="loadFileIntoActiveRepl" value="12" />
 			<IDSymbol name="loadActiveDocumentIntoRepl" value="13" />
 			<IDSymbol name="switchReplNamespaceToActiveDocument" value="14" />
-			<IDSymbol name="formatFile" value="15" />
+		</GuidSymbol>
+		<GuidSymbol name="advancedEditorCommands" value="{1496a755-94de-11d0-8c3f-00c04fc2aae2}">
+			<IDSymbol name="blockComment" value="136"/>
+			<IDSymbol name="blockUncomment" value="137"/>
+			<IDSymbol name="formatDocument" value="143"/>
 		</GuidSymbol>
 		<GuidSymbol name="solutionExplorer" value="{D309F791-903F-11D0-9EFC-00A0C911004F}">
 			<IDSymbol name="solutionExplorerFileMenu" value="1072" />

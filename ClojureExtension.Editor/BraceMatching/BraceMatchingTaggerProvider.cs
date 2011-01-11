@@ -18,7 +18,7 @@ namespace Microsoft.ClojureExtension.Editor.BraceMatching
 		public ITagger<T> CreateTagger<T>(ITextView textView, ITextBuffer buffer) where T : ITag
 		{
 			Entity<LinkedList<Token>> tokenizedBuffer = TokenizedBufferBuilder.TokenizedBuffers[buffer];
-			BraceMatchingTagger matchingTagger = new BraceMatchingTagger(textView, new MatchingBraceFinder(new TextBufferAdapter(buffer), tokenizedBuffer));
+			BraceMatchingTagger matchingTagger = new BraceMatchingTagger(textView, new MatchingBraceFinder(new TextBufferAdapter(textView), tokenizedBuffer));
 			textView.TextBuffer.Changed += (o, e) => matchingTagger.InvalidateAllTags();
 			textView.Caret.PositionChanged += (o, e) => matchingTagger.InvalidateAllTags();
 			return matchingTagger as ITagger<T>;

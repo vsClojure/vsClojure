@@ -69,7 +69,8 @@
     <Compile Include="Classification\ClassificationType.cs" />
     <Compile Include="Classification\ClojureClassifier.cs" />
     <Compile Include="Classification\ClojureClassifierProvider.cs" />
-    <Compile Include="EditorCommandFactory.cs" />
+    <Compile Include="Commenting\BlockComment.cs" />
+    <Compile Include="Commenting\BlockUncomment.cs" />
     <Compile Include="Options\EditorOptions.cs" />
     <Compile Include="Options\EditorOptionsBuilder.cs" />
     <Compile Include="InputHandling\BufferTextChangeHandler.cs" />

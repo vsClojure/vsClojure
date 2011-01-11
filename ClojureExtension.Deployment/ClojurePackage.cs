@@ -17,18 +17,23 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using ClojureExtension.Editor.Commenting;
+using ClojureExtension.Editor.InputHandling;
 using ClojureExtension.Parsing;
 using EnvDTE;
 using EnvDTE80;
 using Microsoft.ClojureExtension;
 using Microsoft.ClojureExtension.Configuration;
 using Microsoft.ClojureExtension.Editor;
+using Microsoft.ClojureExtension.Editor.AutoFormat;
+using Microsoft.ClojureExtension.Editor.Options;
 using Microsoft.ClojureExtension.Project;
 using Microsoft.ClojureExtension.Project.Hierarchy;
 using Microsoft.ClojureExtension.Project.Launching;
 using Microsoft.ClojureExtension.Repl;
 using Microsoft.ClojureExtension.Repl.Operations;
 using Microsoft.ClojureExtension.Utilities;
+using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Project;
 using Microsoft.VisualStudio.Shell;
@@ -37,7 +42,7 @@ using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.Win32;
 
-namespace ClojureExtension.Package
+namespace ClojureExtension.Deployment
 {
 	[Guid(PackageGuid)]
 	[PackageRegistration(UseManagedResourcesOnly = true)]
@@ -52,16 +57,19 @@ namespace ClojureExtension.Package
 	{
 		public const string PackageGuid = "40953a10-3425-499c-8162-a90059792d13";
 
+		private ClearableMenuCommandService _thirdPartyEditorCommands;
+
 		protected override void Initialize()
 		{
 			base.Initialize();
-			AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainAssemblyResolve;
-			RegisterProjectFactory(new ClojureProjectFactory(this));
 			var dte = (DTE2) GetService(typeof (DTE));
 
 			dte.Events.DTEEvents.OnStartupComplete +=
 				() =>
 				{
+					AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainAssemblyResolve;
+					RegisterProjectFactory(new ClojureProjectFactory(this));
+					RegisterCommandMenuService();
 					HideAllClojureEditorMenuCommands();
 					ShowClojureProjectMenuCommands();
 					EnableTokenizationOfNewClojureBuffers();
@@ -69,6 +77,14 @@ namespace ClojureExtension.Package
 					EnableMenuCommandsOnNewClojureBuffers();
 					EnableSettingOfRuntimePathForNewClojureProjects();
 				};
+		}
+
+		private void RegisterCommandMenuService()
+		{
+			IVsRegisterPriorityCommandTarget commandRegistry = GetService(typeof(SVsRegisterPriorityCommandTarget)) as IVsRegisterPriorityCommandTarget;
+			_thirdPartyEditorCommands = new ClearableMenuCommandService(this);
+			uint cookie = 0;
+			commandRegistry.RegisterPriorityCommandTarget(0, _thirdPartyEditorCommands, out cookie);
 		}
 
 		private void EnableSettingOfRuntimePathForNewClojureProjects()
@@ -86,7 +102,7 @@ namespace ClojureExtension.Package
 
 		private void HideAllClojureEditorMenuCommands()
 		{
-			List<int> allCommandIds = new List<int>() {11, 12, 13, 14, 15};
+			List<int> allCommandIds = new List<int>() {11, 12, 13, 14 };
 			DTE2 dte = (DTE2) GetService(typeof (DTE));
 			OleMenuCommandService menuCommandService = (OleMenuCommandService) GetService(typeof (IMenuCommandService));
 			List<MenuCommand> menuCommands = new List<MenuCommand>();
@@ -99,17 +115,21 @@ namespace ClojureExtension.Package
 		{
 			var componentModel = (IComponentModel) GetService(typeof (SComponentModel));
 			ITextEditorFactoryService editorFactoryService = componentModel.GetService<ITextEditorFactoryService>();
-			EditorCommandFactory editorCommandFactory = new EditorCommandFactory(componentModel.GetService<IEditorOptionsFactoryService>());
-			OleMenuCommandService menuCommandService = (OleMenuCommandService) GetService(typeof (IMenuCommandService));
-			DTE2 dte = (DTE2) GetService(typeof (DTE));
 
-			editorFactoryService.TextViewCreated +=
-				(o, e) =>
+			editorFactoryService.TextViewCreated += (o, e) => e.TextView.GotAggregateFocus +=
+				(sender, args) =>
 				{
+					_thirdPartyEditorCommands.Clear();
 					if (e.TextView.TextSnapshot.ContentType.TypeName.ToLower() != "clojure") return;
-					List<MenuCommand> menuCommands = editorCommandFactory.CreateMenuCommands(e.TextView);
-					MenuCommandListWirer wirer = new MenuCommandListWirer(menuCommandService, menuCommands, () => true);
-					dte.Events.WindowEvents.WindowActivated += (sender, args) => wirer.TryToShowMenuCommands();
+
+					var editorOptionsBuilder = new EditorOptionsBuilder(componentModel.GetService<IEditorOptionsFactoryService>().GetOptions(e.TextView));
+					var tokenizedBuffer = TokenizedBufferBuilder.TokenizedBuffers[e.TextView.TextBuffer];
+					var formatter = new AutoFormatter(new TextBufferAdapter(e.TextView), tokenizedBuffer);
+					var blockComment = new BlockComment(new TextBufferAdapter(e.TextView));
+					var blockUncomment = new BlockUncomment(new TextBufferAdapter(e.TextView));
+					_thirdPartyEditorCommands.AddCommand(new MenuCommand((commandSender, commandArgs) => formatter.Format(editorOptionsBuilder.Get()), CommandIDs.FormatDocument));
+					_thirdPartyEditorCommands.AddCommand(new MenuCommand((commandSender, commandArgs) => blockComment.Execute(), CommandIDs.BlockComment));
+					_thirdPartyEditorCommands.AddCommand(new MenuCommand((commandSender, commandArgs) => blockUncomment.Execute(), CommandIDs.BlockUncomment));
 				};
 		}
 
