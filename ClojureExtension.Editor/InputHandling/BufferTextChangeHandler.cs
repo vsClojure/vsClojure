@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using ClojureExtension.Editor.TextBuffer;
 using ClojureExtension.Parsing;
 using Microsoft.ClojureExtension.Utilities;
 

@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using ClojureExtension.Editor.InputHandling;
+using ClojureExtension.Editor.TextBuffer;
 using ClojureExtension.Parsing;
 
 namespace ClojureExtension.Editor.Commenting

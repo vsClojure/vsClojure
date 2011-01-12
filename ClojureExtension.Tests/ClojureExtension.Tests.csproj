@@ -51,6 +51,7 @@
     <Compile Include="Editor\AutoIndent\ClojureSmartIndentTests.cs" />
     <Compile Include="Editor\BraceMatching\MatchingBraceFinderTests.cs" />
     <Compile Include="Editor\Commenting\BlockCommentTests.cs" />
+    <Compile Include="Editor\Commenting\BlockUncommentTests.cs" />
     <Compile Include="Editor\InputHandling\BufferTextChangeHandlerTests.cs" />
     <Compile Include="Parsing\LexerTests.cs" />
     <Compile Include="Parsing\NamespaceParserTests.cs" />

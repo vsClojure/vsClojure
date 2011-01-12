@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using ClojureExtension.Editor.InputHandling;
+using ClojureExtension.Editor.TextBuffer;
 
 namespace ClojureExtension.Editor.Commenting
 {

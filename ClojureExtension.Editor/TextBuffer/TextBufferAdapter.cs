@@ -4,7 +4,7 @@ using System.Linq;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 
-namespace ClojureExtension.Editor.InputHandling
+namespace ClojureExtension.Editor.TextBuffer
 {
 	public class TextBufferAdapter : ITextBufferAdapter
 	{
@@ -35,7 +35,7 @@ namespace ClojureExtension.Editor.InputHandling
 			int startPosition = _textView.Selection.Start.Position.GetContainingLine().Start.Position;
 			int endPosition = _textView.Selection.End.Position.GetContainingLine().End.Position;
 			string rawLines = _textView.TextBuffer.CurrentSnapshot.GetText(startPosition, endPosition - startPosition);
-			return new List<string>(rawLines.Split(new[] { "\r\n" }, StringSplitOptions.None));
+			return new List<string>(rawLines.Split(new[] {"\r\n"}, StringSplitOptions.None));
 		}
 
 		public void ReplaceSelectedLines(List<string> newLines)

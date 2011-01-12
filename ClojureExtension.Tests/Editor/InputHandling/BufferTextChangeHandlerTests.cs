@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using ClojureExtension.Editor.InputHandling;
+using ClojureExtension.Editor.TextBuffer;
 using ClojureExtension.Parsing;
 using Microsoft.ClojureExtension.Utilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

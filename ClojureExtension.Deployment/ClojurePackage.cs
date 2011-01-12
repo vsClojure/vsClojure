@@ -19,6 +19,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using ClojureExtension.Editor.Commenting;
 using ClojureExtension.Editor.InputHandling;
+using ClojureExtension.Editor.TextBuffer;
 using ClojureExtension.Parsing;
 using EnvDTE;
 using EnvDTE80;

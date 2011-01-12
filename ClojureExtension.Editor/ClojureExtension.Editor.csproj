@@ -74,8 +74,8 @@
     <Compile Include="Options\EditorOptions.cs" />
     <Compile Include="Options\EditorOptionsBuilder.cs" />
     <Compile Include="InputHandling\BufferTextChangeHandler.cs" />
-    <Compile Include="InputHandling\ITextBufferAdapter.cs" />
-    <Compile Include="InputHandling\TextBufferAdapter.cs" />
+    <Compile Include="TextBuffer\ITextBufferAdapter.cs" />
+    <Compile Include="TextBuffer\TextBufferAdapter.cs" />
     <Compile Include="InputHandling\TextChangeAdapter.cs" />
     <Compile Include="InputHandling\TextChangeData.cs" />
     <Compile Include="InputHandling\TokenChangedEventArgs.cs" />
