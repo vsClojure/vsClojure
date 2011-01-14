@@ -14,14 +14,17 @@ using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using ClojureExtension.Project.Configuration;
 using EnvDTE;
+using Microsoft.ClojureExtension;
 using Microsoft.ClojureExtension.Configuration;
+using Microsoft.ClojureExtension.Project;
 using Microsoft.VisualStudio.Project;
 using Microsoft.VisualStudio.Project.Automation;
 using Microsoft.VisualStudio.Shell;
 using VSLangProj;
 
-namespace Microsoft.ClojureExtension.Project
+namespace ClojureExtension.Project
 {
     /// <summary>
     ///   This class extends the ProjectNode in order to represent our project 
@@ -66,7 +69,7 @@ namespace Microsoft.ClojureExtension.Project
         /// </summary>
         static ClojureProjectNode()
         {
-            imageList = VisualStudio.Project.Utilities.GetImageList(typeof (ClojureProjectNode).Assembly.GetManifestResourceStream("ClojureExtension.Project.Resources.ClojureImageList.bmp"));
+            imageList = Utilities.GetImageList(typeof (ClojureProjectNode).Assembly.GetManifestResourceStream("ClojureExtension.Project.Resources.ClojureImageList.bmp"));
         }
 
         /// <summary>

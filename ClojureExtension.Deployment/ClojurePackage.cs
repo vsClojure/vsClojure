@@ -17,14 +17,13 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using ClojureExtension.Deployment.Configuration;
 using ClojureExtension.Editor.Commenting;
-using ClojureExtension.Editor.InputHandling;
 using ClojureExtension.Editor.TextBuffer;
 using ClojureExtension.Parsing;
 using EnvDTE;
 using EnvDTE80;
 using Microsoft.ClojureExtension;
-using Microsoft.ClojureExtension.Configuration;
 using Microsoft.ClojureExtension.Editor;
 using Microsoft.ClojureExtension.Editor.AutoFormat;
 using Microsoft.ClojureExtension.Editor.Options;
@@ -34,7 +33,6 @@ using Microsoft.ClojureExtension.Project.Launching;
 using Microsoft.ClojureExtension.Repl;
 using Microsoft.ClojureExtension.Repl.Operations;
 using Microsoft.ClojureExtension.Utilities;
-using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Project;
 using Microsoft.VisualStudio.Shell;
@@ -48,7 +46,7 @@ namespace ClojureExtension.Deployment
 	[Guid(PackageGuid)]
 	[PackageRegistration(UseManagedResourcesOnly = true)]
 	[DefaultRegistryRoot("Software\\Microsoft\\VisualStudio\\10.0")]
-	[ProvideObject(typeof (GeneralPropertyPage))]
+	[ProvideObject(typeof (GeneralPropertyPageAdapter))]
 	[ProvideProjectFactory(typeof (ClojureProjectFactory), "Clojure", "Clojure Project Files (*.cljproj);*.cljproj", "cljproj", "cljproj", @"Templates\Projects\Clojure", LanguageVsTemplate = "Clojure", NewProjectRequireNewFolderVsTemplate = false)]
 	[ProvideProjectItem(typeof (ClojureProjectFactory), "Clojure Items", @"Templates\ProjectItems\Clojure", 500)]
 	[ProvideMenuResource("Menus.ctmenu", 1)]
@@ -82,7 +80,7 @@ namespace ClojureExtension.Deployment
 
 		private void RegisterCommandMenuService()
 		{
-			IVsRegisterPriorityCommandTarget commandRegistry = GetService(typeof(SVsRegisterPriorityCommandTarget)) as IVsRegisterPriorityCommandTarget;
+			IVsRegisterPriorityCommandTarget commandRegistry = GetService(typeof (SVsRegisterPriorityCommandTarget)) as IVsRegisterPriorityCommandTarget;
 			_thirdPartyEditorCommands = new ClearableMenuCommandService(this);
 			uint cookie = 0;
 			commandRegistry.RegisterPriorityCommandTarget(0, _thirdPartyEditorCommands, out cookie);
@@ -103,7 +101,7 @@ namespace ClojureExtension.Deployment
 
 		private void HideAllClojureEditorMenuCommands()
 		{
-			List<int> allCommandIds = new List<int>() {11, 12, 13, 14 };
+			List<int> allCommandIds = new List<int>() {11, 12, 13, 14};
 			DTE2 dte = (DTE2) GetService(typeof (DTE));
 			OleMenuCommandService menuCommandService = (OleMenuCommandService) GetService(typeof (IMenuCommandService));
 			List<MenuCommand> menuCommands = new List<MenuCommand>();
@@ -168,7 +166,7 @@ namespace ClojureExtension.Deployment
 			ReplToolWindow replToolWindow = (ReplToolWindow) FindToolWindow(typeof (ReplToolWindow), 0, true);
 			IVsWindowFrame replToolWindowFrame = (IVsWindowFrame) replToolWindow.Frame;
 			DTE2 dte = (DTE2) GetService(typeof (DTE));
-			IProvider<Project> projectProvider = new SelectedProjectProvider(dte.Solution, dte.ToolWindows.SolutionExplorer);
+			IProvider<EnvDTE.Project> projectProvider = new SelectedProjectProvider(dte.Solution, dte.ToolWindows.SolutionExplorer);
 
 			menuCommandService.AddCommand(
 				new MenuCommand(

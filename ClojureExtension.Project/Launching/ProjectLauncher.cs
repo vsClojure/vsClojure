@@ -1,10 +1,11 @@
 ﻿using System.Runtime.InteropServices;
+using Microsoft.ClojureExtension.Project.Launching;
 using Microsoft.ClojureExtension.Utilities;
 using Microsoft.VisualStudio.Project;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 
-namespace Microsoft.ClojureExtension.Project.Launching
+namespace ClojureExtension.Project.Launching
 {
     public class ProjectLauncher
     {

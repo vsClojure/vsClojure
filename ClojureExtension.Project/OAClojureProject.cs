@@ -10,6 +10,7 @@ PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
 ***************************************************************************/
 
 using System.Runtime.InteropServices;
+using ClojureExtension.Project;
 using Microsoft.VisualStudio.Project.Automation;
 
 namespace Microsoft.ClojureExtension.Project

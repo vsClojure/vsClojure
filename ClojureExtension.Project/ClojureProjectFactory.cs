@@ -10,6 +10,7 @@ PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
 ***************************************************************************/
 
 using System.Runtime.InteropServices;
+using ClojureExtension.Project;
 using Microsoft.VisualStudio.Project;
 using Microsoft.VisualStudio.Shell;
 using IServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
