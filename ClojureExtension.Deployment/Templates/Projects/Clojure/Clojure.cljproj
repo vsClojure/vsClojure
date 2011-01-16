@@ -8,7 +8,8 @@
 		<AssemblyName>$(MSBuildProjectName)</AssemblyName>
 		<ClojureRuntimesDirectory>$(VSCLOJURE_RUNTIMES_DIR)</ClojureRuntimesDirectory>
 		<ClojureVersion>1.2.0</ClojureVersion>
-		<StartupFile>program.clj</StartupFile>
+		<StartupFile>program.exe</StartupFile>
+		<StartupArguments></StartupArguments>
 	</PropertyGroup>
 	<PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
 		<DebugSymbols>true</DebugSymbols>
@@ -21,6 +22,9 @@
 		<EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
 	</PropertyGroup>
 	<ItemGroup>
+		<Reference Include="Clojure.dll">
+			<HintPath>$(ClojureRuntimesDirectory)\$(ClojureVersion)\Clojure.dll</HintPath>
+		</Reference>
 		<Reference Include="mscorlib" />
 		<Reference Include="System" />
 		<Reference Include="System.Core" />

@@ -82,6 +82,7 @@
     <Compile Include="Launching\LaunchParametersBuilder.cs" />
     <Compile Include="Launching\LaunchParametersValidator.cs" />
     <Compile Include="Launching\ProjectLauncher.cs" />
+    <Compile Include="Launching\StartupFileType.cs" />
     <Compile Include="OAClojureProject.cs" />
     <Compile Include="OAClojureProjectFileItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

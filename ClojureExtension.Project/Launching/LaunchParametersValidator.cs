@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Microsoft.ClojureExtension.Project.Launching
+namespace ClojureExtension.Project.Launching
 {
 	public class LaunchParametersValidator
 	{
@@ -11,6 +11,9 @@ namespace Microsoft.ClojureExtension.Project.Launching
 
 			if (string.IsNullOrEmpty(launchParameters.StartupFile))
 				throw new Exception("No startup file defined in project properties.");
+
+			if (launchParameters.StartupFileType == StartupFileType.Unknown)
+				throw new Exception("Cannot start file " + launchParameters.StartupFile);
 		}
 	}
 }

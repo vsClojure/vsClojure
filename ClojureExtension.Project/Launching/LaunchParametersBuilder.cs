@@ -3,7 +3,7 @@ using Microsoft.ClojureExtension.Utilities;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Project;
 
-namespace Microsoft.ClojureExtension.Project.Launching
+namespace ClojureExtension.Project.Launching
 {
 	public class LaunchParametersBuilder : IProvider<LaunchParameters>
 	{
@@ -21,6 +21,7 @@ namespace Microsoft.ClojureExtension.Project.Launching
 			string targetFile = _project.GetProjectProperty("StartupFile");
 			string remoteMachineDebug = _project.GetProjectProperty("RemoteDebugMachine", false);
 			string unmanagedDebugging = _project.GetProjectProperty("EnableUnmanagedDebugging", false);
+			string startupArguments = _project.GetProjectProperty("StartupArguments", false);
 
 			frameworkPath = frameworkPath.TrimEnd(new[] {'\\'});
 			applicationPath = applicationPath.TrimEnd(new[] {'\\'});
@@ -31,6 +32,10 @@ namespace Microsoft.ClojureExtension.Project.Launching
 
 			string runnerPath = frameworkPath + "\\Clojure.Main.exe";
 
+			var startupFileType = StartupFileType.Unknown;
+			if (targetFile.ToLower().EndsWith(".exe")) startupFileType = StartupFileType.Executable;
+			if (targetFile.ToLower().EndsWith(".clj")) startupFileType = StartupFileType.Clojure;
+
 			return new LaunchParameters(
 				runnerPath,
 				frameworkPath,
@@ -38,7 +43,9 @@ namespace Microsoft.ClojureExtension.Project.Launching
 				targetFile,
 				remoteMachineDebug,
 				unmanagedDebugging,
-				debugType);
+				debugType,
+				startupArguments,
+				startupFileType);
 		}
 	}
 }

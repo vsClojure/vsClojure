@@ -14,7 +14,6 @@ using System.IO;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Project;
-using Microsoft.VisualStudio.Shell;
 
 namespace ClojureExtension.Project.Configuration
 {
@@ -25,6 +24,7 @@ namespace ClojureExtension.Project.Configuration
 		private string _defaultNamespace;
 		private string _clojureVersion;
 		private string _targetFile;
+		private string _startupArguments;
 
 		public GeneralPropertyPage()
 		{
@@ -58,6 +58,19 @@ namespace ClojureExtension.Project.Configuration
 			}
 		}
 
+		[Category("Running")]
+		[DisplayName("Startup Arguments")]
+		[Description("Startup Arguments")]
+		public string StartupArguments
+		{
+			get { return _startupArguments; }
+			set
+			{
+				_startupArguments = value;
+				IsDirty = true;
+			}
+		}
+
 		[Category("Project")]
 		[DisplayName("Project File")]
 		[Description("Project File")]
@@ -84,6 +97,7 @@ namespace ClojureExtension.Project.Configuration
 			_defaultNamespace = ProjectMgr.GetProjectProperty("RootNamespace", false);
 			_clojureVersion = ProjectMgr.GetProjectProperty("ClojureVersion", false);
 			_targetFile = ProjectMgr.GetProjectProperty("StartupFile", false);
+			_startupArguments = ProjectMgr.GetProjectProperty("StartupArguments", false);
 		}
 
 		protected override int ApplyChanges()
@@ -91,6 +105,7 @@ namespace ClojureExtension.Project.Configuration
 			ProjectMgr.SetProjectProperty("RootNamespace", _defaultNamespace);
 			ProjectMgr.SetProjectProperty("ClojureVersion", _clojureVersion);
 			ProjectMgr.SetProjectProperty("StartupFile", _targetFile);
+			ProjectMgr.SetProjectProperty("StartupArguments", _startupArguments);
 			IsDirty = false;
 			return VSConstants.S_OK;
 		}

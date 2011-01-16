@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Microsoft.ClojureExtension.Project.Launching
+namespace ClojureExtension.Project.Launching
 {
 	public class LaunchParameters
 	{
@@ -11,8 +11,10 @@ namespace Microsoft.ClojureExtension.Project.Launching
 		private readonly string _remoteDebugMachine;
 		private readonly string _enableUnmanagedDebugging;
 		private readonly Guid _debugType;
+		private readonly string _startupArguments;
+		private readonly StartupFileType _startupFileType;
 
-		public LaunchParameters(string runnerPath, string frameworkPath, string applicationPath, string startupFile, string remoteDebugMachine, string enableUnmanagedDebugging, Guid debugType)
+		public LaunchParameters(string runnerPath, string frameworkPath, string applicationPath, string startupFile, string remoteDebugMachine, string enableUnmanagedDebugging, Guid debugType, string startupArguments, StartupFileType startupFileType)
 		{
 			_runnerPath = runnerPath;
 			_frameworkPath = frameworkPath;
@@ -21,6 +23,18 @@ namespace Microsoft.ClojureExtension.Project.Launching
 			_remoteDebugMachine = remoteDebugMachine;
 			_enableUnmanagedDebugging = enableUnmanagedDebugging;
 			_debugType = debugType;
+			_startupArguments = startupArguments;
+			_startupFileType = startupFileType;
+		}
+
+		public StartupFileType StartupFileType
+		{
+			get { return _startupFileType; }
+		}
+
+		public string StartupArguments
+		{
+			get { return _startupArguments; }
 		}
 
 		public string StartupFile

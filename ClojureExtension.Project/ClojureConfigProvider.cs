@@ -1,6 +1,5 @@
 ﻿using ClojureExtension.Project.Launching;
 using Microsoft.ClojureExtension.Project;
-using Microsoft.ClojureExtension.Project.Launching;
 using Microsoft.VisualStudio.Project;
 
 namespace ClojureExtension.Project

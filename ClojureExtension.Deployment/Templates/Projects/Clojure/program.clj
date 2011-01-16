@@ -1,5 +1,5 @@
-(ns program)
+(ns program
+  (:gen-class))
 
-(defn main [& args] ())
-
-(main)
+(defn -main [& args]
+  (println "Hello world"))
