@@ -90,6 +90,14 @@
 					<ButtonText>Uncomment Selection</ButtonText>
 				</Strings>
 			</Button>
+			<Button guid="guidVSStd97" id="cmdidGotoDefn" priority="0" type="Button">
+				<Parent guid="clojureGroups" id="clojureCodeWindowMenuGroup" />
+				<CommandFlag>DynamicVisibility</CommandFlag>
+				<Strings>
+					<CommandName>Edit.GotoDefinition</CommandName>
+					<ButtonText>Goto Definition</ButtonText>
+				</Strings>
+			</Button>
 		</Buttons>
 	</Commands>
 
@@ -114,6 +122,9 @@
 			<IDSymbol name="blockComment" value="136"/>
 			<IDSymbol name="blockUncomment" value="137"/>
 			<IDSymbol name="formatDocument" value="143"/>
+		</GuidSymbol>
+		<GuidSymbol name="editorCommandMenu" value="{5EFC7975-14BC-11CF-9B2B-00AA00573819}">
+			<IDSymbol name="gotoDefinition" value="935"/>
 		</GuidSymbol>
 		<GuidSymbol name="solutionExplorer" value="{D309F791-903F-11D0-9EFC-00A0C911004F}">
 			<IDSymbol name="solutionExplorerFileMenu" value="1072" />
