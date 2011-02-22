@@ -69,7 +69,7 @@ namespace ClojureExtension.Project
         /// </summary>
         static ClojureProjectNode()
         {
-            imageList = Utilities.GetImageList(typeof (ClojureProjectNode).Assembly.GetManifestResourceStream("ClojureExtension.Project.Resources.ClojureImageList.bmp"));
+            imageList = Microsoft.VisualStudio.Project.Utilities.GetImageList(typeof (ClojureProjectNode).Assembly.GetManifestResourceStream("ClojureExtension.Project.Resources.ClojureImageList.bmp"));
         }
 
         /// <summary>

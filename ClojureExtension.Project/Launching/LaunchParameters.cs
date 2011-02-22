@@ -13,8 +13,9 @@ namespace ClojureExtension.Project.Launching
 		private readonly Guid _debugType;
 		private readonly string _startupArguments;
 		private readonly StartupFileType _startupFileType;
+		private readonly string _clojureLoadPath;
 
-		public LaunchParameters(string runnerPath, string frameworkPath, string applicationPath, string startupFile, string remoteDebugMachine, string enableUnmanagedDebugging, Guid debugType, string startupArguments, StartupFileType startupFileType)
+		public LaunchParameters(string runnerPath, string frameworkPath, string applicationPath, string startupFile, string remoteDebugMachine, string enableUnmanagedDebugging, Guid debugType, string startupArguments, StartupFileType startupFileType, string clojureLoadPath)
 		{
 			_runnerPath = runnerPath;
 			_frameworkPath = frameworkPath;
@@ -25,6 +26,12 @@ namespace ClojureExtension.Project.Launching
 			_debugType = debugType;
 			_startupArguments = startupArguments;
 			_startupFileType = startupFileType;
+			_clojureLoadPath = clojureLoadPath;
+		}
+
+		public string ClojureLoadPath
+		{
+			get { return _clojureLoadPath; }
 		}
 
 		public StartupFileType StartupFileType

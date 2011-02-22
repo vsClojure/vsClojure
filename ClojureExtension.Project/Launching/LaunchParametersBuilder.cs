@@ -16,6 +16,7 @@ namespace ClojureExtension.Project.Launching
 
 		public LaunchParameters Get()
 		{
+			string clojureLoadPath = _project.GetProjectProperty("ClojureLoadPath");
 			string frameworkPath = _project.GetProjectProperty("ClojureRuntimesDirectory") + "\\" + _project.GetProjectProperty("ClojureVersion", true);
 			string applicationPath = _project.GetProjectProperty("ProjectDir", false) + _project.GetProjectProperty("OutputPath", false);
 			string targetFile = _project.GetProjectProperty("StartupFile");
@@ -45,7 +46,8 @@ namespace ClojureExtension.Project.Launching
 				unmanagedDebugging,
 				debugType,
 				startupArguments,
-				startupFileType);
+				startupFileType,
+				clojureLoadPath);
 		}
 	}
 }

@@ -90,14 +90,14 @@
 					<ButtonText>Uncomment Selection</ButtonText>
 				</Strings>
 			</Button>
-			<Button guid="guidVSStd97" id="cmdidGotoDefn" priority="0" type="Button">
+			<!--<Button guid="guidVSStd97" id="cmdidGotoDefn" priority="0" type="Button">
 				<Parent guid="clojureGroups" id="clojureCodeWindowMenuGroup" />
 				<CommandFlag>DynamicVisibility</CommandFlag>
 				<Strings>
 					<CommandName>Edit.GotoDefinition</CommandName>
 					<ButtonText>Goto Definition</ButtonText>
 				</Strings>
-			</Button>
+			</Button>-->
 		</Buttons>
 	</Commands>
 

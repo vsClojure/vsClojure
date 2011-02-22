@@ -55,7 +55,7 @@ namespace ClojureExtension.Project.Launching
 			info.grfLaunch = grfLaunch;
 			info.bstrArg = launchParameters.StartupArguments;
 			info.bstrRemoteMachine = launchParameters.RemoteDebugMachine;
-			info.bstrEnv = "clojure.load.path=" + launchParameters.FrameworkPath + "\0";
+			info.bstrEnv = "clojure.load.path=" + launchParameters.FrameworkPath + ";" + launchParameters.ClojureLoadPath + "\0";
 			info.clsidCustom = launchParameters.DebugType;
 			return info;
 		}

@@ -22,6 +22,7 @@ using ClojureExtension.Editor.Commenting;
 using ClojureExtension.Editor.TextBuffer;
 using ClojureExtension.Parsing;
 using ClojureExtension.Project.Launching;
+using ClojureExtension.Utilities;
 using EnvDTE;
 using EnvDTE80;
 using Microsoft.ClojureExtension;
@@ -40,6 +41,7 @@ using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.Win32;
+using VSLangProj;
 
 namespace ClojureExtension.Deployment
 {

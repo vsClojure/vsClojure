@@ -25,6 +25,7 @@ namespace ClojureExtension.Project.Configuration
 		private string _clojureVersion;
 		private string _targetFile;
 		private string _startupArguments;
+		private string _clojureLoadPath;
 
 		public GeneralPropertyPage()
 		{
@@ -71,6 +72,19 @@ namespace ClojureExtension.Project.Configuration
 			}
 		}
 
+		[Category("Running")]
+		[DisplayName("Clojure Load Path")]
+		[Description("Clojure Load Path")]
+		public string ClojureLoadPath
+		{
+			get { return _clojureLoadPath; }
+			set
+			{
+				_clojureLoadPath = value;
+				IsDirty = true;
+			}
+		}
+
 		[Category("Project")]
 		[DisplayName("Project File")]
 		[Description("Project File")]
@@ -98,6 +112,7 @@ namespace ClojureExtension.Project.Configuration
 			_clojureVersion = ProjectMgr.GetProjectProperty("ClojureVersion", false);
 			_targetFile = ProjectMgr.GetProjectProperty("StartupFile", false);
 			_startupArguments = ProjectMgr.GetProjectProperty("StartupArguments", false);
+			_clojureLoadPath = ProjectMgr.GetProjectProperty("ClojureLoadPath", false);
 		}
 
 		protected override int ApplyChanges()
@@ -106,6 +121,7 @@ namespace ClojureExtension.Project.Configuration
 			ProjectMgr.SetProjectProperty("ClojureVersion", _clojureVersion);
 			ProjectMgr.SetProjectProperty("StartupFile", _targetFile);
 			ProjectMgr.SetProjectProperty("StartupArguments", _startupArguments);
+			ProjectMgr.SetProjectProperty("ClojureLoadPath", _clojureLoadPath);
 			IsDirty = false;
 			return VSConstants.S_OK;
 		}

@@ -10,6 +10,7 @@
 		<ClojureVersion>1.2.0</ClojureVersion>
 		<StartupFile>program.exe</StartupFile>
 		<StartupArguments></StartupArguments>
+		<ClojureLoadPath></ClojureLoadPath>
 	</PropertyGroup>
 	<PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
 		<DebugSymbols>true</DebugSymbols>
