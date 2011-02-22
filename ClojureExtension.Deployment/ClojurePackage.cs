@@ -22,7 +22,6 @@ using ClojureExtension.Editor.Commenting;
 using ClojureExtension.Editor.TextBuffer;
 using ClojureExtension.Parsing;
 using ClojureExtension.Project.Launching;
-using ClojureExtension.Utilities;
 using EnvDTE;
 using EnvDTE80;
 using Microsoft.ClojureExtension;
