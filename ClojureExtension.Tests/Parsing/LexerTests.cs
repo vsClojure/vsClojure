@@ -480,5 +480,14 @@ namespace ClojureExtension.Tests.Parsing
 			Assert.AreEqual(TokenType.String, token.Type);
 			Assert.AreEqual("\"", token.Text);
 		}
+
+		[TestMethod]
+		public void ShouldAllowStringToEndWithAnEscapedBackslash()
+		{
+			Lexer lexer = new Lexer(new PushBackCharacterStream(new StringReader("\"string\\\\\"not string")));
+			Token token = lexer.Next();
+			Assert.AreEqual(TokenType.String, token.Type);
+			Assert.AreEqual("\"string\\\\\"", token.Text);
+		}
 	}
 }

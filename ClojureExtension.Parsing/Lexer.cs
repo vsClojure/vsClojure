@@ -348,7 +348,7 @@ namespace ClojureExtension.Parsing
 			while (currentChar != '"' || (currentChar == '"' && previousCharWasBackslash))
 			{
 				parsedString.Append(currentChar);
-				previousCharWasBackslash = currentChar == '\\';
+				previousCharWasBackslash = currentChar == '\\' && !previousCharWasBackslash;
 				if (_source.HasMore) currentChar = _source.Next();
 				else return parsedString.ToString();
 			}
