@@ -8,7 +8,7 @@ Description:
 
 Status:
 
-	Release 1.0.0 available
+	Release 1.1.0 available
 
 Features:
 
@@ -25,6 +25,7 @@ Features:
 		* Load active file into REPL (Editor menu command)
 		* Switch to active file's namespace (Editor menu command)
 		* History (CTRL + UP ARROW or CTRL + DOWN ARROW)
+	9.) Block commenting
 
 Installing:
 

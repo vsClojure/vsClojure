@@ -645,6 +645,7 @@
   <ItemGroup>
     <Content Include="LICENSE.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <VSCTCompile Include="ClojurePackage.xml">
       <ResourceName>Menus.ctmenu</ResourceName>
