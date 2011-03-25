@@ -30,7 +30,7 @@ namespace ClojureExtension.Repl
 			{
 				string userInput = _interactiveTextBox.Text.Substring(_replEntity.CurrentState.PromptPosition);
 				_replWriter.WriteExpressionToRepl(userInput);
-				_replEntity.CurrentState = _replEntity.CurrentState.ChangePromptPosition(_interactiveTextBox.Text.Length);
+				_replEntity.CurrentState = _replEntity.CurrentState.ChangePromptPosition(_interactiveTextBox.Text.Length + 2);
 				_interactiveTextBox.CaretIndex = _interactiveTextBox.Text.Length;
 				return;
 			}
