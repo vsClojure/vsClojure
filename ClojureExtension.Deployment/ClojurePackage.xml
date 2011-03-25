@@ -90,6 +90,14 @@
 					<ButtonText>Uncomment Selection</ButtonText>
 				</Strings>
 			</Button>
+			<Button guid="clojureGroups" id="loadSelectedTextIntoRepl" priority="0" type="Button">
+				<Parent guid="clojureGroups" id="clojureCodeWindowMenuGroup" />
+				<CommandFlag>DynamicVisibility</CommandFlag>
+				<Strings>
+					<CommandName>Clojure.LoadSelectedTextIntoRepl</CommandName>
+					<ButtonText>Load Selected Text Into Repl</ButtonText>
+				</Strings>
+			</Button>
 			<!--<Button guid="guidVSStd97" id="cmdidGotoDefn" priority="0" type="Button">
 				<Parent guid="clojureGroups" id="clojureCodeWindowMenuGroup" />
 				<CommandFlag>DynamicVisibility</CommandFlag>
@@ -103,6 +111,7 @@
 
 	<KeyBindings>
 		<KeyBinding guid="clojureGroups" id="loadActiveDocumentIntoRepl" editor="guidVSStd97" key1="L" mod1="Alt" />
+		<KeyBinding guid="clojureGroups" id="loadSelectedTextIntoRepl" editor="guidVSStd97" key1="L" mod1="Control" mod2="Shift"/>
 		<KeyBinding guid="clojureGroups" id="switchReplNamespaceToActiveDocument" editor="guidVSStd97" key1="S" mod1="Alt"/>
 	</KeyBindings>
 	
@@ -117,6 +126,7 @@
 			<IDSymbol name="loadFileIntoActiveRepl" value="12" />
 			<IDSymbol name="loadActiveDocumentIntoRepl" value="13" />
 			<IDSymbol name="switchReplNamespaceToActiveDocument" value="14" />
+			<IDSymbol name="loadSelectedTextIntoRepl" value="15" />
 		</GuidSymbol>
 		<GuidSymbol name="advancedEditorCommands" value="{1496a755-94de-11d0-8c3f-00c04fc2aae2}">
 			<IDSymbol name="blockComment" value="136"/>

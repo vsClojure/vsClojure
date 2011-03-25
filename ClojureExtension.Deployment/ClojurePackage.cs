@@ -102,7 +102,7 @@ namespace ClojureExtension.Deployment
 
 		private void HideAllClojureEditorMenuCommands()
 		{
-			List<int> allCommandIds = new List<int>() {11, 12, 13, 14};
+			List<int> allCommandIds = new List<int>() {11, 12, 13, 14, 15};
 			DTE2 dte = (DTE2) GetService(typeof (DTE));
 			OleMenuCommandService menuCommandService = (OleMenuCommandService) GetService(typeof (IMenuCommandService));
 			List<MenuCommand> menuCommands = new List<MenuCommand>();
