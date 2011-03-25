@@ -4,7 +4,7 @@ using System.Windows.Controls;
 using Microsoft.ClojureExtension.Utilities;
 using Microsoft.VisualStudio.Shell.Interop;
 
-namespace Microsoft.ClojureExtension.Repl.Operations
+namespace ClojureExtension.Repl.Operations
 {
 	public class StartReplUsingProjectVersion
 	{

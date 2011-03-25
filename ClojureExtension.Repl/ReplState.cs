@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Input;
 
-namespace Microsoft.ClojureExtension.Repl
+namespace ClojureExtension.Repl
 {
 	public class ReplState
 	{

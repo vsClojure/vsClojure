@@ -2,7 +2,7 @@
 using System.Windows.Input;
 using Microsoft.ClojureExtension.Utilities;
 
-namespace Microsoft.ClojureExtension.Repl
+namespace ClojureExtension.Repl
 {
 	public class InputKeyHandler
 	{

@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Microsoft.ClojureExtension.Utilities;
 
-namespace Microsoft.ClojureExtension.Repl
+namespace ClojureExtension.Repl
 {
 	public class History
 	{

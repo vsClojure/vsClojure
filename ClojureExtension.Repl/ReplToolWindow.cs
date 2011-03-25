@@ -1,9 +1,8 @@
-﻿using System.Diagnostics;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using System.Windows.Controls;
 using Microsoft.VisualStudio.Shell;
 
-namespace Microsoft.ClojureExtension.Repl
+namespace ClojureExtension.Repl
 {
     [Guid("8C5C7302-ECC8-435D-AAFE-D0E5A0A02FE9")]
     public class ReplToolWindow : ToolWindowPane

@@ -5,11 +5,12 @@ using System.Diagnostics;
 using System.Windows.Controls;
 using System.Windows.Input;
 using ClojureExtension.Parsing;
+using ClojureExtension.Repl.Operations;
 using EnvDTE;
 using EnvDTE80;
+using Microsoft.ClojureExtension;
 using Microsoft.ClojureExtension.Editor;
 using Microsoft.ClojureExtension.Project.Hierarchy;
-using Microsoft.ClojureExtension.Repl.Operations;
 using Microsoft.ClojureExtension.Utilities;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Editor;
@@ -19,7 +20,7 @@ using Microsoft.VisualStudio.TextManager.Interop;
 using Process = System.Diagnostics.Process;
 using Thread = System.Threading.Thread;
 
-namespace Microsoft.ClojureExtension.Repl
+namespace ClojureExtension.Repl
 {
 	public class ReplFactory
 	{
@@ -34,6 +35,7 @@ namespace Microsoft.ClojureExtension.Repl
 
 		public void CreateRepl(string replPath, string projectPath, TabControl replManager)
 		{
+			DTE2 dte = (DTE2)_serviceProvider.GetService(typeof(DTE));
 			TextBox interactiveText = ReplUserInterfaceFactory.CreateInteractiveText();
 			Button closeButton = ReplUserInterfaceFactory.CreateCloseButton();
 			Label name = ReplUserInterfaceFactory.CreateTabLabel();
@@ -46,8 +48,7 @@ namespace Microsoft.ClojureExtension.Repl
 			replEntity.CurrentState = new ReplState(0, new LinkedList<string>(), new LinkedList<Key>());
 
 			ProcessOutputTunnel processOutputTunnel = new ProcessOutputTunnel(replProcess, interactiveText, replEntity);
-			Thread outputReaderThread = new Thread(() => processOutputTunnel.WriteFromReplToTextBox(replProcess.StandardOutput));
-			Thread errorReaderThread = new Thread(() => processOutputTunnel.WriteFromReplToTextBox(replProcess.StandardError));
+			Thread outputReaderThread = new Thread(() => processOutputTunnel.WriteFromReplToTextBox());
 			MetaKeyWatcher metaKeyWatcher = new MetaKeyWatcher(replEntity);
 			InputKeyHandler inputKeyHandler = new InputKeyHandler(metaKeyWatcher, replEntity, interactiveText, new ReplWriter(replProcess, interactiveText));
 			History history = new History(metaKeyWatcher, replEntity, interactiveText);
@@ -57,8 +58,6 @@ namespace Microsoft.ClojureExtension.Repl
 			interactiveText.PreviewKeyDown += history.PreviewKeyDown;
 			interactiveText.PreviewTextInput += inputKeyHandler.PreviewTextInput;
 			interactiveText.PreviewKeyDown += inputKeyHandler.PreviewKeyDown;
-
-			DTE2 dte = (DTE2) _serviceProvider.GetService(typeof (DTE));
 
 			MenuCommandListWirer menuCommandListWirer = new MenuCommandListWirer(
 				(OleMenuCommandService) _serviceProvider.GetService(typeof (IMenuCommandService)),
@@ -74,14 +73,12 @@ namespace Microsoft.ClojureExtension.Repl
 					replProcess.Start();
 					replProcess.StandardInput.AutoFlush = true;
 					outputReaderThread.Start();
-					errorReaderThread.Start();
 				};
 
 			replProcess.Exited +=
 				(o, e) =>
 				{
 					outputReaderThread.Abort();
-					errorReaderThread.Abort();
 				};
 
 			closeButton.Click +=

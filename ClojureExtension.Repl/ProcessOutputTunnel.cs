@@ -1,10 +1,10 @@
 ﻿using System.Diagnostics;
-using System.IO;
+using System.Threading;
 using System.Windows.Controls;
 using System.Windows.Threading;
 using Microsoft.ClojureExtension.Utilities;
 
-namespace Microsoft.ClojureExtension.Repl
+namespace ClojureExtension.Repl
 {
 	public class ProcessOutputTunnel
 	{
@@ -19,24 +19,41 @@ namespace Microsoft.ClojureExtension.Repl
 			_replEntity = replEntity;
 		}
 
-		public void WriteFromReplToTextBox(StreamReader stream)
+		public void WriteFromReplToTextBox()
 		{
+			var outputReader = new AsynchronousStream(_process.StandardOutput.BaseStream);
+			var errorReader = new AsynchronousStream(_process.StandardError.BaseStream);
+			outputReader.Start();
+			errorReader.Start();
+
 			while (!_process.HasExited)
 			{
-				string output = ((char) stream.Read()).ToString();
-				while (stream.Peek() != -1) output += ((char) stream.Read()).ToString();
+				Thread.Sleep(2);
 
-				_interactiveTextBox.Dispatcher.Invoke(
-					DispatcherPriority.Normal,
-					new DispatcherOperationCallback(
-						delegate
-						{
-							_interactiveTextBox.AppendText(output);
-							_interactiveTextBox.ScrollToEnd();
-							_replEntity.CurrentState = _replEntity.CurrentState.ChangePromptPosition(_interactiveTextBox.Text.Length);
-							return null;
-						}), null);
+				if (outputReader.HasData && errorReader.HasData) WriteToTextBox(errorReader.GetData());
+				if (outputReader.HasData) WriteToTextBox(outputReader.GetData());
+				if (errorReader.HasData) WriteToTextBox(errorReader.GetData());
 			}
+
+			outputReader.Stop();
+			errorReader.Stop();
+		}
+
+		public void WriteToTextBox(string output)
+		{
+			_interactiveTextBox.Dispatcher.Invoke(
+			                                      DispatcherPriority.Normal,
+			                                      new DispatcherOperationCallback(
+			                                      	delegate
+			                                      	{
+			                                      		_interactiveTextBox.AppendText(output);
+			                                      		_interactiveTextBox.ScrollToEnd();
+			                                      		_replEntity.CurrentState =
+			                                      			_replEntity.CurrentState.ChangePromptPosition(
+			                                      			                                              _interactiveTextBox.Text.
+			                                      			                                              	Length);
+			                                      		return null;
+			                                      	}), null);
 		}
 	}
 }

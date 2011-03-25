@@ -6,7 +6,7 @@ using Microsoft.ClojureExtension.Utilities;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
 
-namespace Microsoft.ClojureExtension.Repl.Operations
+namespace ClojureExtension.Repl.Operations
 {
     internal class LoadFilesIntoRepl
     {
@@ -35,7 +35,7 @@ namespace Microsoft.ClojureExtension.Repl.Operations
             loadFileExpression.Append("))");
 
             _writer.WriteBehindTheSceneExpressionToRepl(loadFileExpression.ToString());
-            ErrorHandler.ThrowOnFailure(_replToolWindowFrame.Show());
+            ErrorHandler.ThrowOnFailure(_replToolWindowFrame.ShowNoActivate());
         }
     }
 }

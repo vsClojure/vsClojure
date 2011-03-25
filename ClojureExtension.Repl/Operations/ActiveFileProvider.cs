@@ -2,7 +2,7 @@
 using EnvDTE80;
 using Microsoft.ClojureExtension.Utilities;
 
-namespace Microsoft.ClojureExtension.Repl.Operations
+namespace ClojureExtension.Repl.Operations
 {
     public class ActiveFileProvider : IProvider<List<string>>
     {

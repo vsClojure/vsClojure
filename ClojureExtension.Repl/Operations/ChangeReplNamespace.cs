@@ -1,4 +1,4 @@
-﻿namespace Microsoft.ClojureExtension.Repl.Operations
+﻿namespace ClojureExtension.Repl.Operations
 {
 	public class ChangeReplNamespace
 	{
