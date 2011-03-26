@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Windows.Input;
 
 namespace ClojureExtension.Repl
 {
@@ -7,18 +6,16 @@ namespace ClojureExtension.Repl
 	{
 		private readonly int _promptPosition;
 		private readonly LinkedList<string> _history;
-		private readonly LinkedList<Key> _downKeys;
 
-		public ReplState(int promptPosition, LinkedList<string> history, LinkedList<Key> downKeys)
+		public ReplState() : this(0, new LinkedList<string>())
+		{
+			
+		}
+
+		public ReplState(int promptPosition, LinkedList<string> history)
 		{
 			_promptPosition = promptPosition;
 			_history = history;
-			_downKeys = downKeys;
-		}
-
-		public LinkedList<Key> DownKeys
-		{
-			get { return new LinkedList<Key>(_downKeys); }
 		}
 
 		public LinkedList<string> History
@@ -33,17 +30,12 @@ namespace ClojureExtension.Repl
 
 		public ReplState ChangePromptPosition(int position)
 		{
-			return new ReplState(position, History, DownKeys);
+			return new ReplState(position, History);
 		}
 
 		public ReplState ChangeHistory(LinkedList<string> history)
 		{
-			return new ReplState(PromptPosition, history, DownKeys);
-		}
-
-		public ReplState ChangeDownKeys(LinkedList<Key> downKeys)
-		{
-			return new ReplState(PromptPosition, History, downKeys);
+			return new ReplState(PromptPosition, history);
 		}
 	}
 }

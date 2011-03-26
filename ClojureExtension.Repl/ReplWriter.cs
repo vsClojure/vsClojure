@@ -22,7 +22,7 @@ namespace ClojureExtension.Repl
 
 		public void WriteExpressionToRepl(string expression)
 		{
-			_process.StandardInput.Write(expression + "\r\n");
+			_process.StandardInput.WriteLine(expression);
 		}
 
 		public void WriteToInteractive(string s)

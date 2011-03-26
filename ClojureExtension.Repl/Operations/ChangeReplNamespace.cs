@@ -11,7 +11,7 @@
 
 		public void Execute(string ns)
 		{
-			_replWriter.WriteBehindTheSceneExpressionToRepl("(do (require '" + ns + ") (in-ns '" + ns + "))");
+			_replWriter.WriteBehindTheSceneExpressionToRepl("(in-ns '" + ns + ")");
 		}
 	}
 }

@@ -45,16 +45,13 @@ namespace ClojureExtension.Repl
 			Process replProcess = CreateReplProcess(replPath, projectPath);
 
 			Entity<ReplState> replEntity = new Entity<ReplState>();
-			replEntity.CurrentState = new ReplState(0, new LinkedList<string>(), new LinkedList<Key>());
+			replEntity.CurrentState = new ReplState();
 
 			ProcessOutputTunnel processOutputTunnel = new ProcessOutputTunnel(replProcess, interactiveText, replEntity);
 			Thread outputReaderThread = new Thread(processOutputTunnel.WriteFromReplToTextBox);
-			MetaKeyWatcher metaKeyWatcher = new MetaKeyWatcher(replEntity);
-			InputKeyHandler inputKeyHandler = new InputKeyHandler(metaKeyWatcher, replEntity, interactiveText, new ReplWriter(replProcess, interactiveText));
-			History history = new History(metaKeyWatcher, replEntity, interactiveText);
+			InputKeyHandler inputKeyHandler = new InputKeyHandler(new KeyboardExaminer(), replEntity, interactiveText, new ReplWriter(replProcess, interactiveText));
+			History history = new History(new KeyboardExaminer(), replEntity, interactiveText);
 
-			interactiveText.PreviewKeyDown += metaKeyWatcher.PreviewKeyDown;
-			interactiveText.PreviewKeyUp += metaKeyWatcher.PreviewKeyUp;
 			interactiveText.PreviewKeyDown += history.PreviewKeyDown;
 			interactiveText.PreviewTextInput += inputKeyHandler.PreviewTextInput;
 			interactiveText.PreviewKeyDown += inputKeyHandler.PreviewKeyDown;
@@ -133,7 +130,7 @@ namespace ClojureExtension.Repl
 			menuCommands.Add(new MenuCommand((sender, args) => loadSelectedFilesIntoRepl.Execute(), new CommandID(Guids.GuidClojureExtensionCmdSet, 12)));
 			menuCommands.Add(new MenuCommand((sender, args) => loadActiveFileIntoRepl.Execute(), new CommandID(Guids.GuidClojureExtensionCmdSet, 13)));
 			menuCommands.Add(new MenuCommand((sender, args) => changeReplNamespace.Execute(namespaceParser.Execute(activeTextBufferStateProvider.Get())), new CommandID(Guids.GuidClojureExtensionCmdSet, 14)));
-			menuCommands.Add(new MenuCommand((sender, args) => new ReplWriter(replProcess, interactiveText).WriteExpressionToRepl(dte.ActiveDocument.Selection.Text.Replace("\r\n", "")), new CommandID(Guids.GuidClojureExtensionCmdSet, 15)));
+			menuCommands.Add(new MenuCommand((sender, args) => new ReplWriter(replProcess, interactiveText).WriteBehindTheSceneExpressionToRepl((string) dte.ActiveDocument.Selection.Text), new CommandID(Guids.GuidClojureExtensionCmdSet, 15)));
 			return menuCommands;
 		}
 

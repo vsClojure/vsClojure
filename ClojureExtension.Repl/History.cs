@@ -7,33 +7,33 @@ namespace ClojureExtension.Repl
 {
 	public class History
 	{
-		private readonly MetaKeyWatcher _metaKeyWatcher;
+		private readonly KeyboardExaminer _keyboardExaminer;
 		private readonly Entity<ReplState> _replEntity;
 		private readonly TextBox _interactiveTextBox;
 		private LinkedListNode<string> _currentlySelectedHistoryItem;
 
-		public History(MetaKeyWatcher metaKeyWatcher, Entity<ReplState> replEntity, TextBox interactiveTextBox)
+		public History(KeyboardExaminer keyboardExaminer, Entity<ReplState> replEntity, TextBox interactiveTextBox)
 		{
-			_metaKeyWatcher = metaKeyWatcher;
+			_keyboardExaminer = keyboardExaminer;
 			_replEntity = replEntity;
 			_interactiveTextBox = interactiveTextBox;
 		}
 
 		public void PreviewKeyDown(object sender, KeyEventArgs e)
 		{
-			if (e.Key == Key.Enter && !_metaKeyWatcher.IsShiftDown() && _interactiveTextBox.CaretIndex >= _replEntity.CurrentState.PromptPosition)
+			if (e.Key == Key.Enter && !_keyboardExaminer.IsShiftDown() && _interactiveTextBox.CaretIndex >= _replEntity.CurrentState.PromptPosition)
 			{
 				SubmitInputToHistory();
 			}
 
-			if (_interactiveTextBox.CaretIndex >= _replEntity.CurrentState.PromptPosition && e.Key == Key.Down && _metaKeyWatcher.ControlIsDown())
+			if (_interactiveTextBox.CaretIndex >= _replEntity.CurrentState.PromptPosition && e.Key == Key.Down && _keyboardExaminer.ControlIsDown())
 			{
 				ShowPreviousHistoryItem();
 				e.Handled = true;
 				return;
 			}
 
-			if (_interactiveTextBox.CaretIndex >= _replEntity.CurrentState.PromptPosition && e.Key == Key.Up && _metaKeyWatcher.ControlIsDown())
+			if (_interactiveTextBox.CaretIndex >= _replEntity.CurrentState.PromptPosition && e.Key == Key.Up && _keyboardExaminer.ControlIsDown())
 			{
 				ShowNextItemInHistory();
 				e.Handled = true;
