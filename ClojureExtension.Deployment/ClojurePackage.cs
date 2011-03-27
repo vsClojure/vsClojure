@@ -174,8 +174,7 @@ namespace ClojureExtension.Deployment
 				new MenuCommand(
 					(sender, args) =>
 						new StartReplUsingProjectVersion(
-							replToolWindow.TabControl,
-							new ReplFactory(replToolWindowFrame, this),
+							new ReplFactory(replToolWindow.TabControl, replToolWindowFrame, this),
 							replToolWindowFrame,
 							() => new LaunchParametersBuilder((ProjectNode) projectProvider.Get().Object).Get().FrameworkPath,
 							new SelectedProjectProvider(dte.Solution, dte.ToolWindows.SolutionExplorer)).Execute(),

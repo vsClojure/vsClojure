@@ -8,14 +8,12 @@ namespace ClojureExtension.Repl.Operations
 {
 	public class StartReplUsingProjectVersion
 	{
-		private readonly TabControl _replManager;
 		private readonly ReplFactory _replFactory;
 		private readonly IVsWindowFrame _toolWindowFrame;
 		private readonly Func<string> _frameworkProvider;
 		private readonly IProvider<EnvDTE.Project> _selectedProjectProvider;
 
 		public StartReplUsingProjectVersion(
-			TabControl replManager,
 			ReplFactory replFactory,
 			IVsWindowFrame toolWindowFrame,
 			Func<string> frameworkProvider,
@@ -23,14 +21,13 @@ namespace ClojureExtension.Repl.Operations
 		{
 			_frameworkProvider = frameworkProvider;
 			_selectedProjectProvider = selectedProjectProvider;
-			_replManager = replManager;
 			_replFactory = replFactory;
 			_toolWindowFrame = toolWindowFrame;
 		}
 
 		public void Execute()
 		{
-			_replFactory.CreateRepl(_frameworkProvider(), Path.GetDirectoryName(_selectedProjectProvider.Get().FullName), _replManager);
+			_replFactory.CreateRepl(_frameworkProvider(), Path.GetDirectoryName(_selectedProjectProvider.Get().FullName));
 			_toolWindowFrame.Show();
 		}
 	}

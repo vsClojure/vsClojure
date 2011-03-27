@@ -1,5 +1,6 @@
 ﻿using System.Windows.Controls;
 using System.Windows.Input;
+using ClojureExtension.Utilities;
 using Microsoft.ClojureExtension.Utilities;
 
 namespace ClojureExtension.Repl

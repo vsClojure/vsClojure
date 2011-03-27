@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Windows.Controls;
-using System.Windows.Input;
 using ClojureExtension.Parsing;
 using ClojureExtension.Repl.Operations;
+using ClojureExtension.Utilities;
 using EnvDTE;
 using EnvDTE80;
 using Microsoft.ClojureExtension;
@@ -24,119 +24,143 @@ namespace ClojureExtension.Repl
 {
 	public class ReplFactory
 	{
+		private readonly TabControl _replManager;
 		private readonly IVsWindowFrame _replToolWindow;
 		private readonly IServiceProvider _serviceProvider;
 
-		public ReplFactory(IVsWindowFrame replToolWindow, IServiceProvider serviceProvider)
+		public ReplFactory(TabControl replManager, IVsWindowFrame replToolWindow, IServiceProvider serviceProvider)
 		{
+			_replManager = replManager;
 			_replToolWindow = replToolWindow;
 			_serviceProvider = serviceProvider;
 		}
 
-		public void CreateRepl(string replPath, string projectPath, TabControl replManager)
+		public void CreateRepl(string replPath, string projectPath)
 		{
-			DTE2 dte = (DTE2)_serviceProvider.GetService(typeof(DTE));
-			TextBox interactiveText = ReplUserInterfaceFactory.CreateInteractiveText();
-			Button closeButton = ReplUserInterfaceFactory.CreateCloseButton();
-			Label name = ReplUserInterfaceFactory.CreateTabLabel();
-			Grid grid = ReplUserInterfaceFactory.CreateTextBoxGrid(interactiveText);
-			WrapPanel headerPanel = ReplUserInterfaceFactory.CreateHeaderPanel(name, closeButton);
-			TabItem tabItem = ReplUserInterfaceFactory.CreateTabItem(headerPanel, grid);
-			Process replProcess = CreateReplProcess(replPath, projectPath);
+			var interactiveText = ReplUserInterfaceFactory.CreateInteractiveText();
+			var closeButton = ReplUserInterfaceFactory.CreateCloseButton();
+			var name = ReplUserInterfaceFactory.CreateTabLabel();
+			var grid = ReplUserInterfaceFactory.CreateTextBoxGrid(interactiveText);
+			var headerPanel = ReplUserInterfaceFactory.CreateHeaderPanel(name, closeButton);
+			var tabItem = ReplUserInterfaceFactory.CreateTabItem(headerPanel, grid);
+			var replProcess = CreateReplProcess(replPath, projectPath);
+			var replEntity = new Entity<ReplState> {CurrentState = new ReplState()};
 
-			Entity<ReplState> replEntity = new Entity<ReplState>();
-			replEntity.CurrentState = new ReplState();
+			WireUpTheTextBoxInputToTheReplProcess(interactiveText, replProcess, replEntity);
+			WireUpTheOutputOfTheReplProcessToTheTextBox(interactiveText, replProcess, replEntity);
+			WireUpTheReplEditorCommandsToTheEditor(interactiveText, replProcess, replEntity, tabItem);
 
-			ProcessOutputTunnel processOutputTunnel = new ProcessOutputTunnel(replProcess, interactiveText, replEntity);
-			Thread outputReaderThread = new Thread(processOutputTunnel.WriteFromReplToTextBox);
-			InputKeyHandler inputKeyHandler = new InputKeyHandler(new KeyboardExaminer(), replEntity, interactiveText, new ReplWriter(replProcess, interactiveText));
-			History history = new History(new KeyboardExaminer(), replEntity, interactiveText);
+			closeButton.Click +=
+				(o, e) =>
+				{
+					replProcess.Kill();
+					_replManager.Items.Remove(tabItem);
+				};
 
-			interactiveText.PreviewKeyDown += history.PreviewKeyDown;
-			interactiveText.PreviewTextInput += inputKeyHandler.PreviewTextInput;
-			interactiveText.PreviewKeyDown += inputKeyHandler.PreviewKeyDown;
+			_replManager.Items.Add(tabItem);
+			_replManager.SelectedItem = tabItem;
+		}
 
-			MenuCommandListWirer menuCommandListWirer = new MenuCommandListWirer(
-				(OleMenuCommandService) _serviceProvider.GetService(typeof (IMenuCommandService)),
-				CreateMenuCommands(replProcess, interactiveText),
-				() => dte.ActiveDocument != null && dte.ActiveDocument.FullName.ToLower().EndsWith(".clj") && replManager.SelectedItem == tabItem);
+		private void WireUpTheReplEditorCommandsToTheEditor(TextBox replTextBox, Process replProcess, Entity<ReplState> replEntity, TabItem tabItem)
+		{
+			var dte = (DTE2)_serviceProvider.GetService(typeof(DTE));
+
+			var menuCommandListWirer = new MenuCommandListWirer(
+				(OleMenuCommandService)_serviceProvider.GetService(typeof(IMenuCommandService)),
+				CreateMenuCommands(replProcess, replTextBox, replEntity),
+				() => dte.ActiveDocument != null && dte.ActiveDocument.FullName.ToLower().EndsWith(".clj") && _replManager.SelectedItem == tabItem);
 
 			dte.Events.WindowEvents.WindowActivated += (o, e) => menuCommandListWirer.TryToShowMenuCommands();
+			_replManager.SelectionChanged += (sender, eventData) => menuCommandListWirer.TryToShowMenuCommands();
+		}
 
-			interactiveText.Loaded +=
+		private static void WireUpTheTextBoxInputToTheReplProcess(TextBox replTextBox, Process replProcess, Entity<ReplState> replEntity)
+		{
+			var inputKeyHandler = new InputKeyHandler(new KeyboardExaminer(), replEntity, replTextBox, new ReplWriter(replProcess, new TextBoxWriter(replTextBox, replEntity)));
+			var history = new History(new KeyboardExaminer(), replEntity, replTextBox);
+
+			replTextBox.PreviewKeyDown += history.PreviewKeyDown;
+			replTextBox.PreviewTextInput += inputKeyHandler.PreviewTextInput;
+			replTextBox.PreviewKeyDown += inputKeyHandler.PreviewKeyDown;
+		}
+
+		private static void WireUpTheOutputOfTheReplProcessToTheTextBox(TextBox replTextBox, Process replProcess, Entity<ReplState> replEntity)
+		{
+			var standardOutputStream = new StreamBuffer();
+			var standardErrorStream = new StreamBuffer();
+			var processOutputReader = new ProcessOutputReader(new TextBoxWriter(replTextBox, replEntity), standardOutputStream, standardErrorStream);
+			var outputReaderThread = new Thread(processOutputReader.StartMarshallingTextFromReplToTextBox);
+			var outputBufferStreamThread = new Thread(() => standardOutputStream.ReadStream(replProcess.StandardOutput.BaseStream));
+			var errorBufferStreamThread = new Thread(() => standardOutputStream.ReadStream(replProcess.StandardError.BaseStream));
+
+			replTextBox.Loaded +=
 				(o, e) =>
 				{
 					if (outputReaderThread.IsAlive) return;
 					replProcess.Start();
 					replProcess.StandardInput.AutoFlush = true;
+					outputBufferStreamThread.Start();
+					errorBufferStreamThread.Start();
 					outputReaderThread.Start();
 				};
 
 			replProcess.Exited +=
 				(o, e) =>
 				{
+					outputBufferStreamThread.Abort();
+					errorBufferStreamThread.Abort();
 					outputReaderThread.Abort();
 				};
-
-			closeButton.Click +=
-				(o, e) =>
-				{
-					replProcess.Kill();
-					replManager.Items.Remove(tabItem);
-				};
-
-			replManager.SelectionChanged += (sender, eventData) => menuCommandListWirer.TryToShowMenuCommands();
-			replManager.Items.Add(tabItem);
-			replManager.SelectedItem = tabItem;
 		}
 
-		private List<MenuCommand> CreateMenuCommands(Process replProcess, TextBox interactiveText)
+		private List<MenuCommand> CreateMenuCommands(Process replProcess, TextBox interactiveText, Entity<ReplState> replEntity)
 		{
-			DTE2 dte = (DTE2) _serviceProvider.GetService(typeof (DTE));
-			
-			LoadFilesIntoRepl loadSelectedFilesIntoRepl =
+			var dte = (DTE2) _serviceProvider.GetService(typeof (DTE));
+
+			var loadSelectedFilesIntoRepl =
 				new LoadFilesIntoRepl(
-					new ReplWriter(replProcess, interactiveText),
+					new ReplWriter(replProcess, new TextBoxWriter(interactiveText, replEntity)),
 					new SelectedFilesProvider(dte.ToolWindows.SolutionExplorer),
 					_replToolWindow);
 
-			LoadFilesIntoRepl loadSelectedProjectIntoRepl =
+			var loadSelectedProjectIntoRepl =
 				new LoadFilesIntoRepl(
-					new ReplWriter(replProcess, interactiveText),
+					new ReplWriter(replProcess, new TextBoxWriter(interactiveText, replEntity)),
 					new ProjectFilesProvider(
 						new SelectedProjectProvider(dte.Solution, dte.ToolWindows.SolutionExplorer)),
 					_replToolWindow);
 
-			LoadFilesIntoRepl loadActiveFileIntoRepl =
+			var loadActiveFileIntoRepl =
 				new LoadFilesIntoRepl(
-					new ReplWriter(replProcess, interactiveText),
+					new ReplWriter(replProcess, new TextBoxWriter(interactiveText, replEntity)),
 					new ActiveFileProvider(dte),
 					_replToolWindow);
 
-			var componentModel = (IComponentModel)_serviceProvider.GetService(typeof(SComponentModel));
+			var componentModel = (IComponentModel) _serviceProvider.GetService(typeof (SComponentModel));
 
-			NamespaceParser namespaceParser = new NamespaceParser(NamespaceParser.NamespaceSymbols);
+			var namespaceParser = new NamespaceParser(NamespaceParser.NamespaceSymbols);
 
-			ActiveTextBufferStateProvider activeTextBufferStateProvider =
-					new ActiveTextBufferStateProvider(
-						componentModel.GetService<IVsEditorAdaptersFactoryService>(),
-						(IVsTextManager) _serviceProvider.GetService(typeof (SVsTextManager)));
+			var activeTextBufferStateProvider =
+				new ActiveTextBufferStateProvider(
+					componentModel.GetService<IVsEditorAdaptersFactoryService>(),
+					(IVsTextManager) _serviceProvider.GetService(typeof (SVsTextManager)));
 
-			ChangeReplNamespace changeReplNamespace =
-				new ChangeReplNamespace(new ReplWriter(replProcess, interactiveText));
+			var changeReplNamespace =
+				new ChangeReplNamespace(new ReplWriter(replProcess, new TextBoxWriter(interactiveText, replEntity)));
 
-			List<MenuCommand> menuCommands = new List<MenuCommand>();
+			var menuCommands = new List<MenuCommand>();
 			menuCommands.Add(new MenuCommand((sender, args) => loadSelectedProjectIntoRepl.Execute(), new CommandID(Guids.GuidClojureExtensionCmdSet, 11)));
 			menuCommands.Add(new MenuCommand((sender, args) => loadSelectedFilesIntoRepl.Execute(), new CommandID(Guids.GuidClojureExtensionCmdSet, 12)));
 			menuCommands.Add(new MenuCommand((sender, args) => loadActiveFileIntoRepl.Execute(), new CommandID(Guids.GuidClojureExtensionCmdSet, 13)));
 			menuCommands.Add(new MenuCommand((sender, args) => changeReplNamespace.Execute(namespaceParser.Execute(activeTextBufferStateProvider.Get())), new CommandID(Guids.GuidClojureExtensionCmdSet, 14)));
-			menuCommands.Add(new MenuCommand((sender, args) => new ReplWriter(replProcess, interactiveText).WriteBehindTheSceneExpressionToRepl((string) dte.ActiveDocument.Selection.Text), new CommandID(Guids.GuidClojureExtensionCmdSet, 15)));
+			menuCommands.Add(new MenuCommand((sender, args) => new ReplWriter(replProcess, new TextBoxWriter(interactiveText, replEntity)).WriteBehindTheSceneExpressionToRepl((string)dte.ActiveDocument.Selection.Text), new CommandID(Guids.GuidClojureExtensionCmdSet, 15)));
 			return menuCommands;
 		}
 
 		private static Process CreateReplProcess(string replPath, string projectPath)
 		{
-			Process process = new Process();
+			var process = new Process();
+			process.EnableRaisingEvents = true;
 			process.StartInfo = new ProcessStartInfo();
 			process.StartInfo.FileName = "\"" + replPath + "\\Clojure.Main.exe\"";
 			process.StartInfo.RedirectStandardOutput = true;

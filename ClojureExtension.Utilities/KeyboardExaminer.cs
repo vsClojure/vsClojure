@@ -1,6 +1,6 @@
 ﻿using System.Windows.Input;
 
-namespace ClojureExtension.Repl
+namespace ClojureExtension.Utilities
 {
 	public class KeyboardExaminer
 	{

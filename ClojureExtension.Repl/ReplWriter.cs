@@ -1,34 +1,27 @@
 ﻿using System.Diagnostics;
-using System.Windows.Controls;
 
 namespace ClojureExtension.Repl
 {
 	public class ReplWriter
 	{
 		private readonly Process _process;
-		private readonly TextBox _interactiveTextBox;
+		private readonly TextBoxWriter _textBoxWriter;
 
-		public ReplWriter(Process process, TextBox interactiveTextBox)
+		public ReplWriter(Process process, TextBoxWriter textBoxWriter)
 		{
 			_process = process;
-			_interactiveTextBox = interactiveTextBox;
+			_textBoxWriter = textBoxWriter;
 		}
 
 		public void WriteBehindTheSceneExpressionToRepl(string expression)
 		{
 			WriteExpressionToRepl(expression);
-			WriteToInteractive("\r\n");
+			_textBoxWriter.WriteToTextBox("\r\n");
 		}
 
 		public void WriteExpressionToRepl(string expression)
 		{
 			_process.StandardInput.WriteLine(expression);
-		}
-
-		public void WriteToInteractive(string s)
-		{
-			_interactiveTextBox.AppendText(s);
-			_interactiveTextBox.ScrollToEnd();
 		}
 	}
 }
