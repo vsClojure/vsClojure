@@ -18,12 +18,12 @@ namespace ClojureExtension.Utilities
 		{
 			while (true)
 			{
-				var c = (char) stream.ReadByte();
+				var c = stream.ReadByte();
 
 				while (c != -1)
 				{
-					lock (_buffer) _buffer.Enqueue(c);
-					c = (char) stream.ReadByte();
+					lock (_buffer) _buffer.Enqueue((char) c);
+					c = stream.ReadByte();
 				}
 
 				Thread.Sleep(2);
