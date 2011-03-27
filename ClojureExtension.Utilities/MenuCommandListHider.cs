@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.Design;
 
-namespace Microsoft.ClojureExtension.Utilities
+namespace ClojureExtension.Utilities
 {
 	public class MenuCommandListHider
 	{
@@ -16,9 +16,9 @@ namespace Microsoft.ClojureExtension.Utilities
 
 		public void HideMenuCommands()
 		{
-			foreach (MenuCommand menuCommand in _menuCommands)
+			foreach (var menuCommand in _menuCommands)
 			{
-				MenuCommand existingMenuCommand = _menuCommandService.FindCommand(menuCommand.CommandID);
+				var existingMenuCommand = _menuCommandService.FindCommand(menuCommand.CommandID);
 				if (existingMenuCommand != null) _menuCommandService.RemoveCommand(existingMenuCommand);
 				_menuCommandService.AddCommand(menuCommand);
 				menuCommand.Visible = false;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using ClojureExtension.Editor.TextBuffer;
 using ClojureExtension.Parsing;
-using Microsoft.ClojureExtension.Utilities;
+using ClojureExtension.Utilities;
 
 namespace ClojureExtension.Editor.InputHandling
 {

@@ -15,6 +15,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using ClojureExtension.Project.Configuration;
+using ClojureExtension.Utilities;
 using EnvDTE;
 using Microsoft.ClojureExtension;
 using Microsoft.ClojureExtension.Configuration;

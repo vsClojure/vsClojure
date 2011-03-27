@@ -1,4 +1,4 @@
-﻿namespace Microsoft.ClojureExtension.Utilities
+﻿namespace ClojureExtension.Utilities
 {
 	public class Entity<T>
 	{

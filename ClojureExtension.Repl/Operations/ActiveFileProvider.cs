@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
+using ClojureExtension.Utilities;
 using EnvDTE80;
-using Microsoft.ClojureExtension.Utilities;
 
 namespace ClojureExtension.Repl.Operations
 {

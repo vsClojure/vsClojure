@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using ClojureExtension.Parsing;
-using Microsoft.ClojureExtension.Utilities;
+using ClojureExtension.Utilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ClojureExtension.Tests.Parsing

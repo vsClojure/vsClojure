@@ -1,5 +1,5 @@
-﻿using Microsoft.ClojureExtension.Editor.Options;
-using Microsoft.ClojureExtension.Utilities;
+﻿using ClojureExtension.Utilities;
+using Microsoft.ClojureExtension.Editor.Options;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 

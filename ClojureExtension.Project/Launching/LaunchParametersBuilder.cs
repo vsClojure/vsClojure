@@ -1,5 +1,5 @@
 ﻿using System;
-using Microsoft.ClojureExtension.Utilities;
+using ClojureExtension.Utilities;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Project;
 

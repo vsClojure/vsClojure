@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Controls;
-using Microsoft.ClojureExtension.Utilities;
+using ClojureExtension.Utilities;
 using Microsoft.VisualStudio.Shell.Interop;
 
 namespace ClojureExtension.Repl.Operations

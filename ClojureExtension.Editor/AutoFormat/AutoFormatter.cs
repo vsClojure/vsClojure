@@ -3,8 +3,8 @@ using System.Text;
 using ClojureExtension.Editor.InputHandling;
 using ClojureExtension.Editor.TextBuffer;
 using ClojureExtension.Parsing;
+using ClojureExtension.Utilities;
 using Microsoft.ClojureExtension.Editor.Options;
-using Microsoft.ClojureExtension.Utilities;
 
 namespace Microsoft.ClojureExtension.Editor.AutoFormat
 {

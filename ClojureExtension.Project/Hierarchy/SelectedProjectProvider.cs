@@ -1,6 +1,6 @@
 ﻿using System;
+using ClojureExtension.Utilities;
 using EnvDTE;
-using Microsoft.ClojureExtension.Utilities;
 
 namespace Microsoft.ClojureExtension.Project.Hierarchy
 {

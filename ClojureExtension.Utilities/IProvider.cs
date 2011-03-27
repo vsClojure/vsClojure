@@ -1,7 +1,7 @@
-﻿namespace Microsoft.ClojureExtension.Utilities
+﻿namespace ClojureExtension.Utilities
 {
-    public interface IProvider<T>
-    {
-        T Get();
-    }
+	public interface IProvider<T>
+	{
+		T Get();
+	}
 }

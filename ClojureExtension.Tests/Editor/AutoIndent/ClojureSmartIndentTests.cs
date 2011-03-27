@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ClojureExtension.Parsing;
+using ClojureExtension.Utilities;
 using Microsoft.ClojureExtension.Editor.AutoIndent;
 using Microsoft.ClojureExtension.Editor.Options;
-using Microsoft.ClojureExtension.Utilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ClojureExtension.Tests.Editor.AutoIndent

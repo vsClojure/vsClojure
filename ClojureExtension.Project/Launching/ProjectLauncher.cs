@@ -1,5 +1,5 @@
 ﻿using System.Runtime.InteropServices;
-using Microsoft.ClojureExtension.Utilities;
+using ClojureExtension.Utilities;
 using Microsoft.VisualStudio.Project;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -31,8 +31,8 @@ namespace ClojureExtension.Project.Launching
 
 		private static VsDebugTargetInfo CreateClojureLaunchInfo(LaunchParameters launchParameters, uint grfLaunch)
 		{
-			VsDebugTargetInfo info = new VsDebugTargetInfo();
-			info.cbSize = (uint)Marshal.SizeOf(info);
+			var info = new VsDebugTargetInfo();
+			info.cbSize = (uint) Marshal.SizeOf(info);
 			info.dlo = DEBUG_LAUNCH_OPERATION.DLO_CreateProcess;
 			info.bstrExe = launchParameters.RunnerPath;
 			info.bstrCurDir = launchParameters.ApplicationPath;
@@ -46,8 +46,8 @@ namespace ClojureExtension.Project.Launching
 
 		private static VsDebugTargetInfo CreateExecutableLaunchInfo(LaunchParameters launchParameters, uint grfLaunch)
 		{
-			VsDebugTargetInfo info = new VsDebugTargetInfo();
-			info.cbSize = (uint)Marshal.SizeOf(info);
+			var info = new VsDebugTargetInfo();
+			info.cbSize = (uint) Marshal.SizeOf(info);
 			info.dlo = DEBUG_LAUNCH_OPERATION.DLO_CreateProcess;
 			info.bstrExe = launchParameters.ApplicationPath + "\\" + launchParameters.StartupFile;
 			info.bstrCurDir = launchParameters.ApplicationPath;

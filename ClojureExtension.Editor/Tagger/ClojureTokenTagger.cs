@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using ClojureExtension.Editor.InputHandling;
 using ClojureExtension.Parsing;
-using Microsoft.ClojureExtension.Utilities;
+using ClojureExtension.Utilities;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Tagging;
 

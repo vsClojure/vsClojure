@@ -11,7 +11,6 @@ using EnvDTE80;
 using Microsoft.ClojureExtension;
 using Microsoft.ClojureExtension.Editor;
 using Microsoft.ClojureExtension.Project.Hierarchy;
-using Microsoft.ClojureExtension.Utilities;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Editor;
 using Microsoft.VisualStudio.Shell;
