@@ -39,6 +39,9 @@
   <ItemGroup>
     <Reference Include="Microsoft.VisualStudio.CoreUtility, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.Editor, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.VisualStudio.Language.Intellisense, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.VisualStudio.OLE.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="Microsoft.VisualStudio.Shell.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.Text.Data, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.Text.Logic, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.Text.UI, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
@@ -71,6 +74,10 @@
     <Compile Include="Classification\ClojureClassifierProvider.cs" />
     <Compile Include="Commenting\BlockComment.cs" />
     <Compile Include="Commenting\BlockUncomment.cs" />
+    <Compile Include="Intellisense\HippieCompletionSource.cs" />
+    <Compile Include="Intellisense\HippieCompletionSourceProvider.cs" />
+    <Compile Include="Intellisense\IntellisenseCommandFilterFactory.cs" />
+    <Compile Include="Intellisense\IntellisenseCommandFilter.cs" />
     <Compile Include="Options\EditorOptions.cs" />
     <Compile Include="Options\EditorOptionsBuilder.cs" />
     <Compile Include="InputHandling\BufferTextChangeHandler.cs" />
