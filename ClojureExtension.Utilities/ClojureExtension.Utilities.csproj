@@ -37,6 +37,9 @@
     <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -48,6 +51,11 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IO\Compression\CompressionExtensions.cs" />
+    <Compile Include="IO\FileSystem\FileSystemExtensions.cs" />
+    <Compile Include="IO\FileSystem\RelativePathFileSystemWriter.cs" />
+    <Compile Include="IO\FileSystem\IFileSystemWriter.cs" />
+    <Compile Include="IO\Streams\StreamExtensions.cs" />
     <Compile Include="StreamBuffer.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="Guids.cs" />
@@ -60,6 +68,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Key.snk" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
