@@ -10,12 +10,15 @@ PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
 ***************************************************************************/
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Windows.Forms;
 using ClojureExtension.Deployment.Configuration;
 using ClojureExtension.Editor.Commenting;
@@ -25,9 +28,12 @@ using ClojureExtension.Project.Launching;
 using ClojureExtension.Repl;
 using ClojureExtension.Repl.Operations;
 using ClojureExtension.Utilities;
+using ClojureExtension.Utilities.IO;
+using ClojureExtension.Utilities.IO.Compression;
+using ClojureExtension.Utilities.IO.FileSystem;
 using EnvDTE;
 using EnvDTE80;
-using Microsoft.ClojureExtension;
+using ICSharpCode.SharpZipLib.Zip;
 using Microsoft.ClojureExtension.Editor;
 using Microsoft.ClojureExtension.Editor.AutoFormat;
 using Microsoft.ClojureExtension.Editor.Options;
@@ -76,7 +82,29 @@ namespace ClojureExtension.Deployment
 					SetupNewClojureBuffersWithSpacingOptions();
 					EnableMenuCommandsOnNewClojureBuffers();
 					EnableSettingOfRuntimePathForNewClojureProjects();
+					UnzipRuntimes();
 				};
+		}
+
+		private void UnzipRuntimes()
+		{
+			try
+			{
+				var runtimeBasePath = Path.Combine(GetDirectoryOfDeployedContents(), "Runtimes");
+				Directory.GetFiles(runtimeBasePath, "*.zip").ToList().ForEach(CompressionExtensions.ExtractZipToFreshSubDirectoryAndDelete);
+			}
+			catch (Exception e)
+			{
+				var errorMessage = new StringBuilder();
+				errorMessage.AppendLine("Failed to extract ClojureCLR runtime(s).  You may need to reinstall vsClojure.");
+				errorMessage.AppendLine(e.Message);
+			}
+		}
+
+		private string GetDirectoryOfDeployedContents()
+		{
+			string codebaseRegistryLocation = ApplicationRegistryRoot + "\\Packages\\{" + PackageGuid + "}";
+			return Path.GetDirectoryName(Registry.GetValue(codebaseRegistryLocation, "CodeBase", "").ToString());
 		}
 
 		private void RegisterCommandMenuService()
