@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using ClojureExtension.Parsing;
 using ClojureExtension.Utilities;
 using Microsoft.ClojureExtension.Editor.AutoIndent;
@@ -79,6 +76,14 @@ namespace ClojureExtension.Tests.Editor.AutoIndent
 			string input = "(asdf [\r\n]";
 			_tokenizedBufferEntity.CurrentState = _tokenizer.Tokenize(input);
 			Assert.AreEqual(input.LastIndexOf("[") + 1, _clojureSmartIndent.GetDesiredIndentation(input.IndexOf("\n") + 1, _defaultOptions));
+		}
+
+		[TestMethod]
+		public void DropsExistingLineDownWhileMaintainingIndentAndIndentsTheCorrectAmountForNewLine()
+		{
+			string input = "(ns program (:gen-class))\n\n(defn -main [& args] (println \"Hello world\"))";
+			_tokenizedBufferEntity.CurrentState = _tokenizer.Tokenize(input);
+			Assert.AreEqual(4, _clojureSmartIndent.GetDesiredIndentation(input.IndexOf("(println") - 1, _defaultOptions));
 		}
 	}
 }

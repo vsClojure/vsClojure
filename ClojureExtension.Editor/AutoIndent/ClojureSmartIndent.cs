@@ -36,7 +36,7 @@ namespace Microsoft.ClojureExtension.Editor.AutoIndent
 			int previousLineLength = 0;
 			IndexTokenNode startOfLine = firstOpenBrace.Previous();
 
-			while (startOfLine != null && (startOfLine.IndexToken.Token.Type != TokenType.Whitespace || (startOfLine.IndexToken.Token.Type == TokenType.Whitespace && !startOfLine.IndexToken.Token.Text.Contains("\r\n"))))
+			while (startOfLine != null && (startOfLine.IndexToken.Token.Type != TokenType.Whitespace || (startOfLine.IndexToken.Token.Type == TokenType.Whitespace && !startOfLine.IndexToken.Token.Text.Contains("\n"))))
 			{
 				previousLineLength += startOfLine.IndexToken.Token.Length;
 				startOfLine = startOfLine.Previous();
