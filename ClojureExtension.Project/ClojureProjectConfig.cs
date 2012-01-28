@@ -15,7 +15,7 @@ namespace ClojureExtension.Project
 
         public override int DebugLaunch(uint grfLaunch)
         {
-            _launcher.Execute(grfLaunch);
+            _launcher.Execute();
             return VSConstants.S_OK;
         }
     }

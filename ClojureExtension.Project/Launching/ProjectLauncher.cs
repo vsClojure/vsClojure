@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.IO;
+using System.Runtime.InteropServices;
 using ClojureExtension.Utilities;
 using Microsoft.VisualStudio.Project;
 using Microsoft.VisualStudio.Shell;
@@ -19,17 +20,17 @@ namespace ClojureExtension.Project.Launching
 			_validator = validator;
 		}
 
-		public void Execute(uint grfLaunch)
+		public void Execute()
 		{
 			var launchParameters = _launchParametersProvider.Get();
 			_validator.Validate(launchParameters);
 
-			var launchInfo = CreateClojureLaunchInfo(launchParameters, grfLaunch);
-			if (launchParameters.StartupFileType == StartupFileType.Executable) launchInfo = CreateExecutableLaunchInfo(launchParameters, grfLaunch);
+			var launchInfo = CreateClojureLaunchInfo(launchParameters);
+			if (launchParameters.StartupFileType == StartupFileType.Executable) launchInfo = CreateExecutableLaunchInfo(launchParameters);
 			VsShellUtilities.LaunchDebugger(_project.Site, launchInfo);
 		}
 
-		private static VsDebugTargetInfo CreateClojureLaunchInfo(LaunchParameters launchParameters, uint grfLaunch)
+		private static VsDebugTargetInfo CreateClojureLaunchInfo(LaunchParameters launchParameters)
 		{
 			var info = new VsDebugTargetInfo();
 			info.cbSize = (uint) Marshal.SizeOf(info);
@@ -37,22 +38,22 @@ namespace ClojureExtension.Project.Launching
 			info.bstrExe = launchParameters.RunnerPath;
 			info.bstrCurDir = launchParameters.ApplicationPath;
 			info.fSendStdoutToOutputWindow = 0;
-			info.grfLaunch = grfLaunch;
+			info.grfLaunch = (uint)__VSDBGLAUNCHFLAGS2.DBGLAUNCH_MergeEnv;
 			info.bstrArg = "-i " + launchParameters.StartupFile;
 			info.bstrRemoteMachine = launchParameters.RemoteDebugMachine;
 			info.clsidCustom = launchParameters.DebugType;
 			return info;
 		}
 
-		private static VsDebugTargetInfo CreateExecutableLaunchInfo(LaunchParameters launchParameters, uint grfLaunch)
+		private static VsDebugTargetInfo CreateExecutableLaunchInfo(LaunchParameters launchParameters)
 		{
 			var info = new VsDebugTargetInfo();
 			info.cbSize = (uint) Marshal.SizeOf(info);
 			info.dlo = DEBUG_LAUNCH_OPERATION.DLO_CreateProcess;
-			info.bstrExe = launchParameters.ApplicationPath + "\\" + launchParameters.StartupFile;
+			info.bstrExe = Path.Combine(launchParameters.ApplicationPath, launchParameters.StartupFile);
 			info.bstrCurDir = launchParameters.ApplicationPath;
 			info.fSendStdoutToOutputWindow = 0;
-			info.grfLaunch = grfLaunch;
+			info.grfLaunch = (uint) __VSDBGLAUNCHFLAGS2.DBGLAUNCH_MergeEnv;
 			info.bstrArg = launchParameters.StartupArguments;
 			info.bstrRemoteMachine = launchParameters.RemoteDebugMachine;
 			info.bstrEnv = "clojure.load.path=" + launchParameters.FrameworkPath + ";" + launchParameters.ClojureLoadPath + "\0";
