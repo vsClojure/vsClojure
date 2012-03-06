@@ -61,7 +61,7 @@ namespace ClojureExtension.Deployment
 	[ProvideAutoLoad(UIContextGuids80.NoSolution)]
 	public sealed class ClojurePackage : ProjectPackage
 	{
-		public const string PackageGuid = "40953a10-3425-499c-8162-a90059792d13";
+      public const string PackageGuid = "7712178c-977f-45ec-adf6-e38108cc7739";
 
 		private ClearableMenuCommandService _thirdPartyEditorCommands;
 
