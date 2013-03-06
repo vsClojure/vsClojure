@@ -55,6 +55,9 @@
     <Content Include="Runtimes\1.2.0.zip">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <Content Include="Runtimes\1.4.0.zip">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
     </None>

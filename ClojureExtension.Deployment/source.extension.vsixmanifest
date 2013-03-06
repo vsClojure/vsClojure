@@ -17,6 +17,18 @@
 				<Edition>Premium</Edition>
 				<Edition>Pro</Edition>
 				<Edition>IntegratedShell</Edition>
+        <Edition>VWDExpress</Edition>
+        <Edition>VPDExpress</Edition>
+      </VisualStudio>
+      <VisualStudio Version="11.0">
+        <Edition>Ultimate</Edition>
+        <Edition>Premium</Edition>
+        <Edition>Pro</Edition>
+        <Edition>IntegratedShell</Edition>
+        <Edition>VWDExpress</Edition>
+        <Edition>VPDExpress</Edition>
+        <Edition>VSWinExpress</Edition>
+        <Edition>VSWinDesktopExpress</Edition>
 			</VisualStudio>
 		</SupportedProducts>
 		<SupportedFrameworkRuntimeEdition MinVersion="4.0" MaxVersion="4.0" />

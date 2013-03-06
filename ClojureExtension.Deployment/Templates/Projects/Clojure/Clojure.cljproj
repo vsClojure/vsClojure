@@ -7,7 +7,7 @@
 		<RootNamespace>$(MSBuildProjectName)</RootNamespace>
 		<AssemblyName>$(MSBuildProjectName)</AssemblyName>
 		<ClojureRuntimesDirectory>$(VSCLOJURE_RUNTIMES_DIR)</ClojureRuntimesDirectory>
-		<ClojureVersion>1.3.0</ClojureVersion>
+		<ClojureVersion>1.4.0</ClojureVersion>
 		<StartupFile>program.exe</StartupFile>
 		<StartupArguments></StartupArguments>
 		<ClojureLoadPath></ClojureLoadPath>
@@ -83,5 +83,14 @@
             Condition="'@(AddModules)' != ''">
 			<Output TaskParameter="DestinationFiles" ItemName="FileWrites"/>
 		</Copy>
+    <Copy Condition="'$(ClojureVersion)' == '1.3.0'" SourceFiles="$(ClojureRuntimesDirectory)\$(ClojureVersion)\$(StartupFile)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="$(SkipCopyUnchangedFiles)" OverwriteReadOnlyFiles="$(OverwriteReadOnlyFiles)" Retries="$(CopyRetryCount)" RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)" UseHardlinksIfPossible="$(CreateHardLinksForCopyAdditionalFilesIfPossible)">
+      <Output TaskParameter="DestinationFiles" ItemName="FileWrites" />
+    </Copy>
+    <CreateItem Include="$(ClojureRuntimesDirectory)\$(ClojureVersion)\**\*.*">
+      <Output TaskParameter="Include" ItemName="Clojure14Runtime"/>
+    </CreateItem>
+    <Copy Condition="'$(ClojureVersion)' == '1.4.0'" SourceFiles="@(Clojure14Runtime)" DestinationFolder="$(OutDir)\" ContinueOnError="true" SkipUnchangedFiles="$(SkipCopyUnchangedFiles)" OverwriteReadOnlyFiles="$(OverwriteReadOnlyFiles)" Retries="$(CopyRetryCount)" RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)" UseHardlinksIfPossible="$(CreateHardLinksForCopyAdditionalFilesIfPossible)">
+      <Output TaskParameter="DestinationFiles" ItemName="FileWrites" />
+    </Copy>
 	</Target>
 </Project>
