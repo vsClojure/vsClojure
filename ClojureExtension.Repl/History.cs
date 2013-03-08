@@ -26,14 +26,14 @@ namespace ClojureExtension.Repl
 				SubmitInputToHistory();
 			}
 
-			if (_interactiveTextBox.CaretIndex >= _replEntity.CurrentState.PromptPosition && e.Key == Key.Down && _keyboardExaminer.ControlIsDown())
+			if (_interactiveTextBox.CaretIndex >= _replEntity.CurrentState.PromptPosition && e.Key == Key.Down)
 			{
 				ShowPreviousHistoryItem();
 				e.Handled = true;
 				return;
 			}
 
-			if (_interactiveTextBox.CaretIndex >= _replEntity.CurrentState.PromptPosition && e.Key == Key.Up && _keyboardExaminer.ControlIsDown())
+			if (_interactiveTextBox.CaretIndex >= _replEntity.CurrentState.PromptPosition && e.Key == Key.Up)
 			{
 				ShowNextItemInHistory();
 				e.Handled = true;
