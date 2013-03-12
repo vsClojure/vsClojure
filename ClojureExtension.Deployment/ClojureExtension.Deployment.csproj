@@ -58,6 +58,9 @@
     <Content Include="Runtimes\1.4.0.zip">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <Content Include="Runtimes\1.5.0.zip">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
     </None>
@@ -80,7 +83,9 @@
     <Content Include="Templates\ProjectItems\Clojure Files\Clojure File.clj">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <None Include="Templates\Projects\ASPNet MVC\Clojure ASP.Net MVC Controller Library.cljproj" />
+    <Content Include="Templates\Projects\ASPNet MVC\Clojure ASP.Net MVC Controller Library.cljproj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="LICENSE.txt">

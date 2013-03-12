@@ -7,7 +7,7 @@
 		<RootNamespace>$(MSBuildProjectName)</RootNamespace>
 		<AssemblyName>$(MSBuildProjectName)</AssemblyName>
 		<ClojureRuntimesDirectory>$(VSCLOJURE_RUNTIMES_DIR)</ClojureRuntimesDirectory>
-		<ClojureVersion>1.4.0</ClojureVersion>
+		<ClojureVersion>1.5.0</ClojureVersion>
 		<StartupFile>program.exe</StartupFile>
 		<StartupArguments></StartupArguments>
 		<ClojureLoadPath></ClojureLoadPath>

@@ -4,11 +4,9 @@ Project:
 
 Description:
 
-	A Visual Studio 2010 Extension for ClojureCLR.
+	A Visual Studio 2012 Extension for ClojureCLR.
 
-Status:
-
-	Release 1.1.0 available
+	Runtimes 1.2.0 - 1.5.0 (stable beta) available
 
 Features:
 
@@ -33,7 +31,7 @@ Installing:
 
 Building:
 
-	1.) Install the Visual Studio 2010 SDK.
+	1.) Install the Visual Studio 2012 SDK.
 	2.) Clone the vsClojure repository.
 	3.) Open the vsClojure solution.
 	4.) Build
