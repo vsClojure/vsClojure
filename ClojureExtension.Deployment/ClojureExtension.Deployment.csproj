@@ -61,16 +61,26 @@
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
     </None>
-    <Content Include="Templates\ProjectItems\Clojure\Clojure File.clj">
+    <Content Include="Templates\Projects\ASPNet MVC\Clojure.ico">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="Templates\Projects\Clojure\Clojure.cljproj">
+    <Content Include="Templates\Projects\Console Application\Console Application.cljproj">
       <SubType>Designer</SubType>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="Templates\Projects\Clojure\program.clj">
+    <Content Include="Templates\Projects\Console Application\program.clj">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <Content Include="Templates\ProjectItems\Clojure Files\Clojure ASP.Net MVC Controller.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Templates\Projects\ASPNet MVC\HomeController.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Templates\ProjectItems\Clojure Files\Clojure File.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <None Include="Templates\Projects\ASPNet MVC\Clojure ASP.Net MVC Controller Library.cljproj" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="LICENSE.txt">
@@ -83,7 +93,7 @@
     </VSCTCompile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Templates\Projects\Clojure\Clojure.ico">
+    <Content Include="Templates\Projects\Console Application\Clojure.ico">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="VSIXIcon.png">

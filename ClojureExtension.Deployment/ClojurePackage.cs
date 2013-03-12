@@ -10,11 +10,9 @@ PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
 ***************************************************************************/
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -28,12 +26,9 @@ using ClojureExtension.Project.Launching;
 using ClojureExtension.Repl;
 using ClojureExtension.Repl.Operations;
 using ClojureExtension.Utilities;
-using ClojureExtension.Utilities.IO;
 using ClojureExtension.Utilities.IO.Compression;
-using ClojureExtension.Utilities.IO.FileSystem;
 using EnvDTE;
 using EnvDTE80;
-using ICSharpCode.SharpZipLib.Zip;
 using Microsoft.ClojureExtension.Editor;
 using Microsoft.ClojureExtension.Editor.AutoFormat;
 using Microsoft.ClojureExtension.Editor.Options;
@@ -46,29 +41,28 @@ using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.Win32;
-using VSLangProj;
 
 namespace ClojureExtension.Deployment
 {
 	[Guid(PackageGuid)]
 	[PackageRegistration(UseManagedResourcesOnly = true)]
-	[DefaultRegistryRoot("Software\\Microsoft\\VisualStudio\\10.0")]
-	[ProvideObject(typeof (GeneralPropertyPageAdapter))]
-	[ProvideProjectFactory(typeof (ClojureProjectFactory), "Clojure", "Clojure Project Files (*.cljproj);*.cljproj", "cljproj", "cljproj", @"Templates\Projects\Clojure", LanguageVsTemplate = "Clojure", NewProjectRequireNewFolderVsTemplate = false)]
-	[ProvideProjectItem(typeof (ClojureProjectFactory), "Clojure Items", @"Templates\ProjectItems\Clojure", 500)]
+	[DefaultRegistryRoot("Software\\Microsoft\\VisualStudio\\11.0")]
+	[ProvideObject(typeof(GeneralPropertyPageAdapter))]
+	[ProvideProjectFactory(typeof(ClojureProjectFactory), "Clojure", "Clojure Project Files (*.cljproj);*.cljproj", "cljproj", "cljproj", @"Templates\Projects", LanguageVsTemplate = "Clojure", NewProjectRequireNewFolderVsTemplate = false)]
+	[ProvideProjectItem(typeof(ClojureProjectFactory), "Clojure Items", @"Templates\ProjectItems\Clojure Files", 500)]
 	[ProvideMenuResource("Menus.ctmenu", 1)]
-	[ProvideToolWindow(typeof (ReplToolWindow))]
+	[ProvideToolWindow(typeof(ReplToolWindow))]
 	[ProvideAutoLoad(UIContextGuids80.NoSolution)]
 	public sealed class ClojurePackage : ProjectPackage
 	{
-      public const string PackageGuid = "7712178c-977f-45ec-adf6-e38108cc7739";
+		public const string PackageGuid = "7712178c-977f-45ec-adf6-e38108cc7739";
 
 		private ClearableMenuCommandService _thirdPartyEditorCommands;
 
 		protected override void Initialize()
 		{
 			base.Initialize();
-			var dte = (DTE2) GetService(typeof (DTE));
+			var dte = (DTE2)GetService(typeof(DTE));
 
 			dte.Events.DTEEvents.OnStartupComplete +=
 				() =>
@@ -109,7 +103,7 @@ namespace ClojureExtension.Deployment
 
 		private void RegisterCommandMenuService()
 		{
-			IVsRegisterPriorityCommandTarget commandRegistry = GetService(typeof (SVsRegisterPriorityCommandTarget)) as IVsRegisterPriorityCommandTarget;
+			IVsRegisterPriorityCommandTarget commandRegistry = GetService(typeof(SVsRegisterPriorityCommandTarget)) as IVsRegisterPriorityCommandTarget;
 			_thirdPartyEditorCommands = new ClearableMenuCommandService(this);
 			uint cookie = 0;
 			commandRegistry.RegisterPriorityCommandTarget(0, _thirdPartyEditorCommands, out cookie);
@@ -130,9 +124,9 @@ namespace ClojureExtension.Deployment
 
 		private void HideAllClojureEditorMenuCommands()
 		{
-			List<int> allCommandIds = new List<int>() {11, 12, 13, 14, 15};
-			DTE2 dte = (DTE2) GetService(typeof (DTE));
-			OleMenuCommandService menuCommandService = (OleMenuCommandService) GetService(typeof (IMenuCommandService));
+			List<int> allCommandIds = new List<int>() { 11, 12, 13, 14, 15 };
+			DTE2 dte = (DTE2)GetService(typeof(DTE));
+			OleMenuCommandService menuCommandService = (OleMenuCommandService)GetService(typeof(IMenuCommandService));
 			List<MenuCommand> menuCommands = new List<MenuCommand>();
 			foreach (int commandId in allCommandIds) menuCommands.Add(new MenuCommand((o, s) => { }, new CommandID(Guids.GuidClojureExtensionCmdSet, commandId)));
 			MenuCommandListHider hider = new MenuCommandListHider(menuCommandService, menuCommands);
@@ -141,7 +135,7 @@ namespace ClojureExtension.Deployment
 
 		private void EnableMenuCommandsOnNewClojureBuffers()
 		{
-			var componentModel = (IComponentModel) GetService(typeof (SComponentModel));
+			var componentModel = (IComponentModel)GetService(typeof(SComponentModel));
 			ITextEditorFactoryService editorFactoryService = componentModel.GetService<ITextEditorFactoryService>();
 
 			editorFactoryService.TextViewCreated += (o, e) => e.TextView.GotAggregateFocus +=
@@ -164,7 +158,7 @@ namespace ClojureExtension.Deployment
 
 		private void SetupNewClojureBuffersWithSpacingOptions()
 		{
-			var componentModel = (IComponentModel) GetService(typeof (SComponentModel));
+			var componentModel = (IComponentModel)GetService(typeof(SComponentModel));
 			ITextEditorFactoryService editorFactoryService = componentModel.GetService<ITextEditorFactoryService>();
 
 			editorFactoryService.TextViewCreated +=
@@ -179,7 +173,7 @@ namespace ClojureExtension.Deployment
 
 		private void EnableTokenizationOfNewClojureBuffers()
 		{
-			var componentModel = (IComponentModel) GetService(typeof (SComponentModel));
+			var componentModel = (IComponentModel)GetService(typeof(SComponentModel));
 			TokenizedBufferBuilder tokenizedBufferBuilder = new TokenizedBufferBuilder(new Tokenizer());
 			ITextDocumentFactoryService documentFactoryService = componentModel.GetService<ITextDocumentFactoryService>();
 
@@ -192,10 +186,10 @@ namespace ClojureExtension.Deployment
 
 		private void ShowClojureProjectMenuCommands()
 		{
-			OleMenuCommandService menuCommandService = (OleMenuCommandService) GetService(typeof (IMenuCommandService));
-			ReplToolWindow replToolWindow = (ReplToolWindow) FindToolWindow(typeof (ReplToolWindow), 0, true);
-			IVsWindowFrame replToolWindowFrame = (IVsWindowFrame) replToolWindow.Frame;
-			DTE2 dte = (DTE2) GetService(typeof (DTE));
+			OleMenuCommandService menuCommandService = (OleMenuCommandService)GetService(typeof(IMenuCommandService));
+			ReplToolWindow replToolWindow = (ReplToolWindow)FindToolWindow(typeof(ReplToolWindow), 0, true);
+			IVsWindowFrame replToolWindowFrame = (IVsWindowFrame)replToolWindow.Frame;
+			DTE2 dte = (DTE2)GetService(typeof(DTE));
 			IProvider<EnvDTE.Project> projectProvider = new SelectedProjectProvider(dte.Solution, dte.ToolWindows.SolutionExplorer);
 
 			menuCommandService.AddCommand(
@@ -204,7 +198,7 @@ namespace ClojureExtension.Deployment
 						new StartReplUsingProjectVersion(
 							new ReplFactory(replToolWindow.TabControl, replToolWindowFrame, this),
 							replToolWindowFrame,
-							() => new LaunchParametersBuilder((ProjectNode) projectProvider.Get().Object).Get().FrameworkPath,
+							() => new LaunchParametersBuilder((ProjectNode)projectProvider.Get().Object).Get().FrameworkPath,
 							new SelectedProjectProvider(dte.Solution, dte.ToolWindows.SolutionExplorer)).Execute(),
 					new CommandID(Guids.GuidClojureExtensionCmdSet, 10)));
 		}

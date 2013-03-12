@@ -116,7 +116,7 @@
 	</KeyBindings>
 	
 	<Symbols>
-		<GuidSymbol name="clojurePackage" value="{7712178c-977f-45ec-adf6-e38108cc7739}" />
+		<GuidSymbol name="clojurePackage" value="{5C19BA4A-D328-4D32-BBEC-230390CA50AD}" />
 		<GuidSymbol name="clojureGroups" value="{44f0b6b9-595a-426f-88d1-468f7af14242}">
 			<IDSymbol name="clojureFileMenuGroup" value="4128" />
 			<IDSymbol name="clojureProjectMenuGroup" value="4129" />
