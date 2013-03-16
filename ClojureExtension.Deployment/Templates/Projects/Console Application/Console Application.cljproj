@@ -4,7 +4,8 @@
 		<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
 		<SchemaVersion>2.0</SchemaVersion>
 		<ProjectGuid>{8fe1995b-4b6d-4911-b563-a759467fdf53}</ProjectGuid>
-		<RootNamespace>$(MSBuildProjectName)</RootNamespace>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>$(MSBuildProjectName)</RootNamespace>
 		<AssemblyName>$(MSBuildProjectName)</AssemblyName>
 		<ClojureRuntimesDirectory>$(VSCLOJURE_RUNTIMES_DIR)</ClojureRuntimesDirectory>
 		<ClojureVersion>1.5.0</ClojureVersion>
@@ -36,34 +37,52 @@
 	</ItemGroup>
 	<ItemGroup>
 		<Compile Include="program.clj">
-			<SubType>Code</SubType>
+      <SubType>Code</SubType>
 		</Compile>
 	</ItemGroup>
 	<Import Project="$(MSBuildBinPath)\Microsoft.Common.targets" />
-	<Target Name="CreateManifestResourceNames">
-	</Target>
-	<Target Name="CoreCompile">
-		<PropertyGroup>
-			<ClojureNamespaces>@(Compile -> '%(RelativeDir)%(Filename)', ' ')</ClojureNamespaces>
-		</PropertyGroup>
-		<Copy SourceFiles="@(Compile)" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" DestinationFiles="@(Compile -> '$(OutDir)%(RelativeDir)%(Filename)%(Extension)')"/>
-		<Exec WorkingDirectory="$(OutDir)" Command="&quot;$(ClojureRuntimesDirectory)\$(ClojureVersion)\Clojure.Compile&quot; $(ClojureNamespaces.Replace('\', '.'))"/>
-		<RemoveDuplicates Inputs="@(Compile -> '$(OutDir)%(RelativeDir)')">
-			<Output TaskParameter="Filtered" ItemName="SourceDirectories"/>
-		</RemoveDuplicates>
-		<ItemGroup>
-			<FileWrites Include="@(Compile -> '$(OutDir)%(RelativeDir)%(Filename)%(Extension)')"/>
-			<FileWrites Include="@(Compile -> '$(OutDir)%(RelativeDir)%(Filename)%(Extension).dll')"/>
-			<FileWrites Include="@(Compile -> '$(OutDir)%(RelativeDir)%(Filename)%(Extension).pdb')"/>
-			<FileWrites Include="@(SourceDirectories)"/>
-		</ItemGroup>
-	</Target>
-	<Target Name="BeforeBuild">
-	</Target>
-	<Target Name="AfterBuild">
-	</Target>
-	<Target
-        Name="CopyFilesToOutputDirectory"
+  <Target Name="CreateManifestResourceNames">
+  </Target>
+  <Target Name="GetCopyToOutputDirectoryItems" Returns="@(CopyToOutputDirectoryItemsWithTargetPath)">
+    <ItemGroup>
+      <CopyToOutputDirectoryItems Include="$(TargetDir)\**\*.clj">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </CopyToOutputDirectoryItems>
+    </ItemGroup>
+    <AssignTargetPath Files="@(CopyToOutputDirectoryItems)" RootFolder="$(TargetDir)">
+      <Output TaskParameter="AssignedFiles" ItemName="CopyToOutputDirectoryItemsWithTargetPath" />
+    </AssignTargetPath>
+  </Target>
+  <Target Name="AfterClean">
+    <CreateItem Include="$(OutDir)**\*.*; $(ProjectDir)\obj\**\*.*; $(IntermediateOutputPath)**\*.*" Exclude="**\bin\**\*.vshost.exe; $(IntermediateOutputPath)**\*.log">
+      <Output TaskParameter="Include" ItemName="AfterClean_FilesToDelete"/>
+    </CreateItem>
+    <Delete Files="@(AfterClean_FilesToDelete)" />
+    <CreateItem Include="$(ProjectDir)\obj\" >
+      <Output TaskParameter="Include" ItemName="AfterClean_DirectoriesToDelete" />
+    </CreateItem>
+    <CreateItem Include ="$(ProjectDir)\bin\" Condition="'$(TargetExt)' != '.exe'" >
+      <Output TaskParameter="Include" ItemName="AfterClean_DirectoriesToDelete"/>
+    </CreateItem>
+    <RemoveDir ContinueOnError="true" Directories="@(AfterClean_DirectoriesToDelete)" />
+  </Target>
+  <Target Name="GetTargetPath" DependsOnTargets="$(GetTargetPathDependsOn)" Returns="@(TargetPath)">
+    <ItemGroup>
+      <TargetPath Include="$(TargetDir)\**\*.dll" />
+    </ItemGroup>
+  </Target>
+  <Target Name="CoreCompile">
+    <PropertyGroup>
+      <ClojureNamespaces>@(Compile -> '%(RelativeDir)%(Filename)', ' ')</ClojureNamespaces>
+    </PropertyGroup>
+    <Copy SourceFiles="@(Compile)" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" DestinationFiles="@(Compile -> '$(OutDir)%(RelativeDir)%(Filename)%(Extension)')"/>
+    <Exec WorkingDirectory="$(OutDir)" Command="&quot;$(ClojureRuntimesDirectory)\$(ClojureVersion)\Clojure.Compile&quot; $(ClojureNamespaces.Replace('\', '.'))"/>
+  </Target>
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  <Target Name="CopyFilesToOutputDirectory"
         DependsOnTargets="
             ComputeIntermediateSatelliteAssemblies;
             _CopyFilesMarkedCopyLocal;
@@ -72,22 +91,5 @@
             _CopyManifestFiles;
             _CheckForCompileOutputs;
             _SGenCheckForOutputs">
-		<Copy
-            SourceFiles="@(AddModules)"
-            DestinationFolder="$(OutDir)"
-            SkipUnchangedFiles="$(SkipCopyUnchangedFiles)"
-            OverwriteReadOnlyFiles="$(OverwriteReadOnlyFiles)"
-            Retries="$(CopyRetryCount)"
-            RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)"
-            UseHardlinksIfPossible="$(CreateHardLinksForCopyAdditionalFilesIfPossible)"
-            Condition="'@(AddModules)' != ''">
-			<Output TaskParameter="DestinationFiles" ItemName="FileWrites"/>
-		</Copy>
-    <CreateItem Include="$(ClojureRuntimesDirectory)\$(ClojureVersion)\**\*.*">
-      <Output TaskParameter="Include" ItemName="ClojureRuntimeFiles"/>
-    </CreateItem>
-    <Copy SourceFiles="@(ClojureRuntimeFiles)" DestinationFolder="$(OutDir)\%(RecursiveDir)" ContinueOnError="true" SkipUnchangedFiles="$(SkipCopyUnchangedFiles)" OverwriteReadOnlyFiles="$(OverwriteReadOnlyFiles)" Retries="$(CopyRetryCount)" RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)" UseHardlinksIfPossible="$(CreateHardLinksForCopyAdditionalFilesIfPossible)">
-      <Output TaskParameter="DestinationFiles" ItemName="FileWrites" />
-    </Copy>
   </Target>
 </Project>

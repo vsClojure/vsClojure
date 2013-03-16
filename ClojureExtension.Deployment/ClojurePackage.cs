@@ -56,6 +56,10 @@ namespace ClojureExtension.Deployment
 	public sealed class ClojurePackage : ProjectPackage
 	{
 		public const string PackageGuid = "7712178c-977f-45ec-adf6-e38108cc7739";
+		private const string VSCLOJURE_RUNTIMES_DIR = "VSCLOJURE_RUNTIMES_DIR";
+		private const string CLOJURE_LOAD_PATH = "CLOJURE_LOAD_PATH";
+
+		public static string RuntimePath = "";
 
 		private ClearableMenuCommandService _thirdPartyEditorCommands;
 
@@ -111,13 +115,29 @@ namespace ClojureExtension.Deployment
 
 		private void EnableSettingOfRuntimePathForNewClojureProjects()
 		{
-			string codebaseRegistryLocation = ApplicationRegistryRoot + "\\Packages\\{" + PackageGuid + "}";
-			string runtimePath = Registry.GetValue(codebaseRegistryLocation, "CodeBase", "").ToString();
-			runtimePath = Path.GetDirectoryName(runtimePath) + "\\Runtimes\\";
+			RuntimePath = GetDirectoryOfDeployedContents() + "\\Runtimes\\";
 
-			if (Environment.GetEnvironmentVariable("VSCLOJURE_RUNTIMES_DIR", EnvironmentVariableTarget.User) != runtimePath)
+			bool runtimePathIncorrect = Environment.GetEnvironmentVariable(VSCLOJURE_RUNTIMES_DIR, EnvironmentVariableTarget.User) != RuntimePath;
+			if (runtimePathIncorrect)
 			{
-				Environment.SetEnvironmentVariable("VSCLOJURE_RUNTIMES_DIR", runtimePath, EnvironmentVariableTarget.User);
+				Environment.SetEnvironmentVariable(VSCLOJURE_RUNTIMES_DIR, RuntimePath, EnvironmentVariableTarget.User);
+			}
+
+			string extensionsDirectory = Directory.GetParent(GetDirectoryOfDeployedContents()).FullName;
+
+			string clojureLoadPath = Environment.GetEnvironmentVariable(CLOJURE_LOAD_PATH) ?? "";
+			List<string> loadPaths = clojureLoadPath.Split(new[] { Path.PathSeparator }, StringSplitOptions.RemoveEmptyEntries).Where(x => !x.Contains(extensionsDirectory)).ToList();
+			loadPaths.Insert(0, RuntimePath + "1.5.0");
+			string newClojureLoadPath = loadPaths.Aggregate((x, y) => x + Path.PathSeparator + y);
+
+			bool clojureLoadPathIncorrect = Environment.GetEnvironmentVariable(CLOJURE_LOAD_PATH) != newClojureLoadPath;
+			if (clojureLoadPathIncorrect)
+			{
+				Environment.SetEnvironmentVariable(CLOJURE_LOAD_PATH, newClojureLoadPath, EnvironmentVariableTarget.User);
+			}
+
+			if (runtimePathIncorrect || clojureLoadPathIncorrect)
+			{
 				MessageBox.Show("Setup of vsClojure complete.  Please restart Visual Studio.", "vsClojure Setup");
 			}
 		}

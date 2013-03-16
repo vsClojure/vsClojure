@@ -1,36 +1,38 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Vsix xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="1.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2010">
   <Identifier Id="5C19BA4A-D328-4D32-BBEC-230390CA50AD">
-		<Name>vsClojure</Name>
-		<Author>vsClojure</Author>
-    <Version>2.0.4</Version>
-		<Description xml:space="preserve">Support for Clojure CLR.</Description>
-		<Locale>1033</Locale>
-		<MoreInfoUrl>https://github.com/vsClojure/vsClojure</MoreInfoUrl>
-		<License>LICENSE.txt</License>
-		<Icon>VSIXIcon.png</Icon>
-		<PreviewImage>VSIXPreview.png</PreviewImage>
-		<InstalledByMsi>false</InstalledByMsi>
-		<SupportedProducts>
-			<VisualStudio Version="10.0">
-				<Edition>Ultimate</Edition>
-				<Edition>Premium</Edition>
-				<Edition>Pro</Edition>
-				<Edition>IntegratedShell</Edition>
+    <Name>vsClojure</Name>
+    <Author>vsClojure</Author>
+    <Version>2.0.5</Version>
+    <Description xml:space="preserve">Support for Clojure CLR.</Description>
+    <Locale>1033</Locale>
+    <MoreInfoUrl>https://github.com/vsClojure/vsClojure</MoreInfoUrl>
+    <License>LICENSE.txt</License>
+    <Icon>VSIXIcon.png</Icon>
+    <PreviewImage>VSIXPreview.png</PreviewImage>
+    <InstalledByMsi>false</InstalledByMsi>
+    <SupportedProducts>
+      <!--
+      <VisualStudio Version="10.0">
+        <Edition>Ultimate</Edition>
+        <Edition>Premium</Edition>
+        <Edition>Pro</Edition>
+        <Edition>IntegratedShell</Edition>
       </VisualStudio>
+      -->
       <VisualStudio Version="11.0">
         <Edition>Ultimate</Edition>
         <Edition>Premium</Edition>
         <Edition>Pro</Edition>
         <Edition>IntegratedShell</Edition>
-			</VisualStudio>
-		</SupportedProducts>
-		<SupportedFrameworkRuntimeEdition MinVersion="4.0" MaxVersion="4.0" />
-		<AllUsers>false</AllUsers>
-	</Identifier>
-	<References />
-	<Content>
-		<MefComponent>|ClojureExtension.Editor|</MefComponent>
-		<VsPackage>|%CurrentProject%;PkgdefProjectOutputGroup|</VsPackage>
-	</Content>
+      </VisualStudio>
+    </SupportedProducts>
+    <SupportedFrameworkRuntimeEdition MinVersion="4.0" MaxVersion="4.0" />
+    <AllUsers>false</AllUsers>
+  </Identifier>
+  <References />
+  <Content>
+    <MefComponent>|ClojureExtension.Editor|</MefComponent>
+    <VsPackage>|%CurrentProject%;PkgdefProjectOutputGroup|</VsPackage>
+  </Content>
 </Vsix>

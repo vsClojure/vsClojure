@@ -8,7 +8,6 @@ using ClojureExtension.Repl.Operations;
 using ClojureExtension.Utilities;
 using EnvDTE;
 using EnvDTE80;
-using Microsoft.ClojureExtension;
 using Microsoft.ClojureExtension.Editor;
 using Microsoft.ClojureExtension.Project.Hierarchy;
 using Microsoft.VisualStudio.ComponentModelHost;
@@ -43,7 +42,7 @@ namespace ClojureExtension.Repl
 			var headerPanel = ReplUserInterfaceFactory.CreateHeaderPanel(name, closeButton);
 			var tabItem = ReplUserInterfaceFactory.CreateTabItem(headerPanel, grid);
 			var replProcess = CreateReplProcess(replPath, projectPath);
-			var replEntity = new Entity<ReplState> {CurrentState = new ReplState()};
+			var replEntity = new Entity<ReplState> { CurrentState = new ReplState() };
 
 			WireUpTheTextBoxInputToTheReplProcess(interactiveText, replProcess, replEntity);
 			WireUpTheOutputOfTheReplProcessToTheTextBox(interactiveText, replProcess, replEntity);
@@ -114,7 +113,7 @@ namespace ClojureExtension.Repl
 
 		private List<MenuCommand> CreateMenuCommands(Process replProcess, TextBox interactiveText, Entity<ReplState> replEntity)
 		{
-			var dte = (DTE2) _serviceProvider.GetService(typeof (DTE));
+			var dte = (DTE2)_serviceProvider.GetService(typeof(DTE));
 
 			var loadSelectedFilesIntoRepl =
 				new LoadFilesIntoRepl(
@@ -135,14 +134,14 @@ namespace ClojureExtension.Repl
 					new ActiveFileProvider(dte),
 					_replToolWindow);
 
-			var componentModel = (IComponentModel) _serviceProvider.GetService(typeof (SComponentModel));
+			var componentModel = (IComponentModel)_serviceProvider.GetService(typeof(SComponentModel));
 
 			var namespaceParser = new NamespaceParser(NamespaceParser.NamespaceSymbols);
 
 			var activeTextBufferStateProvider =
 				new ActiveTextBufferStateProvider(
 					componentModel.GetService<IVsEditorAdaptersFactoryService>(),
-					(IVsTextManager) _serviceProvider.GetService(typeof (SVsTextManager)));
+					(IVsTextManager)_serviceProvider.GetService(typeof(SVsTextManager)));
 
 			var changeReplNamespace =
 				new ChangeReplNamespace(new ReplWriter(replProcess, new TextBoxWriter(interactiveText, replEntity)));
@@ -167,7 +166,7 @@ namespace ClojureExtension.Repl
 			process.StartInfo.RedirectStandardError = true;
 			process.StartInfo.CreateNoWindow = true;
 			process.StartInfo.UseShellExecute = false;
-			process.StartInfo.EnvironmentVariables["clojure.load.path"] = projectPath;
+			process.StartInfo.EnvironmentVariables["clojure_load_path"] = projectPath;
 			return process;
 		}
 	}

@@ -33,7 +33,7 @@ namespace ClojureExtension.Project.Launching
 		private static VsDebugTargetInfo CreateClojureLaunchInfo(LaunchParameters launchParameters)
 		{
 			var info = new VsDebugTargetInfo();
-			info.cbSize = (uint) Marshal.SizeOf(info);
+			info.cbSize = (uint)Marshal.SizeOf(info);
 			info.dlo = DEBUG_LAUNCH_OPERATION.DLO_CreateProcess;
 			info.bstrExe = launchParameters.RunnerPath;
 			info.bstrCurDir = launchParameters.ApplicationPath;
@@ -48,15 +48,15 @@ namespace ClojureExtension.Project.Launching
 		private static VsDebugTargetInfo CreateExecutableLaunchInfo(LaunchParameters launchParameters)
 		{
 			var info = new VsDebugTargetInfo();
-			info.cbSize = (uint) Marshal.SizeOf(info);
+			info.cbSize = (uint)Marshal.SizeOf(info);
 			info.dlo = DEBUG_LAUNCH_OPERATION.DLO_CreateProcess;
 			info.bstrExe = Path.Combine(launchParameters.ApplicationPath, launchParameters.StartupFile);
 			info.bstrCurDir = launchParameters.ApplicationPath;
 			info.fSendStdoutToOutputWindow = 0;
-			info.grfLaunch = (uint) __VSDBGLAUNCHFLAGS2.DBGLAUNCH_MergeEnv;
+			info.grfLaunch = (uint)__VSDBGLAUNCHFLAGS2.DBGLAUNCH_MergeEnv;
 			info.bstrArg = launchParameters.StartupArguments;
 			info.bstrRemoteMachine = launchParameters.RemoteDebugMachine;
-			info.bstrEnv = "clojure.load.path=" + launchParameters.FrameworkPath + ";" + launchParameters.ClojureLoadPath + "\0";
+			info.bstrEnv = "clojure_load_path=" + launchParameters.FrameworkPath + ";" + launchParameters.ClojureLoadPath + "\0";
 			info.clsidCustom = launchParameters.DebugType;
 			return info;
 		}

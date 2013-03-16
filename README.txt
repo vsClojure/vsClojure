@@ -6,7 +6,7 @@ Description:
 
 	A Visual Studio 2012 Extension for ClojureCLR.
 
-	Runtimes 1.2.0 - 1.5.0 (stable beta) available
+	Runtimes 1.5.0 (stable beta) available
 
 Features:
 

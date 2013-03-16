@@ -49,15 +49,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Key.snk" />
-    <Content Include="Runtimes\1.3.0.zip">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="Runtimes\1.2.0.zip">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="Runtimes\1.4.0.zip">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
     <Content Include="Runtimes\1.5.0.zip">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
