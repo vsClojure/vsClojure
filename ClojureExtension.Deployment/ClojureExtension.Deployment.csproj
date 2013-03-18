@@ -65,16 +65,32 @@
     <Content Include="Templates\Projects\Console Application\program.clj">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="Templates\ProjectItems\Clojure Files\Clojure ASP.Net MVC Controller.clj">
+    <Content Include="Templates\ProjectItems\Clojure Files\ASP.Net MVC Controller.clj">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="Templates\Projects\ASPNet MVC\HomeController.clj">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="Templates\ProjectItems\Clojure Files\Clojure File.clj">
+    <Content Include="Templates\ProjectItems\Clojure Files\Code File.clj">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="Templates\Projects\ASPNet MVC\Clojure ASP.Net MVC Controller Library.cljproj">
+    <Content Include="Templates\Projects\ASPNet MVC\ASP.Net MVC Controller Library.cljproj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Templates\ProjectItems\Clojure Files\ADONet Data Reader.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Templates\ProjectItems\Clojure Files\Windows Form.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Templates\Projects\Windows Forms Application\Windows Forms Application.cljproj">
+      <SubType>Designer</SubType>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Templates\Projects\Windows Forms Application\program.clj">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Templates\Projects\Windows Forms Application\Form1.clj">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
   </ItemGroup>
@@ -90,6 +106,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Templates\Projects\Console Application\Clojure.ico">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Templates\Projects\Windows Forms Application\Clojure.ico">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="VSIXIcon.png">

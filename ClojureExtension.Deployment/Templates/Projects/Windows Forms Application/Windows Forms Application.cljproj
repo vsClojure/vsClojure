@@ -39,6 +39,9 @@
 		<Compile Include="program.clj">
       <SubType>Code</SubType>
 		</Compile>
+		<Compile Include="Form1.clj">
+      <SubType>Code</SubType>
+		</Compile>
 	</ItemGroup>
 	<Import Project="$(MSBuildBinPath)\Microsoft.Common.targets" />
   <Target Name="CreateManifestResourceNames">
