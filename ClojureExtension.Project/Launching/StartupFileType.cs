@@ -4,6 +4,7 @@
 	{
 		Executable,
 		Clojure,
+		ClojureScript,
 		Unknown
 	}
 }

@@ -13,18 +13,30 @@ namespace Microsoft.ClojureExtension.Editor.Classification
 	[TagType(typeof (ClassificationTag))]
 	internal sealed class ClojureClassifierProvider : IViewTaggerProvider
 	{
-		[Export] [Name("Clojure")] [BaseDefinition("code")] internal static ContentTypeDefinition ClojureContentType = null;
+		[Export]
+		[Name("Clojure")]
+		[BaseDefinition("code")]
+		internal static ContentTypeDefinition ClojureContentType = null;
 
-		[Export] [FileExtension(".clj")] [ContentType("Clojure")] internal static FileExtensionToContentTypeDefinition ClojureFileType = null;
+		[Export]
+		[FileExtension(".clj")]
+		[ContentType("Clojure")]
+		internal static FileExtensionToContentTypeDefinition ClojureFileType = null;
 
-		[Import] internal IClassificationTypeRegistryService ClassificationTypeRegistry = null;
+		[Export]
+		[FileExtension(".cljs")]
+		[ContentType("Clojure")]
+		internal static FileExtensionToContentTypeDefinition ClojureScriptFileType = null;
 
-		[Import] internal IViewTagAggregatorFactoryService aggregatorFactory = null;
+		[Import]
+		internal IClassificationTypeRegistryService ClassificationTypeRegistry = null;
+
+		[Import]
+		internal IViewTagAggregatorFactoryService aggregatorFactory = null;
 
 		public ITagger<T> CreateTagger<T>(ITextView textView, ITextBuffer buffer) where T : ITag
 		{
-			ITagAggregator<ClojureTokenTag> clojureTagAggregator =
-				aggregatorFactory.CreateTagAggregator<ClojureTokenTag>(textView);
+			ITagAggregator<ClojureTokenTag> clojureTagAggregator = aggregatorFactory.CreateTagAggregator<ClojureTokenTag>(textView);
 
 			return new ClojureClassifier(buffer, clojureTagAggregator, ClassificationTypeRegistry) as ITagger<T>;
 		}

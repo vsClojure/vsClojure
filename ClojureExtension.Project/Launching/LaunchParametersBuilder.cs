@@ -16,8 +16,7 @@ namespace ClojureExtension.Project.Launching
 
 		public LaunchParameters Get()
 		{
-			string clojureLoadPath = _project.GetProjectProperty("ClojureLoadPath");
-			string frameworkPath = _project.GetProjectProperty("ClojureRuntimesDirectory") + "\\" + _project.GetProjectProperty("ClojureVersion", true);
+			string frameworkPath = _project.GetProjectProperty("ClojureRuntimesDirectory") + "\\" + _project.GetProjectProperty("ClojureCompiler", true) + "-" + _project.GetProjectProperty("ClojureVersion", true);
 			string applicationPath = _project.GetProjectProperty("ProjectDir", false) + _project.GetProjectProperty("OutputPath", false);
 			string targetFile = _project.GetProjectProperty("StartupFile");
 			string remoteMachineDebug = _project.GetProjectProperty("RemoteDebugMachine", false);
@@ -36,6 +35,7 @@ namespace ClojureExtension.Project.Launching
 			var startupFileType = StartupFileType.Unknown;
 			if (targetFile.ToLower().EndsWith(".exe")) startupFileType = StartupFileType.Executable;
 			if (targetFile.ToLower().EndsWith(".clj")) startupFileType = StartupFileType.Clojure;
+			if (targetFile.ToLower().EndsWith(".cljs")) startupFileType = StartupFileType.ClojureScript;
 
 			return new LaunchParameters(
 				runnerPath,
@@ -46,8 +46,7 @@ namespace ClojureExtension.Project.Launching
 				unmanagedDebugging,
 				debugType,
 				startupArguments,
-				startupFileType,
-				clojureLoadPath);
+				startupFileType);
 		}
 	}
 }

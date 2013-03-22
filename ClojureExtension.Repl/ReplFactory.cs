@@ -66,7 +66,7 @@ namespace ClojureExtension.Repl
 			var menuCommandListWirer = new MenuCommandListWirer(
 				(OleMenuCommandService)_serviceProvider.GetService(typeof(IMenuCommandService)),
 				CreateMenuCommands(replProcess, replTextBox, replEntity),
-				() => dte.ActiveDocument != null && dte.ActiveDocument.FullName.ToLower().EndsWith(".clj") && _replManager.SelectedItem == tabItem);
+								() => dte.ActiveDocument != null && (dte.ActiveDocument.FullName.ToLower().EndsWith(".clj") || dte.ActiveDocument.FullName.ToLower().EndsWith(".cljs")) && _replManager.SelectedItem == tabItem);
 
 			dte.Events.WindowEvents.WindowActivated += (o, e) => menuCommandListWirer.TryToShowMenuCommands();
 			_replManager.SelectionChanged += (sender, eventData) => menuCommandListWirer.TryToShowMenuCommands();

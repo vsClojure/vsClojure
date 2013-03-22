@@ -4,7 +4,7 @@ Project:
 
 Description:
 
-	A Visual Studio 2012 Extension for ClojureCLR.
+	A Visual Studio 2012 Extension for ClojureCLR & ClojureScript.
 
 	Runtimes 1.5.0 (stable beta) available
 
@@ -24,6 +24,8 @@ Features:
 		* Switch to active file's namespace (Editor menu command)
 		* History (UP ARROW or DOWN ARROW)
 	9.) Block commenting
+	10.) Simple auto-completion
+	11.) Auto-compile .cljs ClojureScript on save to a code-behind JavaScript file
 
 Notes:
 	1.) Compile errors show in the Output window, not the error list window.
@@ -38,9 +40,14 @@ Source:
 	-fork-
 	https://github.com/speige/vsClojure
 
+Discussion:
+
+	http://gplus.to/clojureclr
+
 Installing:
 
 	1.) Install vsClojure from the Visual Studio Gallery using the extension manager in Visual Studio.
+	2.) For ClojureScript, install the latest JDK from Oracle.com and add the folder containing Java.exe to your path environment variable (usually C:\Program Files (x86)\Java\jre7\bin)
 
 Building:
 

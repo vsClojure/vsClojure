@@ -17,8 +17,6 @@ using System.Windows.Forms;
 using ClojureExtension.Project.Configuration;
 using ClojureExtension.Utilities;
 using EnvDTE;
-using Microsoft.ClojureExtension;
-using Microsoft.ClojureExtension.Configuration;
 using Microsoft.ClojureExtension.Project;
 using Microsoft.VisualStudio.Project;
 using Microsoft.VisualStudio.Project.Automation;
@@ -128,7 +126,7 @@ namespace ClojureExtension.Project
 
         public override bool IsCodeFile(string fileName)
         {
-            return fileName.ToLower().EndsWith(".clj");
+			return fileName.ToLower().EndsWith(".clj") || fileName.ToLower().EndsWith(".cljs");
         }
 
         /// <summary>

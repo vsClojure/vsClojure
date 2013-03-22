@@ -26,7 +26,7 @@ namespace ClojureExtension.Repl.Operations
 
         public void Execute()
         {
-            IEnumerable<string> filesToLoad = _filesProvider.Get().Where(p => p.ToLower().EndsWith(".clj"));
+			IEnumerable<string> filesToLoad = _filesProvider.Get().Where(p => p.ToLower().EndsWith(".clj") || p.ToLower().EndsWith(".cljs"));
 
             if (filesToLoad.Count() == 0) throw new Exception("No files to load.");
 

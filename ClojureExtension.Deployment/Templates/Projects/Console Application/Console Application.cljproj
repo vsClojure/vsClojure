@@ -7,11 +7,11 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>$(MSBuildProjectName)</RootNamespace>
 		<AssemblyName>$(MSBuildProjectName)</AssemblyName>
-		<ClojureRuntimesDirectory>$(VSCLOJURE_RUNTIMES_DIR)</ClojureRuntimesDirectory>
+    <ClojureCompiler>ClojureCLR</ClojureCompiler>
 		<ClojureVersion>1.5.0</ClojureVersion>
+    <ClojureRuntimesDirectory>$(VSCLOJURE_RUNTIMES_DIR)\$(ClojureCompiler)-$(ClojureVersion)</ClojureRuntimesDirectory>
 		<StartupFile>program.exe</StartupFile>
 		<StartupArguments></StartupArguments>
-		<ClojureLoadPath></ClojureLoadPath>
 	</PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
 		<DebugSymbols>true</DebugSymbols>
@@ -25,7 +25,7 @@
 	</PropertyGroup>
   <ItemGroup>
 		<Reference Include="Clojure.dll">
-			<HintPath>$(ClojureRuntimesDirectory)\$(ClojureVersion)\Clojure.dll</HintPath>
+			<HintPath>$(ClojureRuntimesDirectory)\Clojure.dll</HintPath>
 		</Reference>
 		<Reference Include="mscorlib" />
 		<Reference Include="System" />
@@ -76,7 +76,7 @@
       <ClojureNamespaces>@(Compile -> '%(RelativeDir)%(Filename)', ' ')</ClojureNamespaces>
     </PropertyGroup>
     <Copy SourceFiles="@(Compile)" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" DestinationFiles="@(Compile -> '$(OutDir)%(RelativeDir)%(Filename)%(Extension)')"/>
-    <Exec WorkingDirectory="$(OutDir)" Command="&quot;$(ClojureRuntimesDirectory)\$(ClojureVersion)\Clojure.Compile&quot; $(ClojureNamespaces.Replace('\', '.'))"/>
+    <Exec WorkingDirectory="$(OutDir)" Command="&quot;$(ClojureRuntimesDirectory)\Clojure.Compile&quot; $(ClojureNamespaces.Replace('\', '.'))"/>
     <RemoveDuplicates Inputs="@(Compile -> '$(OutDir)%(RelativeDir)')">
       <Output TaskParameter="Filtered" ItemName="SourceDirectories"/>
     </RemoveDuplicates>
