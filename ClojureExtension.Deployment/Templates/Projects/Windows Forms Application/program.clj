@@ -9,5 +9,5 @@
 (defn -main [& args]
 			(Application/EnableVisualStyles)
 			(Application/SetCompatibleTextRenderingDefault false)
-			(Application/Run (createForm1))
+			(Application/Run (Form1/createForm1))
 )

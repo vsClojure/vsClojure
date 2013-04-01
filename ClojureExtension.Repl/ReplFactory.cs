@@ -35,20 +35,15 @@ namespace ClojureExtension.Repl
 
 		public void CreateRepl(string replPath, string projectPath)
 		{
-			var interactiveText = ReplUserInterfaceFactory.CreateInteractiveText();
-			var closeButton = ReplUserInterfaceFactory.CreateCloseButton();
-			var name = ReplUserInterfaceFactory.CreateTabLabel();
-			var grid = ReplUserInterfaceFactory.CreateTextBoxGrid(interactiveText);
-			var headerPanel = ReplUserInterfaceFactory.CreateHeaderPanel(name, closeButton);
-			var tabItem = ReplUserInterfaceFactory.CreateTabItem(headerPanel, grid);
+			var tabItem = new ReplTab();
 			var replProcess = CreateReplProcess(replPath, projectPath);
 			var replEntity = new Entity<ReplState> { CurrentState = new ReplState() };
 
-			WireUpTheTextBoxInputToTheReplProcess(interactiveText, replProcess, replEntity);
-			WireUpTheOutputOfTheReplProcessToTheTextBox(interactiveText, replProcess, replEntity);
-			WireUpTheReplEditorCommandsToTheEditor(interactiveText, replProcess, replEntity, tabItem);
+            WireUpTheTextBoxInputToTheReplProcess(tabItem.InteractiveText, replProcess, replEntity);
+            WireUpTheOutputOfTheReplProcessToTheTextBox(tabItem.InteractiveText, replProcess, replEntity);
+            WireUpTheReplEditorCommandsToTheEditor(tabItem.InteractiveText, replProcess, replEntity, tabItem);
 
-			closeButton.Click +=
+            tabItem.CloseButton.Click +=
 				(o, e) =>
 				{
 					replProcess.Kill();
@@ -147,11 +142,11 @@ namespace ClojureExtension.Repl
 				new ChangeReplNamespace(new ReplWriter(replProcess, new TextBoxWriter(interactiveText, replEntity)));
 
 			var menuCommands = new List<MenuCommand>();
-			menuCommands.Add(new MenuCommand((sender, args) => loadSelectedProjectIntoRepl.Execute(), new CommandID(Guids.GuidClojureExtensionCmdSet, 11)));
-			menuCommands.Add(new MenuCommand((sender, args) => loadSelectedFilesIntoRepl.Execute(), new CommandID(Guids.GuidClojureExtensionCmdSet, 12)));
-			menuCommands.Add(new MenuCommand((sender, args) => loadActiveFileIntoRepl.Execute(), new CommandID(Guids.GuidClojureExtensionCmdSet, 13)));
-			menuCommands.Add(new MenuCommand((sender, args) => changeReplNamespace.Execute(namespaceParser.Execute(activeTextBufferStateProvider.Get())), new CommandID(Guids.GuidClojureExtensionCmdSet, 14)));
-			menuCommands.Add(new MenuCommand((sender, args) => new ReplWriter(replProcess, new TextBoxWriter(interactiveText, replEntity)).WriteBehindTheSceneExpressionToRepl((string)dte.ActiveDocument.Selection.Text), new CommandID(Guids.GuidClojureExtensionCmdSet, 15)));
+            menuCommands.Add(new MenuCommand((sender, args) => loadSelectedProjectIntoRepl.Execute(), CommandIDs.LoadProjectIntoActiveRepl));
+            menuCommands.Add(new MenuCommand((sender, args) => loadSelectedFilesIntoRepl.Execute(), CommandIDs.LoadFileIntoActiveRepl));
+            menuCommands.Add(new MenuCommand((sender, args) => loadActiveFileIntoRepl.Execute(), CommandIDs.LoadActiveDocumentIntoRepl));
+            menuCommands.Add(new MenuCommand((sender, args) => changeReplNamespace.Execute(namespaceParser.Execute(activeTextBufferStateProvider.Get())), CommandIDs.SwitchReplNamespaceToActiveDocument));
+            menuCommands.Add(new MenuCommand((sender, args) => new ReplWriter(replProcess, new TextBoxWriter(interactiveText, replEntity)).WriteBehindTheSceneExpressionToRepl((string)dte.ActiveDocument.Selection.Text), CommandIDs.LoadSelectedTextIntoRepl));
 			return menuCommands;
 		}
 

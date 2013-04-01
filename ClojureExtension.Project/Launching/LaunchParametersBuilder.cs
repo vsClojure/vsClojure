@@ -16,7 +16,7 @@ namespace ClojureExtension.Project.Launching
 
 		public LaunchParameters Get()
 		{
-			string frameworkPath = _project.GetProjectProperty("ClojureRuntimesDirectory") + "\\" + _project.GetProjectProperty("ClojureCompiler", true) + "-" + _project.GetProjectProperty("ClojureVersion", true);
+			string frameworkPath = _project.GetProjectProperty("ClojureRuntimesDirectory");
 			string applicationPath = _project.GetProjectProperty("ProjectDir", false) + _project.GetProjectProperty("OutputPath", false);
 			string targetFile = _project.GetProjectProperty("StartupFile");
 			string remoteMachineDebug = _project.GetProjectProperty("RemoteDebugMachine", false);

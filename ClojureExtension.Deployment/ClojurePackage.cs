@@ -108,7 +108,7 @@ namespace ClojureExtension.Deployment
 			catch (Exception e)
 			{
 				var errorMessage = new StringBuilder();
-				errorMessage.AppendLine("Failed to extract ClojureCLR runtime(s).  You may need to reinstall vsClojure.");
+				errorMessage.AppendLine("Failed to extract Clojure runtime(s).  You may need to reinstall vsClojure.");
 				errorMessage.AppendLine(e.Message);
 				MessageBox.Show(errorMessage.ToString());
 			}
@@ -166,11 +166,11 @@ namespace ClojureExtension.Deployment
 
 		private void HideAllClojureEditorMenuCommands()
 		{
-			List<int> allCommandIds = new List<int>() { 11, 12, 13, 14, 15 };
+            List<CommandID> allCommandIds = new List<CommandID>() { CommandIDs.LoadProjectIntoActiveRepl, CommandIDs.LoadFileIntoActiveRepl, CommandIDs.LoadActiveDocumentIntoRepl, CommandIDs.SwitchReplNamespaceToActiveDocument, CommandIDs.LoadSelectedTextIntoRepl };
 			DTE2 dte = (DTE2)GetService(typeof(DTE));
 			OleMenuCommandService menuCommandService = (OleMenuCommandService)GetService(typeof(IMenuCommandService));
 			List<MenuCommand> menuCommands = new List<MenuCommand>();
-			foreach (int commandId in allCommandIds) menuCommands.Add(new MenuCommand((o, s) => { }, new CommandID(Guids.GuidClojureExtensionCmdSet, commandId)));
+			foreach (CommandID commandId in allCommandIds) menuCommands.Add(new MenuCommand((o, s) => { }, commandId));
 			MenuCommandListHider hider = new MenuCommandListHider(menuCommandService, menuCommands);
 			dte.Events.WindowEvents.WindowActivated += (o, e) => hider.HideMenuCommands();
 		}
@@ -295,9 +295,17 @@ namespace ClojureExtension.Deployment
 
 				if (!OPTIMIZE_COMPILED_JAVASCRIPT && !string.IsNullOrWhiteSpace(standardOutput))
 				{
-					string outputFile = Directory.GetFiles(workingDirectory + "\\out", "*.js", SearchOption.TopDirectoryOnly).FirstOrDefault();
+					string outDirectory = workingDirectory + "\\out";
+					if (Directory.Exists(outDirectory))
+					{
+						string outputFile = Directory.GetFiles(outDirectory, "*.js", SearchOption.TopDirectoryOnly).FirstOrDefault();
 					string outputFileContent = !string.IsNullOrWhiteSpace(outputFile) ? File.ReadAllText(outputFile) : "";
 					standardOutput = string.Format("/*{0}{1}{0}*/{0}{2}", Environment.NewLine, standardOutput, outputFileContent);
+				}
+					else
+					{
+						standardOutput = string.Format("/*{0}{1}{0}*/{0}", Environment.NewLine, standardOutput);
+					}
 				}
 
 				if (!string.IsNullOrWhiteSpace(standardError) || !string.IsNullOrWhiteSpace(standardOutput))
@@ -398,7 +406,7 @@ namespace ClojureExtension.Deployment
 							replToolWindowFrame,
 							() => new LaunchParametersBuilder((ProjectNode)projectProvider.Get().Object).Get().FrameworkPath,
 							new SelectedProjectProvider(dte.Solution, dte.ToolWindows.SolutionExplorer)).Execute(),
-					new CommandID(Guids.GuidClojureExtensionCmdSet, 10)));
+                    CommandIDs.StartReplUsingProjectVersion));
 		}
 
 		public override string ProductUserContext

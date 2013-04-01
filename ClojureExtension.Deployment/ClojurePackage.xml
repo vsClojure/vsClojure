@@ -3,7 +3,7 @@
 <CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable">
 	<Extern href="stdidcmd.h" />
 	<Extern href="vsshlids.h" />
-	<Extern href="msobtnid.h" />
+	<!--Extern href="msobtnid.h" /-->
 
 	<Commands package="clojurePackage">
 		<Groups>

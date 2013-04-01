@@ -110,6 +110,7 @@ namespace ClojureExtension.Project.Configuration
 		protected override void BindProperties()
 		{
 			_defaultNamespace = ProjectMgr.GetProjectProperty("RootNamespace", false);
+			_clojureVersion = ProjectMgr.GetProjectProperty("ClojureCompiler", false);
 			_clojureVersion = ProjectMgr.GetProjectProperty("ClojureVersion", false);
 			_targetFile = ProjectMgr.GetProjectProperty("StartupFile", false);
 			_startupArguments = ProjectMgr.GetProjectProperty("StartupArguments", false);
@@ -118,6 +119,7 @@ namespace ClojureExtension.Project.Configuration
 		protected override int ApplyChanges()
 		{
 			ProjectMgr.SetProjectProperty("RootNamespace", _defaultNamespace);
+			ProjectMgr.SetProjectProperty("ClojureCompiler", _clojureVersion);
 			ProjectMgr.SetProjectProperty("ClojureVersion", _clojureVersion);
 			ProjectMgr.SetProjectProperty("StartupFile", _targetFile);
 			ProjectMgr.SetProjectProperty("StartupArguments", _startupArguments);
