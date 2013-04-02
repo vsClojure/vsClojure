@@ -51,7 +51,7 @@ namespace ClojureExtension.Deployment
 	[DefaultRegistryRoot("Software\\Microsoft\\VisualStudio\\11.0")]
 	[ProvideObject(typeof(GeneralPropertyPageAdapter))]
 	[ProvideProjectFactory(typeof(ClojureProjectFactory), "Clojure", "Clojure Project Files (*.cljproj);*.cljproj", "cljproj", "cljproj", @"Templates\Projects", LanguageVsTemplate = "Clojure", NewProjectRequireNewFolderVsTemplate = false)]
-	[ProvideProjectItem(typeof(ClojureProjectFactory), "Clojure Items", @"Templates\ProjectItems\Clojure Files", 500)]
+	[ProvideProjectItem(typeof(ClojureProjectFactory), "Clojure Items", @"Templates\ProjectItems\Clojure", 500)]
 	[ProvideMenuResource("Menus.ctmenu", 1)]
 	[ProvideToolWindow(typeof(ReplToolWindow))]
 	[ProvideAutoLoad(VSConstants.UICONTEXT.NoSolution_string)]
