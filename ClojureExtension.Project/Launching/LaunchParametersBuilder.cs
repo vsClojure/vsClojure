@@ -34,7 +34,7 @@ namespace ClojureExtension.Project.Launching
 
 			var startupFileType = StartupFileType.Unknown;
 			if (targetFile.ToLower().EndsWith(".exe")) startupFileType = StartupFileType.Executable;
-			if (targetFile.ToLower().EndsWith(".clj")) startupFileType = StartupFileType.Clojure;
+			if (targetFile.ToLower().EndsWith(".clj")) startupFileType = StartupFileType.ClojureCLR;
 			if (targetFile.ToLower().EndsWith(".cljs")) startupFileType = StartupFileType.ClojureScript;
 
 			return new LaunchParameters(

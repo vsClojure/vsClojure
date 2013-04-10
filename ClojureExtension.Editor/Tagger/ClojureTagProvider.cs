@@ -18,6 +18,11 @@ namespace Microsoft.ClojureExtension.Editor.Tagger
 	{
 		public ITagger<T> CreateTagger<T>(ITextView textView, ITextBuffer buffer) where T : ITag
 		{
+      if (!TokenizedBufferBuilder.TokenizedBuffers.ContainsKey(buffer))
+      {
+        return null;
+      }
+
 			Entity<LinkedList<Token>> tokenizedBuffer = TokenizedBufferBuilder.TokenizedBuffers[buffer];
 			ClojureTokenTagger tagger = new ClojureTokenTagger(buffer, tokenizedBuffer);
 			BufferTextChangeHandler textChangeHandler = new BufferTextChangeHandler(new TextBufferAdapter(textView), tokenizedBuffer);

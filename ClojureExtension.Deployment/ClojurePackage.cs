@@ -42,7 +42,9 @@ using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.Win32;
+using Constants = ClojureExtension.Utilities.Constants;
 using Process = System.Diagnostics.Process;
+using ClojureExtension.Editor.Intellisense;
 
 namespace ClojureExtension.Deployment
 {
@@ -58,24 +60,9 @@ namespace ClojureExtension.Deployment
 	public sealed class ClojurePackage : ProjectPackage
 	{
 		public const string PackageGuid = "7712178c-977f-45ec-adf6-e38108cc7739";
-		private const string VSCLOJURE_RUNTIMES_DIR = "VSCLOJURE_RUNTIMES_DIR";
-		private const string CLOJURE_LOAD_PATH = "CLOJURE_LOAD_PATH";
-		private const string VERSION = "1.5.0";
 		private const bool OPTIMIZE_COMPILED_JAVASCRIPT = false;
 
 		private ClearableMenuCommandService _thirdPartyEditorCommands;
-
-		public static string ClojureLoadPathEnvironmentVariable
-		{
-			get { return Environment.GetEnvironmentVariable(CLOJURE_LOAD_PATH); }
-			set { Environment.SetEnvironmentVariable(CLOJURE_LOAD_PATH, value, EnvironmentVariableTarget.User); }
-		}
-
-		public static string VsClojureRuntimesDirEnvironmentVariable
-		{
-			get { return Environment.GetEnvironmentVariable(VSCLOJURE_RUNTIMES_DIR); }
-			set { Environment.SetEnvironmentVariable(VSCLOJURE_RUNTIMES_DIR, value, EnvironmentVariableTarget.User); }
-		}
 
 		protected override void Initialize()
 		{
@@ -95,8 +82,14 @@ namespace ClojureExtension.Deployment
 					EnableMenuCommandsOnNewClojureBuffers();
 					UnzipRuntimes();
 					EnableSettingOfRuntimePathForNewClojureProjects();
+          InitializeSlowLoadingProcesses();
 				};
 		}
+
+    private void InitializeSlowLoadingProcesses()
+    {
+      HippieCompletionSource.Initialize();
+    }
 
 		private void UnzipRuntimes()
 		{
@@ -132,36 +125,37 @@ namespace ClojureExtension.Deployment
 		{
 			string deployDirectory = GetDirectoryOfDeployedContents();
 			string runtimePath = deployDirectory + "\\Runtimes";
-			string clrRuntimePath1_5_0 = runtimePath + "\\ClojureCLR-1.5.0";
+			string clrRuntimePath1_5_0 = string.Format("{0}\\{1}-{2}", runtimePath, Constants.CLOJURECLR, Constants.VERSION);
 
-			bool runtimePathIncorrect = VsClojureRuntimesDirEnvironmentVariable != runtimePath;
+			bool runtimePathIncorrect = EnvironmentVariables.VsClojureRuntimesDir != runtimePath;
 			if (runtimePathIncorrect)
 			{
-				VsClojureRuntimesDirEnvironmentVariable = runtimePath;
+        EnvironmentVariables.VsClojureRuntimesDir = runtimePath;
 			}
 
 			string extensionsDirectory = Directory.GetParent(deployDirectory).FullName;
 
-			string clojureLoadPath = ClojureLoadPathEnvironmentVariable ?? "";
+      string clojureLoadPath = EnvironmentVariables.ClojureLoadPath ?? "";
 			List<string> loadPaths = clojureLoadPath.Split(new[] { Path.PathSeparator }, StringSplitOptions.RemoveEmptyEntries).Where(x => !x.Contains(extensionsDirectory)).ToList();
 			loadPaths.Insert(0, clrRuntimePath1_5_0);
 			string newClojureLoadPath = loadPaths.Aggregate((x, y) => x + Path.PathSeparator + y);
 
-			bool clojureLoadPathIncorrect = ClojureLoadPathEnvironmentVariable != newClojureLoadPath;
+      bool clojureLoadPathIncorrect = EnvironmentVariables.ClojureLoadPath != newClojureLoadPath;
 			if (clojureLoadPathIncorrect)
 			{
-				ClojureLoadPathEnvironmentVariable = newClojureLoadPath;
+        EnvironmentVariables.ClojureLoadPath = newClojureLoadPath;
 			}
 
-			if (runtimePathIncorrect || clojureLoadPathIncorrect)
-			{
-				MessageBox.Show("Setup of vsClojure complete.  Please restart Visual Studio.", "vsClojure Setup");
-				if (MessageBox.Show("Would you like to view the vsClojure ReadMe.txt", "vsClojure Readme.txt", MessageBoxButtons.YesNo) == DialogResult.Yes)
-				{
-					string pathToReadme = deployDirectory + "\\ReadMe.txt";
-					System.Diagnostics.Process.Start("notepad.exe", pathToReadme);
-				}
-			}
+      if (runtimePathIncorrect || clojureLoadPathIncorrect)
+      {
+        if (MessageBox.Show("Would you like to view the vsClojure ReadMe.txt", "vsClojure Readme.txt", MessageBoxButtons.YesNo) == DialogResult.Yes)
+        {
+          string pathToReadme = deployDirectory + "\\ReadMe.txt";
+          Process.Start("notepad.exe", pathToReadme);
+        }
+
+        MessageBox.Show("Setup of vsClojure complete.  Please restart Visual Studio.", "vsClojure Setup");
+      }
 		}
 
 		private void HideAllClojureEditorMenuCommands()
@@ -213,7 +207,7 @@ namespace ClojureExtension.Deployment
 				};
 		}
 
-		private Dictionary<string, System.Diagnostics.Process> filesBeingCompiled = new Dictionary<string, Process>();
+		private Dictionary<string, Process> filesBeingCompiled = new Dictionary<string, Process>();
 		private object filesBeingCompiledLock = new object();
 		private void CompileClojureScript(string filePath, string inputFileContents, Action<string> outputResult)
 		{
@@ -221,7 +215,7 @@ namespace ClojureExtension.Deployment
 			{
 				outputResult("/* compiling ... */");
 
-				string runtimeDir = string.Format("{0}\\{1}-{2}", VsClojureRuntimesDirEnvironmentVariable, "ClojureScript", VERSION);
+        string runtimeDir = string.Format("{0}\\{1}-{2}", EnvironmentVariables.VsClojureRuntimesDir, Constants.CLOJURESCRIPT, Constants.VERSION);
 				List<string> paths = Directory.GetFiles(string.Format("{0}\\lib\\", runtimeDir), "*.jar", SearchOption.AllDirectories).ToList();
 				paths.Add(string.Format("{0}\\src\\clj", runtimeDir));
 				paths.Add(string.Format("{0}\\src\\cljs", runtimeDir));
@@ -299,9 +293,9 @@ namespace ClojureExtension.Deployment
 					if (Directory.Exists(outDirectory))
 					{
 						string outputFile = Directory.GetFiles(outDirectory, "*.js", SearchOption.TopDirectoryOnly).FirstOrDefault();
-					string outputFileContent = !string.IsNullOrWhiteSpace(outputFile) ? File.ReadAllText(outputFile) : "";
-					standardOutput = string.Format("/*{0}{1}{0}*/{0}{2}", Environment.NewLine, standardOutput, outputFileContent);
-				}
+						string outputFileContent = !string.IsNullOrWhiteSpace(outputFile) ? File.ReadAllText(outputFile) : "";
+						standardOutput = string.Format("/*{0}{1}{0}*/{0}{2}", Environment.NewLine, standardOutput, outputFileContent);
+					}
 					else
 					{
 						standardOutput = string.Format("/*{0}{1}{0}*/{0}", Environment.NewLine, standardOutput);

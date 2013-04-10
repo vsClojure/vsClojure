@@ -36,7 +36,7 @@ namespace ClojureExtension.Repl
 		public void CreateRepl(string replPath, string projectPath)
 		{
 			var tabItem = new ReplTab();
-			var replProcess = CreateReplProcess(replPath, projectPath);
+			var replProcess = ReplUtilities.CreateReplProcess(replPath, projectPath);
 			var replEntity = new Entity<ReplState> { CurrentState = new ReplState() };
 
             WireUpTheTextBoxInputToTheReplProcess(tabItem.InteractiveText, replProcess, replEntity);
@@ -148,21 +148,6 @@ namespace ClojureExtension.Repl
             menuCommands.Add(new MenuCommand((sender, args) => changeReplNamespace.Execute(namespaceParser.Execute(activeTextBufferStateProvider.Get())), CommandIDs.SwitchReplNamespaceToActiveDocument));
             menuCommands.Add(new MenuCommand((sender, args) => new ReplWriter(replProcess, new TextBoxWriter(interactiveText, replEntity)).WriteBehindTheSceneExpressionToRepl((string)dte.ActiveDocument.Selection.Text), CommandIDs.LoadSelectedTextIntoRepl));
 			return menuCommands;
-		}
-
-		private static Process CreateReplProcess(string replPath, string projectPath)
-		{
-			var process = new Process();
-			process.EnableRaisingEvents = true;
-			process.StartInfo = new ProcessStartInfo();
-			process.StartInfo.FileName = "\"" + replPath + "\\Clojure.Main.exe\"";
-			process.StartInfo.RedirectStandardOutput = true;
-			process.StartInfo.RedirectStandardInput = true;
-			process.StartInfo.RedirectStandardError = true;
-			process.StartInfo.CreateNoWindow = true;
-			process.StartInfo.UseShellExecute = false;
-			process.StartInfo.EnvironmentVariables["clojure_load_path"] = projectPath;
-			return process;
 		}
 	}
 }

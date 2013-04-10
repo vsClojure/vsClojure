@@ -4,6 +4,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{9B2D8C59-FCD5-40E3-ADEA-44D64ECB6993}"
 	ProjectSection(SolutionItems) = preProject
 		ATTRIBUTION.txt = ATTRIBUTION.txt
+		DLR-License.html = DLR-License.html
 		LICENSE.txt = LICENSE.txt
 		README.txt = README.txt
 	EndProjectSection
@@ -23,6 +24,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClojureExtension.Repl", "ClojureExtension.Repl\ClojureExtension.Repl.csproj", "{C9104D7A-6125-4E79-9AC1-1490D6DFA57C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClojureScript Code File", "ClojureScript Code File\ClojureScript Code File.csproj", "{967AD11D-637A-439A-B06A-5A24D1234F00}"
+EndProject
+Project("{985F20FF-87AE-45F6-86E0-1DBBF0224EB9}") = "vsClojure", "vsClojure\vsClojure.cljproj", "{8FE1995B-4B6D-4911-B563-A759467FDF53}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -114,6 +117,16 @@ Global
 		{967AD11D-637A-439A-B06A-5A24D1234F00}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{967AD11D-637A-439A-B06A-5A24D1234F00}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{967AD11D-637A-439A-B06A-5A24D1234F00}.Release|x86.ActiveCfg = Release|Any CPU
+		{8FE1995B-4B6D-4911-B563-A759467FDF53}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{8FE1995B-4B6D-4911-B563-A759467FDF53}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{8FE1995B-4B6D-4911-B563-A759467FDF53}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{8FE1995B-4B6D-4911-B563-A759467FDF53}.Debug|x86.ActiveCfg = Debug|x86
+		{8FE1995B-4B6D-4911-B563-A759467FDF53}.Debug|x86.Build.0 = Debug|x86
+		{8FE1995B-4B6D-4911-B563-A759467FDF53}.Release|Any CPU.ActiveCfg = Release|x86
+		{8FE1995B-4B6D-4911-B563-A759467FDF53}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{8FE1995B-4B6D-4911-B563-A759467FDF53}.Release|Mixed Platforms.Build.0 = Release|x86
+		{8FE1995B-4B6D-4911-B563-A759467FDF53}.Release|x86.ActiveCfg = Release|x86
+		{8FE1995B-4B6D-4911-B563-A759467FDF53}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

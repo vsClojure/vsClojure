@@ -54,11 +54,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommandIds.cs" />
+    <Compile Include="EnvironmentVariables.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="IO\Compression\CompressionExtensions.cs" />
     <Compile Include="IO\FileSystem\FileSystemExtensions.cs" />
     <Compile Include="IO\FileSystem\RelativePathFileSystemWriter.cs" />
     <Compile Include="IO\FileSystem\IFileSystemWriter.cs" />
     <Compile Include="IO\Streams\StreamExtensions.cs" />
+    <Compile Include="ReplUtilities.cs" />
     <Compile Include="StreamBuffer.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="Guids.cs" />
