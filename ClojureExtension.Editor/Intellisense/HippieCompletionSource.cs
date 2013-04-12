@@ -21,7 +21,13 @@ namespace ClojureExtension.Editor.Intellisense
     {
       new Thread(() =>
       {
-        new Metadata(); // pre-load clojure.dll due to slow start-up times
+        try
+        {
+          new Metadata(); // pre-load clojure.dll due to slow start-up times
+        }
+        catch (Exception e)
+        {
+        }
       }).Start();
     }
 

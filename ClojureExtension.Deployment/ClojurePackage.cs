@@ -148,13 +148,12 @@ namespace ClojureExtension.Deployment
 
       if (runtimePathIncorrect || clojureLoadPathIncorrect)
       {
+        MessageBox.Show("Setup of vsClojure complete.  Please restart Visual Studio.", "vsClojure Setup");
         if (MessageBox.Show("Would you like to view the vsClojure ReadMe.txt", "vsClojure Readme.txt", MessageBoxButtons.YesNo) == DialogResult.Yes)
         {
           string pathToReadme = deployDirectory + "\\ReadMe.txt";
           Process.Start("notepad.exe", pathToReadme);
         }
-
-        MessageBox.Show("Setup of vsClojure complete.  Please restart Visual Studio.", "vsClojure Setup");
       }
 		}
 
