@@ -16,7 +16,11 @@ namespace ClojureExtension.Deployment
 
 		public void Clear()
 		{
-			foreach (MenuCommand command in _menuCommands) RemoveCommand(command);
+			foreach (MenuCommand command in _menuCommands)
+			{
+			  RemoveCommand(command);
+			}
+
 			_menuCommands.Clear();
 		}
 

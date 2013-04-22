@@ -14,6 +14,10 @@ namespace Microsoft.ClojureExtension.Editor.AutoIndent
 
 		public ISmartIndent CreateSmartIndent(ITextView textView)
 		{
+      if (!TokenizedBufferBuilder.TokenizedBuffers.ContainsKey(textView.TextBuffer))
+      {
+        return null;
+      }
 			return new SmartIndentAdapter(
 				new ClojureSmartIndent(TokenizedBufferBuilder.TokenizedBuffers[textView.TextBuffer]),
 				new EditorOptionsBuilder(EditorOptionsFactoryService.GetOptions(textView)));

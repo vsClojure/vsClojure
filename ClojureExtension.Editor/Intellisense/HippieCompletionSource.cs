@@ -1,47 +1,69 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.ComponentModel.Design.Serialization;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
-using System.Threading;
 using ClojureExtension.Parsing;
+using ClojureExtension.Project;
 using ClojureExtension.Utilities;
+using EnvDTE;
+using EnvDTE80;
 using Microsoft.VisualStudio.Text;
+using VSLangProj;
 using vsClojure;
 using Microsoft.VisualStudio.Language.Intellisense;
+using System.Reflection;
+using Thread = System.Threading.Thread;
 
 namespace ClojureExtension.Editor.Intellisense
 {
   public class HippieCompletionSource : ICompletionSource
   {
-    private readonly Entity<LinkedList<Token>> _tokenizedBuffer;
-    private Metadata _metadata = new Metadata();
-
-    public static void Initialize()
+    private static IServiceProvider _serviceProvider;
+    private static Metadata _metadata;
+    public static void Initialize(IServiceProvider serviceProvider)
     {
+      _serviceProvider = serviceProvider;
+
       new Thread(() =>
       {
-        try
-        {
-          new Metadata(); // pre-load clojure.dll due to slow start-up times
-        }
-        catch (Exception e)
-        {
-        }
+        _metadata = new Metadata(); // SlowLoadingProcess for the 1st time.
       }).Start();
     }
+
+    private readonly Entity<LinkedList<Token>> _tokenizedBuffer;
+    private DTE2 _dte;
 
     public HippieCompletionSource(Entity<LinkedList<Token>> tokenizedBuffer)
     {
       _tokenizedBuffer = tokenizedBuffer;
+      _dte = (DTE2)_serviceProvider.GetService(typeof(DTE));
     }
 
     public void Dispose()
     {
     }
 
+    public List<EnvDTE.Project> GetProjects()
+    {
+      return ((Array)_dte.ActiveSolutionProjects).Cast<EnvDTE.Project>().ToList();
+    }
+
+    public List<Reference> GetAllProjectReferences()
+    {
+      List<EnvDTE.Project> projects = GetProjects();
+      List<Reference> clojureProjectReferences = projects.Select(x => x.Object).Where(x => x is ClojureProjectNode).Cast<ClojureProjectNode>().SelectMany(x => x.References.Cast<Reference>()).ToList();
+      List<Reference> otherProjectReferences = projects.Select(x => x.Object).Where(x => x is VSProject).Cast<VSProject>().SelectMany(x => x.References.Cast<Reference>()).ToList();
+      return clojureProjectReferences.Union(otherProjectReferences).ToList();
+    }
+
     public void AugmentCompletionSession(ICompletionSession session, IList<CompletionSet> completionSets)
     {
+      if (_metadata == null)
+      {
+        return;
+      }
+
       string fileNameBeingEdited = "";
 
       var caretPosition = session.TextView.Caret.Position.BufferPosition.Position;
@@ -49,6 +71,11 @@ namespace ClojureExtension.Editor.Intellisense
       if (caretPosition == tokenTriggeringIntellisense.IndexToken.StartIndex) tokenTriggeringIntellisense = tokenTriggeringIntellisense.Previous();
       var numberOfCharactersBeforeCursor = caretPosition - tokenTriggeringIntellisense.IndexToken.StartIndex;
       var textFromSymbolBeforeCursor = tokenTriggeringIntellisense.IndexToken.Token.Text.Substring(0, numberOfCharactersBeforeCursor);
+
+      if (string.IsNullOrWhiteSpace(textFromSymbolBeforeCursor))
+      {
+        return;
+      }
 
       var completions = new List<Completion>();
 
@@ -81,6 +108,14 @@ namespace ClojureExtension.Editor.Intellisense
       }
 
       completions.AddRange(_metadata.LoadCoreCompletionsMatchingString(textFromSymbolBeforeCursor));
+
+      //todo: load assemblies in separate appDomain
+      List<Reference> references = GetAllProjectReferences();
+      List<Assembly> referencedAssemblies = references.Select(x => Assembly.LoadFrom(x.Path)).ToList();
+
+      completions.AddRange(referencedAssemblies.SelectMany(x => _metadata.LoadCompletionsInAssemblyMatchingString(x, textFromSymbolBeforeCursor)));
+
+      //completions.AddRange(_metadata.LoadCompletionsInCljFileMatchingString(, textFromSymbolBeforeCursor));
 
       var snapshot = session.TextView.TextSnapshot;
       var start = new SnapshotPoint(snapshot, tokenTriggeringIntellisense.IndexToken.StartIndex);

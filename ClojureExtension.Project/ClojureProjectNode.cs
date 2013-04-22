@@ -111,6 +111,8 @@ namespace ClojureExtension.Project
             }
         }
 
+    public References References { get { return VSProject.References; } }
+    
         #endregion
 
         #region Overriden implementation

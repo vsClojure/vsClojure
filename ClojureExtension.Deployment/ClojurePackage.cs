@@ -17,6 +17,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using ClojureExtension.Deployment.Configuration;
 using ClojureExtension.Editor.Commenting;
@@ -42,6 +43,9 @@ using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.Win32;
+using VSLangProj;
+using clojure.lang;
+using vsClojure;
 using Constants = ClojureExtension.Utilities.Constants;
 using Process = System.Diagnostics.Process;
 using ClojureExtension.Editor.Intellisense;
@@ -63,16 +67,20 @@ namespace ClojureExtension.Deployment
 		private const bool OPTIMIZE_COMPILED_JAVASCRIPT = false;
 
 		private ClearableMenuCommandService _thirdPartyEditorCommands;
+    Metadata _metadata;
+    ErrorListHelper _errorListHelper;
 
 		protected override void Initialize()
 		{
 			base.Initialize();
-			var dte = (DTE2)GetService(typeof(DTE));
+			_dte = (DTE2)GetService(typeof(DTE));
 
-			dte.Events.DTEEvents.OnStartupComplete +=
+			_dte.Events.DTEEvents.OnStartupComplete +=
 				() =>
 				{
-					AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainAssemblyResolve;
+          bool restartRequired;
+          
+          AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainAssemblyResolve;
 					RegisterProjectFactory(new ClojureProjectFactory(this));
 					RegisterCommandMenuService();
 					HideAllClojureEditorMenuCommands();
@@ -81,14 +89,24 @@ namespace ClojureExtension.Deployment
 					SetupNewClojureBuffersWithSpacingOptions();
 					EnableMenuCommandsOnNewClojureBuffers();
 					UnzipRuntimes();
-					EnableSettingOfRuntimePathForNewClojureProjects();
-          InitializeSlowLoadingProcesses();
-				};
+          EnableSettingOfRuntimePathForNewClojureProjects(out restartRequired);
+
+          if (!restartRequired)
+          {
+            AfterStartupComplete();
+          }
+        };
 		}
 
-    private void InitializeSlowLoadingProcesses()
-    {
-      HippieCompletionSource.Initialize();
+	  private void AfterStartupComplete()
+	  {
+      new System.Threading.Thread(() =>
+	    {
+        _metadata = new Metadata(); // SlowLoadingProcess for the 1st time.
+      }).Start();
+
+      _errorListHelper = new ErrorListHelper();
+      HippieCompletionSource.Initialize(this);
     }
 
 		private void UnzipRuntimes()
@@ -121,7 +139,7 @@ namespace ClojureExtension.Deployment
 			commandRegistry.RegisterPriorityCommandTarget(0, _thirdPartyEditorCommands, out cookie);
 		}
 
-		private void EnableSettingOfRuntimePathForNewClojureProjects()
+		private void EnableSettingOfRuntimePathForNewClojureProjects(out bool restartRequired)
 		{
 			string deployDirectory = GetDirectoryOfDeployedContents();
 			string runtimePath = deployDirectory + "\\Runtimes";
@@ -146,7 +164,8 @@ namespace ClojureExtension.Deployment
         EnvironmentVariables.ClojureLoadPath = newClojureLoadPath;
 			}
 
-      if (runtimePathIncorrect || clojureLoadPathIncorrect)
+		  restartRequired = runtimePathIncorrect || clojureLoadPathIncorrect;
+      if (restartRequired)
       {
         MessageBox.Show("Setup of vsClojure complete.  Please restart Visual Studio.", "vsClojure Setup");
         if (MessageBox.Show("Would you like to view the vsClojure ReadMe.txt", "vsClojure Readme.txt", MessageBoxButtons.YesNo) == DialogResult.Yes)
@@ -173,22 +192,27 @@ namespace ClojureExtension.Deployment
 			var componentModel = (IComponentModel)GetService(typeof(SComponentModel));
 			ITextEditorFactoryService editorFactoryService = componentModel.GetService<ITextEditorFactoryService>();
 
-			editorFactoryService.TextViewCreated += (o, e) => e.TextView.GotAggregateFocus +=
-				(sender, args) =>
-				{
-					_thirdPartyEditorCommands.Clear();
-					if (e.TextView.TextSnapshot.ContentType.TypeName.ToLower() != "clojure") return;
+			editorFactoryService.TextViewCreated += (o, e) => {
+        e.TextView.GotAggregateFocus +=
+        (sender, args) =>
+        {
+          _thirdPartyEditorCommands.Clear();
+          if (e.TextView.TextSnapshot.ContentType.TypeName.ToLower() != "clojure")
+          {
+            return;
+          }
 
-					var editorOptionsBuilder = new EditorOptionsBuilder(componentModel.GetService<IEditorOptionsFactoryService>().GetOptions(e.TextView));
-					var tokenizedBuffer = TokenizedBufferBuilder.TokenizedBuffers[e.TextView.TextBuffer];
-					var formatter = new AutoFormatter(new TextBufferAdapter(e.TextView), tokenizedBuffer);
-					var blockComment = new BlockComment(new TextBufferAdapter(e.TextView));
-					var blockUncomment = new BlockUncomment(new TextBufferAdapter(e.TextView));
-					_thirdPartyEditorCommands.AddCommand(new MenuCommand((commandSender, commandArgs) => formatter.Format(editorOptionsBuilder.Get()), CommandIDs.FormatDocument));
-					_thirdPartyEditorCommands.AddCommand(new MenuCommand((commandSender, commandArgs) => blockComment.Execute(), CommandIDs.BlockComment));
-					_thirdPartyEditorCommands.AddCommand(new MenuCommand((commandSender, commandArgs) => blockUncomment.Execute(), CommandIDs.BlockUncomment));
-					_thirdPartyEditorCommands.AddCommand(new MenuCommand((commandSender, commandArgs) => { }, CommandIDs.GotoDefinition));
-				};
+          var editorOptionsBuilder = new EditorOptionsBuilder(componentModel.GetService<IEditorOptionsFactoryService>().GetOptions(e.TextView));
+          var tokenizedBuffer = TokenizedBufferBuilder.TokenizedBuffers[e.TextView.TextBuffer];
+          var formatter = new AutoFormatter(new TextBufferAdapter(e.TextView), tokenizedBuffer);
+          var blockComment = new BlockComment(new TextBufferAdapter(e.TextView));
+          var blockUncomment = new BlockUncomment(new TextBufferAdapter(e.TextView));
+          _thirdPartyEditorCommands.AddCommand(new MenuCommand((commandSender, commandArgs) => formatter.Format(editorOptionsBuilder.Get()), CommandIDs.FormatDocument));
+          _thirdPartyEditorCommands.AddCommand(new MenuCommand((commandSender, commandArgs) => blockComment.Execute(), CommandIDs.BlockComment));
+          _thirdPartyEditorCommands.AddCommand(new MenuCommand((commandSender, commandArgs) => blockUncomment.Execute(), CommandIDs.BlockUncomment));
+          _thirdPartyEditorCommands.AddCommand(new MenuCommand((commandSender, commandArgs) => { }, CommandIDs.GotoDefinition));
+        };
+      };
 		}
 
 		private void SetupNewClojureBuffersWithSpacingOptions()
@@ -208,7 +232,9 @@ namespace ClojureExtension.Deployment
 
 		private Dictionary<string, Process> filesBeingCompiled = new Dictionary<string, Process>();
 		private object filesBeingCompiledLock = new object();
-		private void CompileClojureScript(string filePath, string inputFileContents, Action<string> outputResult)
+	  private DTE2 _dte;
+
+	  private void CompileClojureScript(string filePath, string inputFileContents, Action<string> outputResult)
 		{
 			new System.Threading.Thread(() =>
 			{
@@ -333,7 +359,15 @@ namespace ClojureExtension.Deployment
 						if (e.TextDocument.FilePath.EndsWith(".clj"))
 						{
 							tokenizedBufferBuilder.CreateTokenizedBuffer(e.TextDocument.TextBuffer);
-						}
+
+              e.TextDocument.FileActionOccurred += (sender, fileActionEvent) =>
+              {
+                if (fileActionEvent.FileActionType == FileActionTypes.ContentSavedToDisk)
+                {
+                  RequestClojureCompile(e.TextDocument);
+                }
+              };
+            }
 						else if (e.TextDocument.FilePath.EndsWith(".cljs"))
 						{
 							tokenizedBufferBuilder.CreateTokenizedBuffer(e.TextDocument.TextBuffer);
@@ -342,14 +376,38 @@ namespace ClojureExtension.Deployment
 							{
 								if (fileActionEvent.FileActionType == FileActionTypes.ContentSavedToDisk)
 								{
-									RequestCompile(e.TextDocument);
+									RequestClojureScriptCompile(e.TextDocument);
 								}
 							};
 						}
 					};
 		}
 
-		private void RequestCompile(ITextDocument textDocument)
+	  private void RequestClojureCompile(ITextDocument textDocument)
+	  {
+      if (_metadata == null)
+      {
+        return;
+      }
+
+      string filePath = textDocument.FilePath;
+      string code = textDocument.TextBuffer.CurrentSnapshot.GetText();
+
+	    new System.Threading.Thread(() =>
+	    {
+	      Var.pushThreadBindings(RT.map(Compiler.CompilePathVar, Path.GetTempPath()));
+        IEnumerable<string> compilerErrors = _metadata.GetCompilerErrors(code);
+
+        _errorListHelper.ClearErrors(filePath);
+
+        foreach (string compilerError in compilerErrors)
+        {
+          _errorListHelper.Write(TaskCategory.BuildCompile, TaskErrorCategory.Error, compilerError, filePath);
+        }
+      }).Start();
+	  }
+
+	  private void RequestClojureScriptCompile(ITextDocument textDocument)
 		{
 			string filePath = textDocument.FilePath;
 			DTE2 dte = (DTE2)GetService(typeof(DTE));
