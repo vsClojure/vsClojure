@@ -34,10 +34,10 @@ namespace ClojureExtension.Editor.Intellisense
       List<string> parsedError = new Regex("^\\(([^,]*),([^,]*),([^,]*),([^)]*)\\): (.*)").Matches(error).Cast<Match>().SelectMany(x => x.Groups.Cast<Group>()).Select(x => x.Value).ToList();
 
       int parsedInt;
-      startLine = int.TryParse(parsedError[1], out parsedInt) ? (int?) parsedInt : null;
-      startColumn = int.TryParse(parsedError[2], out parsedInt) ? (int?) parsedInt : null;
-      endLine = int.TryParse(parsedError[3], out parsedInt) ? (int?) parsedInt : null;
-      endColumn = int.TryParse(parsedError[4], out parsedInt) ? (int?) parsedInt : null;
+      startLine = parsedError.Count > 2 && int.TryParse(parsedError[1], out parsedInt) ? (int?)parsedInt : null;
+      startColumn = parsedError.Count > 3 && int.TryParse(parsedError[2], out parsedInt) ? (int?)parsedInt : null;
+      endLine = parsedError.Count > 4 && int.TryParse(parsedError[3], out parsedInt) ? (int?)parsedInt : null;
+      endColumn = parsedError.Count > 5 && int.TryParse(parsedError[4], out parsedInt) ? (int?)parsedInt : null;
     }
     
     public void Write(TaskCategory category, TaskErrorCategory errorCategory, string text, string document, int? line = null, int? column = null)

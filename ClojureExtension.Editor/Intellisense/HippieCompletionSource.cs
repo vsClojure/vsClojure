@@ -27,7 +27,14 @@ namespace ClojureExtension.Editor.Intellisense
 
       new Thread(() =>
       {
+        try
+        {
         _metadata = new Metadata(); // SlowLoadingProcess for the 1st time.
+        }
+        catch
+        {
+          //ignore exception to prevent crashing visual studio
+        }
       }).Start();
     }
 

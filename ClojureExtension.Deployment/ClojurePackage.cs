@@ -19,6 +19,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using ClojureExtension.Debugger;
 using ClojureExtension.Deployment.Configuration;
 using ClojureExtension.Editor.Commenting;
 using ClojureExtension.Editor.TextBuffer;
@@ -55,12 +56,21 @@ namespace ClojureExtension.Deployment
 	[Guid(PackageGuid)]
 	[PackageRegistration(UseManagedResourcesOnly = true)]
 	[DefaultRegistryRoot("Software\\Microsoft\\VisualStudio\\11.0")]
+  [ProvideService(typeof(ClojureLanguage), ServiceName = ClojureLanguage.CLOJURE_LANGUAGE_NAME)]
+  [ProvideLanguageService(typeof(ClojureLanguage), ClojureLanguage.CLOJURE_LANGUAGE_NAME, 100, CodeSense = true, DefaultToInsertSpaces = true, EnableCommenting = true, MatchBraces = true, MatchBracesAtCaret = true, ShowCompletion = true, ShowMatchingBrace = true, QuickInfo = true, AutoOutlining = true, DebuggerLanguageExpressionEvaluator = ClojureLanguage.CLOJURE_LANGUAGE_GUID)]
+  [ProvideLanguageExtension(typeof(ClojureLanguage), ClojureLanguage.CLJ_FILE_EXTENSION)]
+  [ProvideLanguageExtension(typeof(ClojureLanguage), ClojureLanguage.CLJS_FILE_EXTENSION)]
+  [ProvideIntellisenseProvider(typeof(ClojureIntellisenseProvider), ClojureLanguage.CLOJURE_CODE_PROVIDER, ClojureLanguage.CLOJURE_LANGUAGE_NAME, ClojureLanguage.CLJ_FILE_EXTENSION, ClojureLanguage.CLOJURE_LANGUAGE_NAME, ClojureLanguage.CLOJURE_TEMPLATE_FOLDER_NAME)]
+  [ProvideIntellisenseProvider(typeof(ClojureIntellisenseProvider), ClojureLanguage.CLOJURE_CODE_PROVIDER, ClojureLanguage.CLOJURE_LANGUAGE_NAME, ClojureLanguage.CLJS_FILE_EXTENSION, ClojureLanguage.CLOJURE_LANGUAGE_NAME, ClojureLanguage.CLOJURE_TEMPLATE_FOLDER_NAME)]
+  [ProvideObject(typeof(ClojureIntellisenseProvider))]
+  [RegisterSnippetsAttribute(ClojureLanguage.CLOJURE_LANGUAGE_GUID, false, 131, ClojureLanguage.CLOJURE_LANGUAGE_NAME, @"CodeSnippets\SnippetsIndex.xml", @"CodeSnippets\Snippets\", @"CodeSnippets\Snippets\")]
 	[ProvideObject(typeof(GeneralPropertyPageAdapter))]
 	[ProvideProjectFactory(typeof(ClojureProjectFactory), "Clojure", "Clojure Project Files (*.cljproj);*.cljproj", "cljproj", "cljproj", @"Templates\Projects", LanguageVsTemplate = "Clojure", NewProjectRequireNewFolderVsTemplate = false)]
 	[ProvideProjectItem(typeof(ClojureProjectFactory), "Clojure Items", @"Templates\ProjectItems\Clojure", 500)]
 	[ProvideMenuResource("Menus.ctmenu", 1)]
 	[ProvideToolWindow(typeof(ReplToolWindow))]
 	[ProvideAutoLoad(VSConstants.UICONTEXT.NoSolution_string)]
+  [RegisterExpressionEvaluator(typeof(ExpressionEvaluator), ClojureLanguage.CLOJURE_LANGUAGE_NAME, ExpressionEvaluator.CLOJURE_DEBUG_EXPRESSION_EVALUATOR_GUID, ExpressionEvaluator.MICROSOFT_VENDOR_GUID)]
 	public sealed class ClojurePackage : ProjectPackage
 	{
 		public const string PackageGuid = "7712178c-977f-45ec-adf6-e38108cc7739";
@@ -102,7 +112,14 @@ namespace ClojureExtension.Deployment
 	  {
       new System.Threading.Thread(() =>
 	    {
+        try
+        {
         _metadata = new Metadata(); // SlowLoadingProcess for the 1st time.
+        }
+        catch
+        {
+          //ignore exception to prevent crashing visual studio
+        }
       }).Start();
 
       _errorListHelper = new ErrorListHelper();
@@ -307,9 +324,19 @@ namespace ClojureExtension.Deployment
 					newProcess.WaitForExit();
 				}
 
+        _errorListHelper.ClearErrors(filePath);
+
 				if (!string.IsNullOrWhiteSpace(standardError))
 				{
 					standardError = string.Format("/*{0}{1}{0}*/{0}", Environment.NewLine, standardError);
+
+          List<string> compilerErrors = new Regex("^Exception in thread \"main\" [^:]*:(.*)compiling:\\(.:[^:]*:([0-9]*):([0-9]*)\\)", RegexOptions.Multiline).Matches(standardError, 0).Cast<Match>().Select(x => string.Format("({0}, {1}, {0}, {1}): {2}", x.Groups[2].Value, x.Groups[3].Value, x.Groups[1].Value)).ToList();
+          compilerErrors.AddRange(new Regex("^Caused by:[^:]*:(.*)", RegexOptions.Multiline).Matches(standardError, 0).Cast<Match>().Select(x => x.Groups[1].Value).ToList());
+
+          foreach (string compilerError in compilerErrors)
+          {
+            _errorListHelper.Write(TaskCategory.BuildCompile, TaskErrorCategory.Error, compilerError, filePath);
+          }
 				}
 
 				if (!OPTIMIZE_COMPILED_JAVASCRIPT && !string.IsNullOrWhiteSpace(standardOutput))
@@ -438,6 +465,8 @@ namespace ClojureExtension.Deployment
 						projectItem.ContainingProject.ProjectItems.AddFromFile(outputFilePath);
 						ProjectItem newProjectItem = dte.Solution.FindProjectItem(outputFilePath);
 					}
+
+
 				});
 		}
 

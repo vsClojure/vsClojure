@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+	<CodeSnippet Format="1.0.0">
+		<Header>
+			<Title>Generate Class</Title>
+			<Shortcut>genclass</Shortcut>
+			<Description>Code snippet for Generate Class</Description>
+			<Author>vsClojure</Author>
+			<SnippetTypes>
+				<SnippetType>Expansion</SnippetType>
+				<SnippetType>SurroundsWith</SnippetType>
+			</SnippetTypes>
+		</Header>
+		<Snippet>
+			<Declarations>
+				<Literal>
+					<ID>name</ID>
+					<ToolTip>Class name</ToolTip>
+					<Default>MyClass</Default>
+				</Literal>
+			</Declarations>
+			<Code Language="Clojure">
+<![CDATA[
+(ns $name$ (:require [clojure.core])
+  (:import (System.Linq Enumerable))
+     (:gen-class :main false
+    :name project.$name$
+    :methods [
+              [MyMethod [String] |System.Collections.Generic.IEnumerable`1[System.String]|]
+             ]
+    :constructors {[] []}
+  )
+)
+
+(defn -MyMethod [this myString]
+  (Enumerable/Cast (type-args System.String) (map #(%1) myString)
+)
+
+$selected$
+
+$end$
+]]>
+			</Code>
+		</Snippet>
+	</CodeSnippet>
+</CodeSnippets>

@@ -7,6 +7,8 @@ namespace ClojureExtension.Project.Launching
 {
 	public class LaunchParametersBuilder : IProvider<LaunchParameters>
 	{
+    private const string NATIVE_DEBUG_ENGINE_GUID = "3B476D35-A401-11D2-AAD4-00C04F990171";
+
 		private readonly ProjectNode _project;
 
 		public LaunchParametersBuilder(ProjectNode project)
@@ -26,9 +28,7 @@ namespace ClojureExtension.Project.Launching
 			frameworkPath = frameworkPath.TrimEnd(new[] {'\\'});
 			applicationPath = applicationPath.TrimEnd(new[] {'\\'});
 
-			Guid debugType = !string.IsNullOrEmpty(unmanagedDebugging) && unmanagedDebugging.ToLower() == "true"
-				? new Guid("{3B476D35-A401-11D2-AAD4-00C04F990171}")
-				: VSConstants.CLSID_ComPlusOnlyDebugEngine;
+		  Guid debugType = !string.IsNullOrEmpty(unmanagedDebugging) && unmanagedDebugging.ToLower() == "true" ? new Guid(NATIVE_DEBUG_ENGINE_GUID) : VSConstants.CLSID_ComPlusOnlyDebugEngine;
 
 			string runnerPath = frameworkPath + "\\Clojure.Main.exe";
 

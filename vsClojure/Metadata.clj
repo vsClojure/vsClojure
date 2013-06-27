@@ -4,7 +4,7 @@
   (:require [clojure.core])
   (:import (System.Linq Enumerable))
   (:import (System.Text.RegularExpressions Regex RegexOptions))
-  (:import (System.IO Directory SearchOption Path File FileInfo))
+  (:import (System.IO Directory SearchOption Path File FileInfo IOException))
   (:import (System.Reflection Assembly BindingFlags))
   (:import (Microsoft.VisualStudio.Language.Intellisense Completion))
   (:gen-class
@@ -213,13 +213,11 @@
       (compile-string code)
       nil
     )
-    (catch Exception e (conj
-      {:error (.Message e)} (select-all-location code))
-    )
+    (catch IOException _)
+    (catch Exception e (conj {:error (.Message e)} (select-all-location code)))
   )
 )
 
-;todo: add line numbers & put in format that's easy for Error List to display
 (defn parse-for-errors [code]
   (let* [
          codeWithoutStringsOrCommentsOrEscapedParenthesis (remove-strings-and-comments-and-escaped-parenthesis-from-code code)

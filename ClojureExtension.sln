@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClojureScript Code File", "
 EndProject
 Project("{985F20FF-87AE-45F6-86E0-1DBBF0224EB9}") = "vsClojure", "vsClojure\vsClojure.cljproj", "{8FE1995B-4B6D-4911-B563-A759467FDF53}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClojureExtension.Debugger", "ClojureExtension.Debugger\ClojureExtension.Debugger.csproj", "{7987C896-EAFD-4695-84D8-8A09F9E6E856}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -127,6 +129,16 @@ Global
 		{8FE1995B-4B6D-4911-B563-A759467FDF53}.Release|Mixed Platforms.Build.0 = Release|x86
 		{8FE1995B-4B6D-4911-B563-A759467FDF53}.Release|x86.ActiveCfg = Release|x86
 		{8FE1995B-4B6D-4911-B563-A759467FDF53}.Release|x86.Build.0 = Release|x86
+		{7987C896-EAFD-4695-84D8-8A09F9E6E856}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7987C896-EAFD-4695-84D8-8A09F9E6E856}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7987C896-EAFD-4695-84D8-8A09F9E6E856}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{7987C896-EAFD-4695-84D8-8A09F9E6E856}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{7987C896-EAFD-4695-84D8-8A09F9E6E856}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7987C896-EAFD-4695-84D8-8A09F9E6E856}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7987C896-EAFD-4695-84D8-8A09F9E6E856}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7987C896-EAFD-4695-84D8-8A09F9E6E856}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{7987C896-EAFD-4695-84D8-8A09F9E6E856}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{7987C896-EAFD-4695-84D8-8A09F9E6E856}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
