@@ -8,9 +8,9 @@ using Microsoft.VisualStudio.Utilities;
 
 namespace Microsoft.ClojureExtension.Editor.Classification
 {
-	[Export(typeof (IViewTaggerProvider))]
+	[Export(typeof(IViewTaggerProvider))]
 	[ContentType("Clojure")]
-	[TagType(typeof (ClassificationTag))]
+	[TagType(typeof(ClassificationTag))]
 	internal sealed class ClojureClassifierProvider : IViewTaggerProvider
 	{
 		[Export]

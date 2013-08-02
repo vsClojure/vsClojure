@@ -8,9 +8,9 @@
     <RootNamespace>$(MSBuildProjectName)</RootNamespace>
 		<AssemblyName>$(MSBuildProjectName)</AssemblyName>
     <ClojureCompiler>ClojureCLR</ClojureCompiler>
-		<ClojureVersion>1.5.0</ClojureVersion>
+    <ClojureVersion>1.5.0</ClojureVersion>
     <ClojureRuntimesDirectory>$(VSCLOJURE_RUNTIMES_DIR)\$(ClojureCompiler)-$(ClojureVersion)</ClojureRuntimesDirectory>
-		<StartupFile>program.exe</StartupFile>
+    <StartupFile>$(MSBuildProjectName)$(TargetExt)</StartupFile>
 		<StartupArguments></StartupArguments>
 	</PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -45,7 +45,7 @@
   </Target>
   <Target Name="GetCopyToOutputDirectoryItems" Returns="@(CopyToOutputDirectoryItemsWithTargetPath)">
     <ItemGroup>
-      <CopyToOutputDirectoryItems Include="$(TargetDir)\**\*.clj">
+      <CopyToOutputDirectoryItems Include="$(TargetDir)\$(MSBuildProjectName)$(TargetExt)">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </CopyToOutputDirectoryItems>
     </ItemGroup>
@@ -68,23 +68,18 @@
   </Target>
   <Target Name="GetTargetPath" DependsOnTargets="$(GetTargetPathDependsOn)" Returns="@(TargetPath)">
     <ItemGroup>
-      <TargetPath Include="$(TargetDir)\**\*.dll" />
+      <TargetPath Include="$(TargetDir)\$(MSBuildProjectName)$(TargetExt)" />
     </ItemGroup>
   </Target>
   <Target Name="CoreCompile">
     <PropertyGroup>
-      <ClojureNamespaces>@(Compile -> '%(RelativeDir)%(Filename)', ' ')</ClojureNamespaces>
+      <ClojureCompileIncludes>@(Compile -> '-i %(RelativeDir)%(Filename)', ' ')</ClojureCompileIncludes>
     </PropertyGroup>
     <Copy SourceFiles="@(Compile)" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" DestinationFiles="@(Compile -> '$(OutDir)%(RelativeDir)%(Filename)%(Extension)')"/>
-    <Exec WorkingDirectory="$(OutDir)" Command="&quot;$(ClojureRuntimesDirectory)\Clojure.Compile&quot; $(ClojureNamespaces.Replace('\', '.'))"/>
-    <RemoveDuplicates Inputs="@(Compile -> '$(OutDir)%(RelativeDir)')">
-      <Output TaskParameter="Filtered" ItemName="SourceDirectories"/>
-    </RemoveDuplicates>
+    <Exec WorkingDirectory="$(OutDir)" Command="&quot;$(ClojureRuntimesDirectory)\Clojure.Compile&quot; -o $(MSBuildProjectName)$(TargetExt) $(ClojureCompileIncludes.Replace('\', '.'))" />
     <ItemGroup>
-      <FileWrites Include="@(Compile -> '$(OutDir)%(RelativeDir)%(Filename)%(Extension)')"/>
-      <FileWrites Include="@(Compile -> '$(OutDir)%(RelativeDir)%(Filename)%(Extension).dll')"/>
-      <FileWrites Include="@(Compile -> '$(OutDir)%(RelativeDir)%(Filename)%(Extension).pdb')"/>
-      <FileWrites Include="@(SourceDirectories)"/>
+      <FileWrites Include="$(MSBuildProjectName)$(TargetExt)"/>
+      <FileWrites Include="$(MSBuildProjectName).pdb"/>
     </ItemGroup>
   </Target>
   <Target Name="BeforeBuild">

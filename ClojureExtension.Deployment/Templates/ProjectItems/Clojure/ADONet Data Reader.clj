@@ -2,7 +2,7 @@
 
 (System.Reflection.Assembly/LoadWithPartialName "System.Data")
 
-(defn read%namespace% [reader]
+(defn read%namespace%Row [reader]
   (loop [columnAccumulator {} columnIndex 0]
     (if (>= columnIndex (.FieldCount reader))
       columnAccumulator
@@ -19,10 +19,10 @@
        ]
     (def rows
       (if (.Read reader)
-        (loop [rowAccumulator [(readRow reader)]]
+        (loop [rowAccumulator [(read%namespace%Row reader)]]
           (if (not (.Read reader))
             rowAccumulator
-            (recur (conj rowAccumulator (readRow reader)))
+            (recur (conj rowAccumulator (read%namespace%Row reader)))
           )
         )
         []
