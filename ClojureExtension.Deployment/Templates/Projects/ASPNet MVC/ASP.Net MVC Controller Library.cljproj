@@ -73,10 +73,10 @@
   </Target>
   <Target Name="CoreCompile">
     <PropertyGroup>
-      <ClojureCompileIncludes>@(Compile -> '-i %(RelativeDir)%(Filename)', ' ')</ClojureCompileIncludes>
+      <ClojureCompileIncludes>@(Compile -> '-i &quot;%(RelativeDir)%(Filename)&quot;', ' ')</ClojureCompileIncludes>
     </PropertyGroup>
     <Copy SourceFiles="@(Compile)" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" DestinationFiles="@(Compile -> '$(OutDir)%(RelativeDir)%(Filename)%(Extension)')" />
-    <Exec WorkingDirectory="$(OutDir)" Command="&quot;$(ClojureRuntimesDirectory)\Clojure.Compile&quot; -o $(MSBuildProjectName)$(TargetExt) $(ClojureCompileIncludes.Replace('\', '.'))" />
+    <Exec WorkingDirectory="$(OutDir)" Command="&quot;$(ClojureRuntimesDirectory)\Clojure.Compile&quot; -o &quot;$(MSBuildProjectName)$(TargetExt)&quot; $(ClojureCompileIncludes.Replace('\', '.'))" />
     <ItemGroup>
       <FileWrites Include="$(MSBuildProjectName)$(TargetExt)"/>
       <FileWrites Include="$(MSBuildProjectName).pdb"/>
