@@ -6,6 +6,7 @@ namespace ClojureExtension.Parsing
 {
 	public class Lexer
 	{
+    //todo: get list by parsing core.clj for all functions?
 		private static readonly List<string> BuiltInFunctions = new List<string>()
 		{
 			"def", "if", "do", "let", "quote", "var", "fn", "loop",

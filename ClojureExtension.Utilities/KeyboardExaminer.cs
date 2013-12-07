@@ -9,7 +9,7 @@ namespace ClojureExtension.Utilities
 			return Keyboard.IsKeyDown(Key.LeftShift) | Keyboard.IsKeyDown(Key.RightShift);
 		}
 
-		public bool ControlIsDown()
+		public bool IsControlDown()
 		{
 			return Keyboard.IsKeyDown(Key.LeftCtrl) | Keyboard.IsKeyDown(Key.RightCtrl);
 		}

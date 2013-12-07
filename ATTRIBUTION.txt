@@ -1,15 +1,12 @@
 Project Type - Adapted the CustomProject example from the Managed Package Framework for Clojure.
-
 	MPF Team (http://mpfproj.codeplex.com/team/view)
 	Managed Package Framework (http://mpfproj.codeplex.com/)
 	Ms-PL (http://msdn.microsoft.com/en-us/library/aa721778.aspx)
 
-Clojure Images -
-
+Clojure Images
 	Clojure Project (http://clojure.org/)
 	Eclipse Public License v1.0 (http://opensource.org/licenses/eclipse-1.0.php)
 
-Clojure CLR - 1.2.0 - https://github.com/downloads/richhickey/clojure-clr/clojure-clr-1.2.0.zip
-
-	clojure-clr (https://github.com/richhickey/clojure-clr)
+Clojure CLR
+	clojure-clr (https://github.com/clojure/clojure-clr)
 	Eclipse Public License v1.0 (http://opensource.org/licenses/eclipse-1.0.php)

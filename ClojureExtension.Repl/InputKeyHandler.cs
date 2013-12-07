@@ -49,7 +49,13 @@ namespace ClojureExtension.Repl
 
 			if (_keyboardExaminer.IsArrowKey(e.Key)) return;
 			if (e.Key == Key.Home || e.Key == Key.End || e.Key == Key.PageUp || e.Key == Key.PageDown) return;
-			if (_interactiveTextBox.CaretIndex < _replEntity.CurrentState.PromptPosition) e.Handled = true;
+			if (_interactiveTextBox.CaretIndex < _replEntity.CurrentState.PromptPosition)
+			{
+        if (!(_keyboardExaminer.IsControlDown() && e.Key == Key.C))
+        {
+          e.Handled = true;
+        }
+			}
 
 			if (_interactiveTextBox.CaretIndex == _replEntity.CurrentState.PromptPosition && e.Key == Key.Back)
 			{

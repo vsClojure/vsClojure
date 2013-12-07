@@ -22,14 +22,29 @@ namespace ClojureExtension.Project.Configuration
 	public class GeneralPropertyPage : SettingsPage
 	{
 		private string _defaultNamespace;
+		private string _clojureCompiler;
 		private string _clojureVersion;
+    private string _outputType;
 		private string _targetFile;
 		private string _startupArguments;
-		private string _clojureLoadPath;
 
 		public GeneralPropertyPage()
 		{
 			Name = "General";
+		}
+
+		[Description("Clojure Compiler")]
+		[DisplayName("Clojure Compiler")]
+		[Category("Clojure")]
+		public string ClojureCompiler
+		{
+			get { return _clojureCompiler; }
+
+			set
+			{
+				_clojureCompiler = value;
+				IsDirty = true;
+			}
 		}
 
 		[Description("Clojure Version")]
@@ -45,6 +60,20 @@ namespace ClojureExtension.Project.Configuration
 				IsDirty = true;
 			}
 		}
+
+    [Description("OutputType")]
+    [DisplayName("OutputType")]
+    [Category("Clojure")]
+    public string OutputType
+    {
+      get { return _outputType; }
+
+      set
+      {
+        _outputType = value;
+        IsDirty = true;
+      }
+    }
 
 		[Category("Running")]
 		[DisplayName("Startup File")]
@@ -68,19 +97,6 @@ namespace ClojureExtension.Project.Configuration
 			set
 			{
 				_startupArguments = value;
-				IsDirty = true;
-			}
-		}
-
-		[Category("Running")]
-		[DisplayName("Clojure Load Path")]
-		[Description("Clojure Load Path")]
-		public string ClojureLoadPath
-		{
-			get { return _clojureLoadPath; }
-			set
-			{
-				_clojureLoadPath = value;
 				IsDirty = true;
 			}
 		}
@@ -109,19 +125,21 @@ namespace ClojureExtension.Project.Configuration
 		protected override void BindProperties()
 		{
 			_defaultNamespace = ProjectMgr.GetProjectProperty("RootNamespace", false);
+			_clojureCompiler = ProjectMgr.GetProjectProperty("ClojureCompiler", false);
 			_clojureVersion = ProjectMgr.GetProjectProperty("ClojureVersion", false);
+      _outputType = ProjectMgr.GetProjectProperty("OutputType", false);
 			_targetFile = ProjectMgr.GetProjectProperty("StartupFile", false);
 			_startupArguments = ProjectMgr.GetProjectProperty("StartupArguments", false);
-			_clojureLoadPath = ProjectMgr.GetProjectProperty("ClojureLoadPath", false);
 		}
 
 		protected override int ApplyChanges()
 		{
 			ProjectMgr.SetProjectProperty("RootNamespace", _defaultNamespace);
+			ProjectMgr.SetProjectProperty("ClojureCompiler", _clojureCompiler);
 			ProjectMgr.SetProjectProperty("ClojureVersion", _clojureVersion);
+      ProjectMgr.SetProjectProperty("OutputType", _outputType);
 			ProjectMgr.SetProjectProperty("StartupFile", _targetFile);
 			ProjectMgr.SetProjectProperty("StartupArguments", _startupArguments);
-			ProjectMgr.SetProjectProperty("ClojureLoadPath", _clojureLoadPath);
 			IsDirty = false;
 			return VSConstants.S_OK;
 		}

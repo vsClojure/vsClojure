@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SnippetCollection>
+  <Language Lang="Clojure" Guid="{C1591EC7-00F3-426B-8A62-9B10F3855288}">
+    <SnippetDir>
+      <OnOff>On</OnOff>
+      <Installed>true</Installed>
+      <Locale>1033</Locale>
+      <DirPath>.\Snippets\</DirPath>
+      <LocalizedName>Clojure</LocalizedName>
+    </SnippetDir>
+  </Language>
+</SnippetCollection>

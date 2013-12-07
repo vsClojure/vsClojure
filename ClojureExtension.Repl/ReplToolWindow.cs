@@ -15,7 +15,7 @@ namespace ClojureExtension.Repl
         }
 
         public ReplToolWindow()
-            : this(ReplUserInterfaceFactory.CreateTabControl())
+            : this(new ReplTabControl())
         {
         }
 

@@ -8,7 +8,6 @@ using ClojureExtension.Repl.Operations;
 using ClojureExtension.Utilities;
 using EnvDTE;
 using EnvDTE80;
-using Microsoft.ClojureExtension;
 using Microsoft.ClojureExtension.Editor;
 using Microsoft.ClojureExtension.Project.Hierarchy;
 using Microsoft.VisualStudio.ComponentModelHost;
@@ -36,20 +35,15 @@ namespace ClojureExtension.Repl
 
 		public void CreateRepl(string replPath, string projectPath)
 		{
-			var interactiveText = ReplUserInterfaceFactory.CreateInteractiveText();
-			var closeButton = ReplUserInterfaceFactory.CreateCloseButton();
-			var name = ReplUserInterfaceFactory.CreateTabLabel();
-			var grid = ReplUserInterfaceFactory.CreateTextBoxGrid(interactiveText);
-			var headerPanel = ReplUserInterfaceFactory.CreateHeaderPanel(name, closeButton);
-			var tabItem = ReplUserInterfaceFactory.CreateTabItem(headerPanel, grid);
-			var replProcess = CreateReplProcess(replPath, projectPath);
-			var replEntity = new Entity<ReplState> {CurrentState = new ReplState()};
+			var tabItem = new ReplTab();
+			var replProcess = ReplUtilities.CreateReplProcess(replPath, projectPath);
+			var replEntity = new Entity<ReplState> { CurrentState = new ReplState() };
 
-			WireUpTheTextBoxInputToTheReplProcess(interactiveText, replProcess, replEntity);
-			WireUpTheOutputOfTheReplProcessToTheTextBox(interactiveText, replProcess, replEntity);
-			WireUpTheReplEditorCommandsToTheEditor(interactiveText, replProcess, replEntity, tabItem);
+            WireUpTheTextBoxInputToTheReplProcess(tabItem.InteractiveText, replProcess, replEntity);
+            WireUpTheOutputOfTheReplProcessToTheTextBox(tabItem.InteractiveText, replProcess, replEntity);
+            WireUpTheReplEditorCommandsToTheEditor(tabItem.InteractiveText, replProcess, replEntity, tabItem);
 
-			closeButton.Click +=
+            tabItem.CloseButton.Click +=
 				(o, e) =>
 				{
 					replProcess.Kill();
@@ -67,7 +61,7 @@ namespace ClojureExtension.Repl
 			var menuCommandListWirer = new MenuCommandListWirer(
 				(OleMenuCommandService)_serviceProvider.GetService(typeof(IMenuCommandService)),
 				CreateMenuCommands(replProcess, replTextBox, replEntity),
-				() => dte.ActiveDocument != null && dte.ActiveDocument.FullName.ToLower().EndsWith(".clj") && _replManager.SelectedItem == tabItem);
+								() => dte.ActiveDocument != null && (dte.ActiveDocument.FullName.ToLower().EndsWith(".clj") || dte.ActiveDocument.FullName.ToLower().EndsWith(".cljs")) && _replManager.SelectedItem == tabItem);
 
 			dte.Events.WindowEvents.WindowActivated += (o, e) => menuCommandListWirer.TryToShowMenuCommands();
 			_replManager.SelectionChanged += (sender, eventData) => menuCommandListWirer.TryToShowMenuCommands();
@@ -114,7 +108,7 @@ namespace ClojureExtension.Repl
 
 		private List<MenuCommand> CreateMenuCommands(Process replProcess, TextBox interactiveText, Entity<ReplState> replEntity)
 		{
-			var dte = (DTE2) _serviceProvider.GetService(typeof (DTE));
+			var dte = (DTE2)_serviceProvider.GetService(typeof(DTE));
 
 			var loadSelectedFilesIntoRepl =
 				new LoadFilesIntoRepl(
@@ -135,40 +129,25 @@ namespace ClojureExtension.Repl
 					new ActiveFileProvider(dte),
 					_replToolWindow);
 
-			var componentModel = (IComponentModel) _serviceProvider.GetService(typeof (SComponentModel));
+			var componentModel = (IComponentModel)_serviceProvider.GetService(typeof(SComponentModel));
 
 			var namespaceParser = new NamespaceParser(NamespaceParser.NamespaceSymbols);
 
 			var activeTextBufferStateProvider =
 				new ActiveTextBufferStateProvider(
 					componentModel.GetService<IVsEditorAdaptersFactoryService>(),
-					(IVsTextManager) _serviceProvider.GetService(typeof (SVsTextManager)));
+					(IVsTextManager)_serviceProvider.GetService(typeof(SVsTextManager)));
 
 			var changeReplNamespace =
 				new ChangeReplNamespace(new ReplWriter(replProcess, new TextBoxWriter(interactiveText, replEntity)));
 
 			var menuCommands = new List<MenuCommand>();
-			menuCommands.Add(new MenuCommand((sender, args) => loadSelectedProjectIntoRepl.Execute(), new CommandID(Guids.GuidClojureExtensionCmdSet, 11)));
-			menuCommands.Add(new MenuCommand((sender, args) => loadSelectedFilesIntoRepl.Execute(), new CommandID(Guids.GuidClojureExtensionCmdSet, 12)));
-			menuCommands.Add(new MenuCommand((sender, args) => loadActiveFileIntoRepl.Execute(), new CommandID(Guids.GuidClojureExtensionCmdSet, 13)));
-			menuCommands.Add(new MenuCommand((sender, args) => changeReplNamespace.Execute(namespaceParser.Execute(activeTextBufferStateProvider.Get())), new CommandID(Guids.GuidClojureExtensionCmdSet, 14)));
-			menuCommands.Add(new MenuCommand((sender, args) => new ReplWriter(replProcess, new TextBoxWriter(interactiveText, replEntity)).WriteBehindTheSceneExpressionToRepl((string)dte.ActiveDocument.Selection.Text), new CommandID(Guids.GuidClojureExtensionCmdSet, 15)));
+            menuCommands.Add(new MenuCommand((sender, args) => loadSelectedProjectIntoRepl.Execute(), CommandIDs.LoadProjectIntoActiveRepl));
+            menuCommands.Add(new MenuCommand((sender, args) => loadSelectedFilesIntoRepl.Execute(), CommandIDs.LoadFileIntoActiveRepl));
+            menuCommands.Add(new MenuCommand((sender, args) => loadActiveFileIntoRepl.Execute(), CommandIDs.LoadActiveDocumentIntoRepl));
+            menuCommands.Add(new MenuCommand((sender, args) => changeReplNamespace.Execute(namespaceParser.Execute(activeTextBufferStateProvider.Get())), CommandIDs.SwitchReplNamespaceToActiveDocument));
+            menuCommands.Add(new MenuCommand((sender, args) => new ReplWriter(replProcess, new TextBoxWriter(interactiveText, replEntity)).WriteBehindTheSceneExpressionToRepl((string)dte.ActiveDocument.Selection.Text), CommandIDs.LoadSelectedTextIntoRepl));
 			return menuCommands;
-		}
-
-		private static Process CreateReplProcess(string replPath, string projectPath)
-		{
-			var process = new Process();
-			process.EnableRaisingEvents = true;
-			process.StartInfo = new ProcessStartInfo();
-			process.StartInfo.FileName = "\"" + replPath + "\\Clojure.Main.exe\"";
-			process.StartInfo.RedirectStandardOutput = true;
-			process.StartInfo.RedirectStandardInput = true;
-			process.StartInfo.RedirectStandardError = true;
-			process.StartInfo.CreateNoWindow = true;
-			process.StartInfo.UseShellExecute = false;
-			process.StartInfo.EnvironmentVariables["clojure.load.path"] = projectPath;
-			return process;
 		}
 	}
 }

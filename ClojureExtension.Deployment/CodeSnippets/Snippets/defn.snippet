@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+	<CodeSnippet Format="1.0.0">
+		<Header>
+			<Title>Defin Function</Title>
+			<Shortcut>defn</Shortcut>
+			<Description>Code snippet for define function</Description>
+			<Author>vsClojure</Author>
+			<SnippetTypes>
+				<SnippetType>Expansion</SnippetType>
+				<SnippetType>SurroundsWith</SnippetType>
+			</SnippetTypes>
+		</Header>
+		<Snippet>
+			<Declarations>
+				<Literal>
+					<ID>name</ID>
+					<ToolTip>Function name</ToolTip>
+					<Default>MyFunction</Default>
+				</Literal>
+			</Declarations>
+			<Code Language="Clojure">
+<![CDATA[
+(defn $name$ [$end$] $selected$)
+]]>
+			</Code>
+		</Snippet>
+	</CodeSnippet>
+</CodeSnippets>

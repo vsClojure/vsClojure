@@ -3,7 +3,8 @@
 	public enum StartupFileType
 	{
 		Executable,
-		Clojure,
+		ClojureCLR,
+		ClojureScript,
 		Unknown
 	}
 }

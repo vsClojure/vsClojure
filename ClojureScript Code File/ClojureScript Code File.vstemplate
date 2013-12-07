@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<VSTemplate Version="3.0.0" Type="Item" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+  <TemplateData>
+    <Name>ClojureScript Code File</Name>
+    <Description>Clojure compiled to JavaScript</Description>
+    <Icon>ClojureScript Code File.ico</Icon>
+    <TemplateID>7d4d6284-b9f9-4115-abd1-96259857780d</TemplateID>
+    <ProjectType>CSharp</ProjectType>
+    <RequiredFrameworkVersion>2.0</RequiredFrameworkVersion>
+    <NumberOfParentCategoriesToRollUp>1</NumberOfParentCategoriesToRollUp>
+    <DefaultName>ClojureScript.cljs</DefaultName>
+  </TemplateData>
+  <TemplateContent>
+    <ProjectItem ReplaceParameters="true">ClojureScript.cljs</ProjectItem>
+  </TemplateContent>
+</VSTemplate>

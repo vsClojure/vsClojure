@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{8fe1995b-4b6d-4911-b563-a759467fdf53}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>$(MSBuildProjectName)</RootNamespace>
+    <AssemblyName>$(MSBuildProjectName)</AssemblyName>
+    <ClojureCompiler>ClojureCLR</ClojureCompiler>
+    <ClojureVersion>1.5.0</ClojureVersion>
+    <ClojureRuntimesDirectory>$(VSCLOJURE_RUNTIMES_DIR)\$(ClojureCompiler)-$(ClojureVersion)</ClojureRuntimesDirectory>
+    <StartupFile></StartupFile>
+    <StartupArguments></StartupArguments>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug\</OutputPath>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>false</DebugSymbols>
+    <OutputPath>bin\Release\</OutputPath>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Clojure.dll">
+      <HintPath>$(ClojureRuntimesDirectory)\Clojure.dll</HintPath>
+    </Reference>
+    <Reference Include="mscorlib" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="HomeController.clj">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.Common.targets" />
+  <Target Name="CreateManifestResourceNames">
+  </Target>
+  <Target Name="GetCopyToOutputDirectoryItems" Returns="@(CopyToOutputDirectoryItemsWithTargetPath)">
+    <ItemGroup>
+      <CopyToOutputDirectoryItems Include="$(TargetDir)\$(MSBuildProjectName)$(TargetExt)">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </CopyToOutputDirectoryItems>
+    </ItemGroup>
+    <AssignTargetPath Files="@(CopyToOutputDirectoryItems)" RootFolder="$(TargetDir)">
+      <Output TaskParameter="AssignedFiles" ItemName="CopyToOutputDirectoryItemsWithTargetPath" />
+    </AssignTargetPath>
+  </Target>
+  <Target Name="AfterClean">
+    <CreateItem Include="$(OutDir)**\*.*; $(ProjectDir)\obj\**\*.*; $(IntermediateOutputPath)**\*.*" Exclude="**\bin\**\*.vshost.exe; $(IntermediateOutputPath)**\*.log">
+      <Output TaskParameter="Include" ItemName="AfterClean_FilesToDelete"/>
+    </CreateItem>
+    <Delete Files="@(AfterClean_FilesToDelete)" />
+    <CreateItem Include="$(ProjectDir)\obj\" >
+      <Output TaskParameter="Include" ItemName="AfterClean_DirectoriesToDelete" />
+    </CreateItem>
+    <CreateItem Include ="$(ProjectDir)\bin\" Condition="'$(TargetExt)' != '.exe'" >
+      <Output TaskParameter="Include" ItemName="AfterClean_DirectoriesToDelete"/>
+    </CreateItem>
+    <RemoveDir ContinueOnError="true" Directories="@(AfterClean_DirectoriesToDelete)" />
+  </Target>
+  <Target Name="GetTargetPath" DependsOnTargets="$(GetTargetPathDependsOn)" Returns="@(TargetPath)">
+    <ItemGroup>
+      <TargetPath Include="$(TargetDir)\$(MSBuildProjectName)$(TargetExt)" />
+    </ItemGroup>
+  </Target>
+  <Target Name="CoreCompile">
+    <PropertyGroup>
+      <ClojureCompileIncludes>@(Compile -> '-i &quot;%(RelativeDir)%(Filename)&quot;', ' ')</ClojureCompileIncludes>
+    </PropertyGroup>
+    <Copy SourceFiles="@(Compile)" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" DestinationFiles="@(Compile -> '$(OutDir)%(RelativeDir)%(Filename)%(Extension)')" />
+    <Exec WorkingDirectory="$(OutDir)" Command="&quot;$(ClojureRuntimesDirectory)\Clojure.Compile&quot; -o &quot;$(MSBuildProjectName)$(TargetExt)&quot; $(ClojureCompileIncludes.Replace('\', '.'))" />
+    <ItemGroup>
+      <FileWrites Include="$(MSBuildProjectName)$(TargetExt)"/>
+      <FileWrites Include="$(MSBuildProjectName).pdb"/>
+    </ItemGroup>
+  </Target>
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  <Target Name="CopyFilesToOutputDirectory"
+        DependsOnTargets="
+            ComputeIntermediateSatelliteAssemblies;
+            _CopyFilesMarkedCopyLocal;
+            _CopySourceItemsToOutputDirectory;
+            _CopyAppConfigFile;
+            _CopyManifestFiles;
+            _CheckForCompileOutputs;
+            _SGenCheckForOutputs">
+
+  </Target>
+</Project>
