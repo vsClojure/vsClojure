@@ -71,8 +71,6 @@ namespace ClojureExtension.Editor.Intellisense
         return;
       }
 
-      string fileNameBeingEdited = "";
-
       var caretPosition = session.TextView.Caret.Position.BufferPosition.Position;
       var tokenTriggeringIntellisense = _tokenizedBuffer.CurrentState.FindTokenAtIndex(caretPosition);
       if (caretPosition == tokenTriggeringIntellisense.IndexToken.StartIndex) tokenTriggeringIntellisense = tokenTriggeringIntellisense.Previous();

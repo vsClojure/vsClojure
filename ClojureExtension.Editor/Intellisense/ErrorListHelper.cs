@@ -102,7 +102,7 @@ namespace ClojureExtension.Editor.Intellisense
         uint itemid;
         openDoc.OpenDocumentViaProject(path, ref logicalView, out sp, out hier, out itemid, out frame);
       }
-      catch (Exception e)
+      catch (Exception)
       {
         return;
       }
@@ -122,7 +122,7 @@ namespace ClojureExtension.Editor.Intellisense
           {
             bufferProvider.GetTextBuffer(out lines);
           }
-          catch (Exception e)
+          catch (Exception)
           {
             return;
           }
