@@ -127,6 +127,9 @@
     <Content Include="CodeSnippets\SnippetsIndex.xml">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <Content Include="Microsoft.VisualStudio.Package.LanguageService.10.0.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <Content Include="Runtimes\ClojureCLR-1.5.0.zip">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
@@ -280,9 +283,9 @@
       <HintPath>..\Dependencies\Visual Studio SDK\Microsoft.VisualStudio.Language.Intellisense.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.OLE.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-    <Reference Include="Microsoft.VisualStudio.Package.LanguageService.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.VisualStudio.Package.LanguageService.10.0, Version=12.0.0.0, Culture=neutral, PublicKeyToken=d0a477b1756ef34d, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\Windows\Microsoft.NET\assembly\GAC_MSIL\Microsoft.VisualStudio.Package.LanguageService.10.0\v4.0_10.0.0.0__b03f5f7f11d50a3a\Microsoft.VisualStudio.Package.LanguageService.10.0.dll</HintPath>
+      <HintPath>..\..\..\Windows\Microsoft.NET\assembly\GAC_MSIL\Microsoft.VisualStudio.Package.LanguageService.10.0\v4.0_10.0.0.0__b03f5f7f11d50a3a\Microsoft.VisualStudio.Package.LanguageService.10.0.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Project, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b7ed17bb64a9597f, processorArchitecture=MSIL">
       <HintPath>..\Dependencies\Microsoft.VisualStudio.Project.dll</HintPath>

@@ -15,10 +15,6 @@
     <StartupArguments>
     </StartupArguments>
     <Name>vsClojure</Name>
-    <SccProjectName>SAK</SccProjectName>
-    <SccProvider>SAK</SccProvider>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccLocalPath>SAK</SccLocalPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -49,7 +45,7 @@
   </Target>
   <Target Name="GetCopyToOutputDirectoryItems" Returns="@(CopyToOutputDirectoryItemsWithTargetPath)">
     <ItemGroup>
-      <CopyToOutputDirectoryItems Include="$(TargetDir)\**\*.clj">
+      <CopyToOutputDirectoryItems Include="$(TargetDir)\$(MSBuildProjectName)$(TargetExt)">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </CopyToOutputDirectoryItems>
     </ItemGroup>
@@ -72,29 +68,33 @@
   </Target>
   <Target Name="GetTargetPath" DependsOnTargets="$(GetTargetPathDependsOn)" Returns="@(TargetPath)">
     <ItemGroup>
-      <TargetPath Include="$(TargetDir)\**\*.dll" />
+      <TargetPath Include="$(TargetDir)\$(MSBuildProjectName)$(TargetExt)" />
     </ItemGroup>
   </Target>
   <Target Name="CoreCompile">
     <PropertyGroup>
-      <ClojureNamespaces>@(Compile -> '%(RelativeDir)%(Filename)', ' ')</ClojureNamespaces>
+      <ClojureCompileIncludes>@(Compile -> '-i &quot;%(RelativeDir)%(Filename)&quot;', ' ')</ClojureCompileIncludes>
     </PropertyGroup>
     <Copy SourceFiles="@(Compile)" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" DestinationFiles="@(Compile -> '$(OutDir)%(RelativeDir)%(Filename)%(Extension)')" />
-    <Exec WorkingDirectory="$(OutDir)" Command="&quot;$(ClojureRuntimesDirectory)\Clojure.Compile&quot; $(ClojureNamespaces.Replace('\', '.'))" />
-    <RemoveDuplicates Inputs="@(Compile -> '$(OutDir)%(RelativeDir)')">
-      <Output TaskParameter="Filtered" ItemName="SourceDirectories" />
-    </RemoveDuplicates>
+    <Exec WorkingDirectory="$(OutDir)" Command="&quot;$(ClojureRuntimesDirectory)\Clojure.Compile&quot; -o &quot;$(MSBuildProjectName)$(TargetExt)&quot; $(ClojureCompileIncludes.Replace('\', '.'))" />
     <ItemGroup>
-      <FileWrites Include="@(Compile -> '$(OutDir)%(RelativeDir)%(Filename)%(Extension)')" />
-      <FileWrites Include="@(Compile -> '$(OutDir)%(RelativeDir)%(Filename)%(Extension).dll')" />
-      <FileWrites Include="@(Compile -> '$(OutDir)%(RelativeDir)%(Filename)%(Extension).pdb')" />
-      <FileWrites Include="@(SourceDirectories)" />
+      <FileWrites Include="$(MSBuildProjectName)$(TargetExt)"/>
+      <FileWrites Include="$(MSBuildProjectName).pdb"/>
     </ItemGroup>
   </Target>
   <Target Name="BeforeBuild">
   </Target>
   <Target Name="AfterBuild">
   </Target>
-  <Target Name="CopyFilesToOutputDirectory" DependsOnTargets="&#xD;&#xA;            ComputeIntermediateSatelliteAssemblies;&#xD;&#xA;            _CopyFilesMarkedCopyLocal;&#xD;&#xA;            _CopySourceItemsToOutputDirectory;&#xD;&#xA;            _CopyAppConfigFile;&#xD;&#xA;            _CopyManifestFiles;&#xD;&#xA;            _CheckForCompileOutputs;&#xD;&#xA;            _SGenCheckForOutputs">
+  <Target Name="CopyFilesToOutputDirectory"
+        DependsOnTargets="
+            ComputeIntermediateSatelliteAssemblies;
+            _CopyFilesMarkedCopyLocal;
+            _CopySourceItemsToOutputDirectory;
+            _CopyAppConfigFile;
+            _CopyManifestFiles;
+            _CheckForCompileOutputs;
+            _SGenCheckForOutputs">
+
   </Target>
 </Project>

@@ -4,9 +4,9 @@ Project:
 
 Description:
 
-	A Visual Studio 2012 Extension for ClojureCLR & ClojureScript.
+	A Visual Studio 2010, 2012, & 2013 Extension for ClojureCLR & ClojureScript.
 
-	Runtimes 1.5.0 (stable beta) available
+	Runtimes 1.5.0 available
 
 Features:
 
@@ -36,10 +36,7 @@ Notes:
 
 Source:
 
-	-original-
 	https://github.com/vsClojure/vsClojure
-	-fork-
-	https://github.com/speige/vsClojure
 
 Discussion:
 
@@ -52,10 +49,15 @@ Installing:
 
 Building:
 
-	1.) Install the Visual Studio 2012 SDK.
+	1.) Install the Visual Studio 2010, 2012, & 2013 SDK.
 	2.) Clone the vsClojure repository.
 	3.) Open the vsClojure solution.
 	4.) Build
+
+Note: There is a bug in the bindingRedirect in devenv.exe.config included in vs2013, breaking all extensions which use Microsoft.VisualStudio.Package.LanguageService.10.0.dll
+This causes it to attempt to load Microsoft.VisualStudio.Package.LanguageService.10.0, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a' (version 10 & 12 in same strong name), which does not exist.
+The .vsix includes an identical copy of the original .dll which has been resigned with a new strong name. The public key token does not match the original because the dll was not signed by Microsoft.
+Please vote to correct this vs2013 bug at http://connect.microsoft.com/VisualStudio/feedback/details/794961/previous-version-assemblies-cannot-load-in-visual-studio-2013-preview
 
 License:
 

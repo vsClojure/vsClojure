@@ -80,30 +80,38 @@ namespace ClojureExtension.Deployment
     Metadata _metadata;
     ErrorListHelper _errorListHelper;
 
-		protected override void Initialize()
+    protected override void Initialize()
 		{
-			base.Initialize();
+      base.Initialize();
+
 			_dte = (DTE2)GetService(typeof(DTE));
 
 			_dte.Events.DTEEvents.OnStartupComplete +=
 				() =>
 				{
-          bool restartRequired;
-          
-          AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainAssemblyResolve;
-					RegisterProjectFactory(new ClojureProjectFactory(this));
-					RegisterCommandMenuService();
-					HideAllClojureEditorMenuCommands();
-					ShowClojureProjectMenuCommands();
-					EnableTokenizationOfNewClojureBuffers();
-					SetupNewClojureBuffersWithSpacingOptions();
-					EnableMenuCommandsOnNewClojureBuffers();
-					UnzipRuntimes();
-          EnableSettingOfRuntimePathForNewClojureProjects(out restartRequired);
-
-          if (!restartRequired)
+          try
           {
-            AfterStartupComplete();
+            bool restartRequired;
+
+            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainAssemblyResolve;
+            RegisterProjectFactory(new ClojureProjectFactory(this));
+            RegisterCommandMenuService();
+            HideAllClojureEditorMenuCommands();
+            ShowClojureProjectMenuCommands();
+            EnableTokenizationOfNewClojureBuffers();
+            SetupNewClojureBuffersWithSpacingOptions();
+            EnableMenuCommandsOnNewClojureBuffers();
+            UnzipRuntimes();
+            EnableSettingOfRuntimePathForNewClojureProjects(out restartRequired);
+
+            if (!restartRequired)
+            {
+              AfterStartupComplete();
+            }
+          }
+          catch (Exception e)
+          {
+            MessageBox.Show("Unhandled Exception loading vsClojure : " + e.Message + System.Environment.NewLine + "Stack Trace: " + e.StackTrace);
           }
         };
 		}
@@ -127,8 +135,8 @@ namespace ClojureExtension.Deployment
     }
 
 		private void UnzipRuntimes()
-		{
-			try
+		{     
+      try
 			{
 				var runtimeBasePath = Path.Combine(GetDirectoryOfDeployedContents(), "Runtimes");
 				Directory.GetFiles(runtimeBasePath, "*.zip").ToList().ForEach(CompressionExtensions.ExtractZipToFreshSubDirectoryAndDelete);
@@ -158,7 +166,7 @@ namespace ClojureExtension.Deployment
 
 		private void EnableSettingOfRuntimePathForNewClojureProjects(out bool restartRequired)
 		{
-			string deployDirectory = GetDirectoryOfDeployedContents();
+      string deployDirectory = GetDirectoryOfDeployedContents();
 			string runtimePath = deployDirectory + "\\Runtimes";
 			string clrRuntimePath1_5_0 = string.Format("{0}\\{1}-{2}", runtimePath, Constants.CLOJURECLR, Constants.VERSION);
 
