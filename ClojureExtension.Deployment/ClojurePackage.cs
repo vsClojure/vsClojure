@@ -486,15 +486,20 @@ namespace ClojureExtension.Deployment
 			DTE2 dte = (DTE2)GetService(typeof(DTE));
 			IProvider<EnvDTE.Project> projectProvider = new SelectedProjectProvider(dte.Solution, dte.ToolWindows.SolutionExplorer);
 
-			menuCommandService.AddCommand(
-				new MenuCommand(
-					(sender, args) =>
-						new StartReplUsingProjectVersion(
-							new ReplFactory(replToolWindow.TabControl, replToolWindowFrame, this),
-							replToolWindowFrame,
-							() => new LaunchParametersBuilder((ProjectNode)projectProvider.Get().Object).Get().FrameworkPath,
-							new SelectedProjectProvider(dte.Solution, dte.ToolWindows.SolutionExplorer)).Execute(),
-                    CommandIDs.StartReplUsingProjectVersion));
+			var clojureCLRRuntime = Utilities.EnvironmentVariables.ClojureRuntime;
+
+			if (!string.IsNullOrEmpty(clojureCLRRuntime))
+			{
+				menuCommandService.AddCommand(
+					new MenuCommand(
+						(sender, args) =>
+							new StartReplUsingProjectVersion(
+								new ReplFactory(replToolWindow.TabControl, replToolWindowFrame, this),
+								replToolWindowFrame,
+								() => { return clojureCLRRuntime; },
+								new SelectedProjectProvider(dte.Solution, dte.ToolWindows.SolutionExplorer)).Execute(),
+						CommandIDs.StartReplUsingProjectVersion));
+			}
 		}
 
 		public override string ProductUserContext

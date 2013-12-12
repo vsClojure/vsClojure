@@ -23,7 +23,7 @@ namespace ClojureExtension.Repl
             base(null)
         {
             _replManager = replManager;
-            Caption = "Repl Manager";
+            Caption = "Clojure Repl Manager";
             BitmapResourceID = 301;
             BitmapIndex = 1;
             base.Content = _replManager;

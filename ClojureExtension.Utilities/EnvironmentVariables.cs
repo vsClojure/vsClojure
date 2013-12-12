@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace ClojureExtension.Utilities
 {
@@ -6,6 +7,17 @@ namespace ClojureExtension.Utilities
   {
     private const string VSCLOJURE_RUNTIMES_DIR = "VSCLOJURE_RUNTIMES_DIR";
     private const string CLOJURE_LOAD_PATH = "CLOJURE_LOAD_PATH";
+
+	public static string ClojureRuntime
+	{
+		get
+		{
+			return Environment.GetEnvironmentVariable("CLOJURE_LOAD_PATH")
+							  .Split(';')
+							  .Where(x => x.EndsWith(Constants.VERSION))
+							  .FirstOrDefault();
+		}
+	}
 
     public static string ClojureLoadPath
     {
