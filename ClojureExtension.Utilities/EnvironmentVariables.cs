@@ -12,7 +12,7 @@ namespace ClojureExtension.Utilities
 	{
 		get
 		{
-			return Environment.GetEnvironmentVariable("CLOJURE_LOAD_PATH")
+			return Environment.GetEnvironmentVariable(CLOJURE_LOAD_PATH)
 							  .Split(';')
 							  .Where(x => x.EndsWith(Constants.VERSION))
 							  .FirstOrDefault();
