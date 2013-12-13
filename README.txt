@@ -41,6 +41,8 @@ Source:
 Discussion:
 
 	http://gplus.to/clojureclr
+	
+	#vsclojure on irc.freenode.net
 
 Installing:
 
