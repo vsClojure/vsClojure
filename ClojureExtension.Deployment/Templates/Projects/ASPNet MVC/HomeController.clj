@@ -4,7 +4,7 @@
 ; Add a reference from your MVC web project to this project (as a project reference, not to a specific dll)
 ; The clojure compiler will generate many dlls [namespace].clj.dll & [classname].dll
 ; All the dlls & clj files should be automatically copied to the bin folder of the MVC web project which references this clojure project on run/build of the MVC web application project.
-; The vsClojure installer should have stored the core framework directory in the CLOJURE_LOAD_PATH environment variable pointing to C:\Users\[username]\AppData\Local\Microsoft\VisualStudio\11.0\Extensions\[randomCharacters]\Runtimes\1.5.0
+; The vsClojure installer should have stored the core framework directory in the VSCLOJURE_RUNTIMES_DIR environment variable pointing to C:\Users\[username]\AppData\Local\Microsoft\VisualStudio\11.0\Extensions\[randomCharacters]\Runtimes\
 
 (System.Reflection.Assembly/LoadWithPartialName "System.Web.Mvc")
 

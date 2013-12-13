@@ -178,18 +178,7 @@ namespace ClojureExtension.Deployment
 
 			string extensionsDirectory = Directory.GetParent(deployDirectory).FullName;
 
-      string clojureLoadPath = EnvironmentVariables.ClojureLoadPath ?? "";
-			List<string> loadPaths = clojureLoadPath.Split(new[] { Path.PathSeparator }, StringSplitOptions.RemoveEmptyEntries).Where(x => !x.Contains(extensionsDirectory)).ToList();
-			loadPaths.Insert(0, clrRuntimePath1_5_0);
-			string newClojureLoadPath = loadPaths.Aggregate((x, y) => x + Path.PathSeparator + y);
-
-      bool clojureLoadPathIncorrect = EnvironmentVariables.ClojureLoadPath != newClojureLoadPath;
-			if (clojureLoadPathIncorrect)
-			{
-        EnvironmentVariables.ClojureLoadPath = newClojureLoadPath;
-			}
-
-		  restartRequired = runtimePathIncorrect || clojureLoadPathIncorrect;
+		  restartRequired = runtimePathIncorrect;
       if (restartRequired)
       {
         MessageBox.Show("Setup of vsClojure complete.  Please restart Visual Studio.", "vsClojure Setup");
@@ -486,20 +475,20 @@ namespace ClojureExtension.Deployment
 			DTE2 dte = (DTE2)GetService(typeof(DTE));
 			IProvider<EnvDTE.Project> projectProvider = new SelectedProjectProvider(dte.Solution, dte.ToolWindows.SolutionExplorer);
 
-			var clojureCLRRuntime = Utilities.EnvironmentVariables.ClojureRuntime;
+      string frameworkPath = Path.Combine(Utilities.EnvironmentVariables.VsClojureRuntimesDir, "ClojureCLR-1.5.0");
+      try
+      {
+        frameworkPath = new LaunchParametersBuilder((ProjectNode)projectProvider.Get().Object).Get().FrameworkPath;
+      }
+      catch
+      {
+      }
 
-			if (!string.IsNullOrEmpty(clojureCLRRuntime))
-			{
-				menuCommandService.AddCommand(
-					new MenuCommand(
-						(sender, args) =>
-							new StartReplUsingProjectVersion(
-								new ReplFactory(replToolWindow.TabControl, replToolWindowFrame, this),
-								replToolWindowFrame,
-								() => { return clojureCLRRuntime; },
-								new SelectedProjectProvider(dte.Solution, dte.ToolWindows.SolutionExplorer)).Execute(),
-						CommandIDs.StartReplUsingProjectVersion));
-			}
+      SelectedProjectProvider selectedProjectProvider = new SelectedProjectProvider(dte.Solution, dte.ToolWindows.SolutionExplorer);
+      ReplFactory replFactory = new ReplFactory(replToolWindow.TabControl, replToolWindowFrame, this);
+      StartReplUsingProjectVersion replStartFunction = new StartReplUsingProjectVersion(replFactory, replToolWindowFrame, () => frameworkPath, selectedProjectProvider);
+
+      menuCommandService.AddCommand(new MenuCommand((sender, args) => replStartFunction.Execute(), CommandIDs.StartReplUsingProjectVersion));
 		}
 
 		public override string ProductUserContext

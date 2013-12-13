@@ -21,7 +21,6 @@ namespace ClojureExtension.Utilities
       process.StartInfo.RedirectStandardError = true;
       process.StartInfo.CreateNoWindow = true;
       process.StartInfo.UseShellExecute = false;
-      process.StartInfo.EnvironmentVariables["clojure_load_path"] = projectPath;
       return process;
     }    
   }

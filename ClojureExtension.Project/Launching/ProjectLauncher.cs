@@ -56,7 +56,6 @@ namespace ClojureExtension.Project.Launching
 			info.grfLaunch = (uint)__VSDBGLAUNCHFLAGS2.DBGLAUNCH_MergeEnv;
 			info.bstrArg = launchParameters.StartupArguments;
 			info.bstrRemoteMachine = launchParameters.RemoteDebugMachine;
-			info.bstrEnv = "clojure_load_path=" + launchParameters.FrameworkPath + "\0";
 			info.clsidCustom = launchParameters.DebugType;
 			return info;
 		}
