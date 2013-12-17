@@ -7,6 +7,6 @@
   (:gen-class))
 
 (defn -main [& args]
-  (println "Press enter to quit...")
-  (read-line)
-)
+  (println "Hello, World!")
+  (println "Press any to quit...")
+  (System.Console/ReadKey))
