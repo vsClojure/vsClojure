@@ -64,7 +64,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="ClearableMenuCommandService.cs" />
-    <Compile Include="ClojureIntellisenseProvider.cs" />
     <Compile Include="ClojureLanguage.cs" />
     <Compile Include="ClojurePackage.cs" />
     <Content Include="CodeSnippets\Snippets\defn.snippet">
@@ -125,9 +124,6 @@
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="CodeSnippets\SnippetsIndex.xml">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="Microsoft.VisualStudio.Package.LanguageService.10.0.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="Runtimes\ClojureCLR-1.5.0.zip">
