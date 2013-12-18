@@ -8,3 +8,5 @@ obj/
 *.suo
 Debug/
 Release/
+tmp*.dll
+ClojureScript.cljs.js

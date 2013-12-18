@@ -2,7 +2,6 @@
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Debugger.Interop;
-using Microsoft.Win32;
 
 namespace ClojureExtension.Debugger
 {

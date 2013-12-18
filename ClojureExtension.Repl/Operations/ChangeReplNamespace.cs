@@ -11,7 +11,7 @@
 
 		public void Execute(string ns)
 		{
-			_replWriter.WriteBehindTheSceneExpressionToRepl("(in-ns '" + ns + ")");
+			_replWriter.WriteBehindTheSceneExpressionToRepl(string.Format("(in-ns '{0})", ns));
 		}
 	}
 }

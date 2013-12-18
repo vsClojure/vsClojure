@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using ClojureExtension.Utilities.IO.FileSystem;
 using ICSharpCode.SharpZipLib.Zip;
