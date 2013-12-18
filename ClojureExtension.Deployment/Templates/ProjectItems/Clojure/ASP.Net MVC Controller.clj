@@ -15,13 +15,9 @@
     :main false
     :name MvcApplication1.Controllers.%namespace%
     :extends System.Web.Mvc.Controller
-    :methods [
-              [Index [] System.Web.Mvc.ActionResult]
-              ]
-    :constructors {[] []}
-  )
-)
+    :methods [[Index [] System.Web.Mvc.ActionResult]]
+    :constructors {[] []}))
 
 ;implementation
 
- (defn -Index [this] (.View this))
+(defn -Index [this] (.View this))

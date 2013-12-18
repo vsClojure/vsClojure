@@ -15,12 +15,8 @@
     :main false
     :name MvcApplication1.Controllers.HomeController
     :extends System.Web.Mvc.Controller
-    :methods [
-              [Index [] System.Web.Mvc.ActionResult]
-              ]
-    :constructors {[] []}
-  )
-)
+    :methods [[Index [] System.Web.Mvc.ActionResult]]
+    :constructors {[] []}))
 
 ;implementation
 

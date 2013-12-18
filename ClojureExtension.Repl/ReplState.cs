@@ -7,10 +7,7 @@ namespace ClojureExtension.Repl
 		private readonly int _promptPosition;
 		private readonly LinkedList<string> _history;
 
-		public ReplState() : this(0, new LinkedList<string>())
-		{
-			
-		}
+		public ReplState() : this(0, new LinkedList<string>()) { }
 
 		public ReplState(int promptPosition, LinkedList<string> history)
 		{

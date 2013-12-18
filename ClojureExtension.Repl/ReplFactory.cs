@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
-using System.Diagnostics;
 using System.Windows.Controls;
 using ClojureExtension.Parsing;
 using ClojureExtension.Repl.Operations;

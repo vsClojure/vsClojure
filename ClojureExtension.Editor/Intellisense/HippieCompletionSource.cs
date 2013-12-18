@@ -17,116 +17,116 @@ using Thread = System.Threading.Thread;
 
 namespace ClojureExtension.Editor.Intellisense
 {
-  public class HippieCompletionSource : ICompletionSource
-  {
-    private static IServiceProvider _serviceProvider;
-    private static Metadata _metadata;
-    public static void Initialize(IServiceProvider serviceProvider)
+    public class HippieCompletionSource : ICompletionSource
     {
-      _serviceProvider = serviceProvider;
-
-      new Thread(() =>
-      {
-        try
+        private static IServiceProvider _serviceProvider;
+        private static Metadata _metadata;
+        public static void Initialize(IServiceProvider serviceProvider)
         {
-        _metadata = new Metadata(); // SlowLoadingProcess for the 1st time.
-        }
-        catch
-        {
-          //ignore exception to prevent crashing visual studio
-        }
-      }).Start();
-    }
+            _serviceProvider = serviceProvider;
 
-    private readonly Entity<LinkedList<Token>> _tokenizedBuffer;
-    private DTE2 _dte;
-
-    public HippieCompletionSource(Entity<LinkedList<Token>> tokenizedBuffer)
-    {
-      _tokenizedBuffer = tokenizedBuffer;
-      _dte = (DTE2)_serviceProvider.GetService(typeof(DTE));
-    }
-
-    public void Dispose()
-    {
-    }
-
-    public List<EnvDTE.Project> GetProjects()
-    {
-      return ((Array)_dte.ActiveSolutionProjects).Cast<EnvDTE.Project>().ToList();
-    }
-
-    public List<Reference> GetAllProjectReferences()
-    {
-      List<EnvDTE.Project> projects = GetProjects();
-      List<Reference> clojureProjectReferences = projects.Select(x => x.Object).Where(x => x is ClojureProjectNode).Cast<ClojureProjectNode>().SelectMany(x => x.References.Cast<Reference>()).ToList();
-      List<Reference> otherProjectReferences = projects.Select(x => x.Object).Where(x => x is VSProject).Cast<VSProject>().SelectMany(x => x.References.Cast<Reference>()).ToList();
-      return clojureProjectReferences.Union(otherProjectReferences).ToList();
-    }
-
-    public void AugmentCompletionSession(ICompletionSession session, IList<CompletionSet> completionSets)
-    {
-      if (_metadata == null)
-      {
-        return;
-      }
-
-      var caretPosition = session.TextView.Caret.Position.BufferPosition.Position;
-      var tokenTriggeringIntellisense = _tokenizedBuffer.CurrentState.FindTokenAtIndex(caretPosition);
-      if (caretPosition == tokenTriggeringIntellisense.IndexToken.StartIndex) tokenTriggeringIntellisense = tokenTriggeringIntellisense.Previous();
-      var numberOfCharactersBeforeCursor = caretPosition - tokenTriggeringIntellisense.IndexToken.StartIndex;
-      var textFromSymbolBeforeCursor = tokenTriggeringIntellisense.IndexToken.Token.Text.Substring(0, numberOfCharactersBeforeCursor);
-
-      if (string.IsNullOrWhiteSpace(textFromSymbolBeforeCursor))
-      {
-        return;
-      }
-
-      var completions = new List<Completion>();
-
-      //todo: convert current file being edited to constantly try to compile in background thread & update metadatacache (allowing Clojure commands to present intellisense for file being edited)
-      //todo: add context sensitivity to filter for functions/variables depending on 1st argument to list or not & whether list is quoted or list starts with .. or ->
-      NamespaceParser namespaceParser = new NamespaceParser(NamespaceParser.NamespaceSymbols);
-      string namespaceOfFile = "";
-      try
-      {
-        namespaceOfFile = namespaceParser.Execute(_tokenizedBuffer.CurrentState);
-      }
-      catch { }
-
-      var currentIndexToken = _tokenizedBuffer.CurrentState.FindTokenAtIndex(0);
-
-      while (currentIndexToken != null)
-      {
-        if (currentIndexToken.IndexToken.StartIndex != tokenTriggeringIntellisense.IndexToken.StartIndex)
-        {
-          if (currentIndexToken.Node.Value.Type == TokenType.Symbol && currentIndexToken.Node.Value.Text.StartsWith(textFromSymbolBeforeCursor))
-          {
-            if (completions.Find(c => c.DisplayText == currentIndexToken.Node.Value.Text) == null)
+            new Thread(() =>
             {
-              completions.Add(new Completion(currentIndexToken.Node.Value.Text));
-            }
-          }
+                try
+                {
+                    _metadata = new Metadata(); // SlowLoadingProcess for the 1st time.
+                }
+                catch
+                {
+                    //ignore exception to prevent crashing visual studio
+                }
+            }).Start();
         }
 
-        currentIndexToken = currentIndexToken.Next();
-      }
+        private readonly Entity<LinkedList<Token>> _tokenizedBuffer;
+        private DTE2 _dte;
 
-      completions.AddRange(_metadata.LoadCoreCompletionsMatchingString(textFromSymbolBeforeCursor));
+        public HippieCompletionSource(Entity<LinkedList<Token>> tokenizedBuffer)
+        {
+            _tokenizedBuffer = tokenizedBuffer;
+            _dte = (DTE2)_serviceProvider.GetService(typeof(DTE));
+        }
 
-      //todo: load assemblies in separate appDomain
-      List<Reference> references = GetAllProjectReferences();
-      List<Assembly> referencedAssemblies = references.Select(x => Assembly.LoadFrom(x.Path)).ToList();
+        public void Dispose()
+        {
+        }
 
-      completions.AddRange(referencedAssemblies.SelectMany(x => _metadata.LoadCompletionsInAssemblyMatchingString(x, textFromSymbolBeforeCursor)));
+        public List<EnvDTE.Project> GetProjects()
+        {
+            return ((Array)_dte.ActiveSolutionProjects).Cast<EnvDTE.Project>().ToList();
+        }
 
-      //completions.AddRange(_metadata.LoadCompletionsInCljFileMatchingString(, textFromSymbolBeforeCursor));
+        public List<Reference> GetAllProjectReferences()
+        {
+            List<EnvDTE.Project> projects = GetProjects();
+            List<Reference> clojureProjectReferences = projects.Select(x => x.Object).Where(x => x is ClojureProjectNode).Cast<ClojureProjectNode>().SelectMany(x => x.References.Cast<Reference>()).ToList();
+            List<Reference> otherProjectReferences = projects.Select(x => x.Object).Where(x => x is VSProject).Cast<VSProject>().SelectMany(x => x.References.Cast<Reference>()).ToList();
+            return clojureProjectReferences.Union(otherProjectReferences).ToList();
+        }
 
-      var snapshot = session.TextView.TextSnapshot;
-      var start = new SnapshotPoint(snapshot, tokenTriggeringIntellisense.IndexToken.StartIndex);
-      var end = new SnapshotPoint(snapshot, start.Position + tokenTriggeringIntellisense.IndexToken.Token.Text.Length);
-      var applicableTo = snapshot.CreateTrackingSpan(new SnapshotSpan(start, end), SpanTrackingMode.EdgeInclusive);
-      completionSets.Add(new CompletionSet("All", "All", applicableTo, completions, new List<Completion>()));
+        public void AugmentCompletionSession(ICompletionSession session, IList<CompletionSet> completionSets)
+        {
+            if (_metadata == null)
+            {
+                return;
+            }
+
+            var caretPosition = session.TextView.Caret.Position.BufferPosition.Position;
+            var tokenTriggeringIntellisense = _tokenizedBuffer.CurrentState.FindTokenAtIndex(caretPosition);
+            if (caretPosition == tokenTriggeringIntellisense.IndexToken.StartIndex) tokenTriggeringIntellisense = tokenTriggeringIntellisense.Previous();
+            var numberOfCharactersBeforeCursor = caretPosition - tokenTriggeringIntellisense.IndexToken.StartIndex;
+            var textFromSymbolBeforeCursor = tokenTriggeringIntellisense.IndexToken.Token.Text.Substring(0, numberOfCharactersBeforeCursor);
+
+            if (string.IsNullOrWhiteSpace(textFromSymbolBeforeCursor))
+            {
+                return;
+            }
+
+            var completions = new List<Completion>();
+
+            //todo: convert current file being edited to constantly try to compile in background thread & update metadatacache (allowing Clojure commands to present intellisense for file being edited)
+            //todo: add context sensitivity to filter for functions/variables depending on 1st argument to list or not & whether list is quoted or list starts with .. or ->
+            NamespaceParser namespaceParser = new NamespaceParser(NamespaceParser.NamespaceSymbols);
+            string namespaceOfFile = "";
+            try
+            {
+                namespaceOfFile = namespaceParser.Execute(_tokenizedBuffer.CurrentState);
+            }
+            catch { }
+
+            var currentIndexToken = _tokenizedBuffer.CurrentState.FindTokenAtIndex(0);
+
+            while (currentIndexToken != null)
+            {
+                if (currentIndexToken.IndexToken.StartIndex != tokenTriggeringIntellisense.IndexToken.StartIndex)
+                {
+                    if (currentIndexToken.Node.Value.Type == TokenType.Symbol && currentIndexToken.Node.Value.Text.StartsWith(textFromSymbolBeforeCursor))
+                    {
+                        if (completions.Find(c => c.DisplayText == currentIndexToken.Node.Value.Text) == null)
+                        {
+                            completions.Add(new Completion(currentIndexToken.Node.Value.Text));
+                        }
+                    }
+                }
+
+                currentIndexToken = currentIndexToken.Next();
+            }
+
+            completions.AddRange(_metadata.LoadCoreCompletionsMatchingString(textFromSymbolBeforeCursor));
+
+            //todo: load assemblies in separate appDomain
+            List<Reference> references = GetAllProjectReferences();
+            List<Assembly> referencedAssemblies = references.Select(x => Assembly.LoadFrom(x.Path)).ToList();
+
+            completions.AddRange(referencedAssemblies.SelectMany(x => _metadata.LoadCompletionsInAssemblyMatchingString(x, textFromSymbolBeforeCursor)));
+
+            //completions.AddRange(_metadata.LoadCompletionsInCljFileMatchingString(, textFromSymbolBeforeCursor));
+
+            var snapshot = session.TextView.TextSnapshot;
+            var start = new SnapshotPoint(snapshot, tokenTriggeringIntellisense.IndexToken.StartIndex);
+            var end = new SnapshotPoint(snapshot, start.Position + tokenTriggeringIntellisense.IndexToken.Token.Text.Length);
+            var applicableTo = snapshot.CreateTrackingSpan(new SnapshotSpan(start, end), SpanTrackingMode.EdgeInclusive);
+            completionSets.Add(new CompletionSet("All", "All", applicableTo, completions, new List<Completion>()));
+        }
     }
-  }
 }

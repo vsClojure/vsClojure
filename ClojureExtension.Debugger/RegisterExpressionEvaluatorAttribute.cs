@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Runtime.InteropServices;
-using Microsoft.VisualStudio.Debugger.Interop;
 using Microsoft.VisualStudio.Shell;
-using Microsoft.Win32;
 
 namespace ClojureExtension.Debugger
 {
