@@ -132,6 +132,7 @@
     <Content Include="Runtimes\ClojureScript-1.5.0.zip">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <None Include="Runtimes\ClojureCLR-1.6.0.zip" />
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
     </None>

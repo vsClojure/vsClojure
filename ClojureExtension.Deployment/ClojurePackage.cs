@@ -1,13 +1,6 @@
-﻿/***************************************************************************
-
-Copyright (c) Microsoft Corporation. All rights reserved.
-This code is licensed under the Visual Studio SDK license terms.
-THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF
-ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY
-IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR
-PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
-
-***************************************************************************/
+﻿// MIT License Copyright 2010-2013 jmis
+// See LICENSE.txt or http://opensource.org/licenses/MIT
+// See AUTHORS.txt for a complete list of all contributors
 
 using System;
 using System.Collections.Generic;
