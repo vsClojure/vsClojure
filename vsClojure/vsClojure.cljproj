@@ -95,6 +95,5 @@
             _CopyManifestFiles;
             _CheckForCompileOutputs;
             _SGenCheckForOutputs">
-
   </Target>
 </Project>

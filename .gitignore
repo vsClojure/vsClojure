@@ -10,3 +10,4 @@ Debug/
 Release/
 tmp*.dll
 ClojureScript.cljs.js
+UpgradeLog.htm
