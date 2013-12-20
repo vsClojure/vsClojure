@@ -1,4 +1,8 @@
-﻿using ClojureExtension.Utilities;
+﻿// MIT License Copyright 2010-2013 jmis
+// See LICENSE.txt or http://opensource.org/licenses/MIT
+// See AUTHORS.txt for a complete list of all contributors
+
+using ClojureExtension.Utilities;
 using Microsoft.ClojureExtension.Editor.Options;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
