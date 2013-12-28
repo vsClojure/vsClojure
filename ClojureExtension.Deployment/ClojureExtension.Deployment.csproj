@@ -126,6 +126,7 @@
     <Content Include="CodeSnippets\SnippetsIndex.xml">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <Content Include="Microsoft.VisualStudio.Package.LanguageService.10.0.dll" />
     <Content Include="Runtimes\ClojureCLR-1.5.0.zip">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>

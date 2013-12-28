@@ -466,14 +466,12 @@ namespace ClojureExtension.Deployment
         IProvider<EnvDTE.Project> projectProvider = new SelectedProjectProvider(dte.Solution, dte.ToolWindows.SolutionExplorer);
 
         string frameworkPath = Path.Combine(Utilities.EnvironmentVariables.VsClojureRuntimesDir, "ClojureCLR-1.5.0");
-        try
+        
+				try
         {
           frameworkPath = new LaunchParametersBuilder((ProjectNode)projectProvider.Get().Object).Get().FrameworkPath;
         }
-        catch (Exception ex)
-        {
-          MessageBox.Show(string.Format("ShowClojureProjectMenuCommands (LaunchParametersBuilder) : {0}", ex.Message));
-        }
+        catch { }
 
         SelectedProjectProvider selectedProjectProvider = new SelectedProjectProvider(dte.Solution, dte.ToolWindows.SolutionExplorer);
         ReplFactory replFactory = new ReplFactory(replToolWindow.TabControl, replToolWindowFrame, this);
