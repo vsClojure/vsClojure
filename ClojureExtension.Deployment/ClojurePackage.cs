@@ -153,27 +153,26 @@ namespace ClojureExtension.Deployment
 
 		private void EnableSettingOfRuntimePathForNewClojureProjects(out bool restartRequired)
 		{
-			// FH: I'm not really a fan of this method but it beats registry settings
-			//     mainly because now if vsClojure is uninstalled the temp file I'm 
-			//     creating after restarting for the first time will be removed and
-			//     that would eliminate adding/removing to the registry.
+      string deployDirectory = GetDirectoryOfDeployedContents();
+      string runtimePath = string.Format(@"{0}\Runtimes", deployDirectory);
+      bool runtimePathIncorrect = EnvironmentVariables.VsClojureRuntimesDir != runtimePath;
+      if (runtimePathIncorrect)
+      {
+        EnvironmentVariables.VsClojureRuntimesDir = runtimePath;
+      }
 
-			string deployedPath = GetDirectoryOfDeployedContents();
-			string runtimePath = string.Format(@"{0}\Runtimes", deployedPath);
-			bool hasVSRestartedAfterInstall = File.Exists(string.Format(@"{0}\restarted.txt", deployedPath));
-
-			restartRequired = !hasVSRestartedAfterInstall;
-
-			if (!hasVSRestartedAfterInstall)
-				File.CreateText(string.Format(@"{0}\restarted.txt", deployedPath));
-
+      restartRequired = runtimePathIncorrect;
 			if (restartRequired)
 			{
-				if (MessageBox.Show("Setup of vsClojure complete.  Please restart Visual Studio.", "vsClojure Setup") == DialogResult.OK)
-				{
-					var shell = (IVsShell4)GetService(typeof(SVsShell));
-					shell.Restart((uint)__VSRESTARTTYPE.RESTART_Normal);
-				}
+        if (MessageBox.Show("Would you like to view the vsClojure ReadMe.txt", "vsClojure Readme.txt", MessageBoxButtons.YesNo) == DialogResult.Yes)
+        {
+          string pathToReadme = string.Format(@"{0}\ReadMe.txt", deployDirectory);
+          Process.Start("notepad.exe", pathToReadme);
+        }
+
+        MessageBox.Show("Setup of vsClojure complete. Visual Studio will now restart.", "vsClojure Setup");
+				var shell = (IVsShell4)GetService(typeof(SVsShell));
+				shell.Restart((uint)__VSRESTARTTYPE.RESTART_Normal);
 			}
 		}
 
