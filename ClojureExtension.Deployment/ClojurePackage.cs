@@ -83,18 +83,18 @@ namespace ClojureExtension.Deployment
 							bool restartRequired;
 
 							AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainAssemblyResolve;
-							RegisterProjectFactory(new ClojureProjectFactory(this));
-							RegisterCommandMenuService();
-							HideAllClojureEditorMenuCommands();
-							ShowClojureProjectMenuCommands();
-							EnableTokenizationOfNewClojureBuffers();
-							SetupNewClojureBuffersWithSpacingOptions();
-							EnableMenuCommandsOnNewClojureBuffers();
-							UnzipRuntimes();
-							EnableSettingOfRuntimePathForNewClojureProjects(out restartRequired);
 
-							if (!restartRequired)
-								AfterStartupComplete();
+              EnableSettingOfRuntimePathForNewClojureProjects();
+              UnzipRuntimes();
+              RegisterProjectFactory(new ClojureProjectFactory(this));
+              RegisterCommandMenuService();
+              HideAllClojureEditorMenuCommands();
+              ShowClojureProjectMenuCommands();
+              EnableTokenizationOfNewClojureBuffers();
+              SetupNewClojureBuffersWithSpacingOptions();
+              EnableMenuCommandsOnNewClojureBuffers();
+                
+              AfterStartupComplete();
 						}
 						catch (Exception e)
 						{
@@ -151,29 +151,22 @@ namespace ClojureExtension.Deployment
 			commandRegistry.RegisterPriorityCommandTarget(0, _thirdPartyEditorCommands, out cookie);
 		}
 
-		private void EnableSettingOfRuntimePathForNewClojureProjects(out bool restartRequired)
+		private void EnableSettingOfRuntimePathForNewClojureProjects()
 		{
       string deployDirectory = GetDirectoryOfDeployedContents();
       string runtimePath = string.Format(@"{0}\Runtimes", deployDirectory);
-      bool runtimePathIncorrect = EnvironmentVariables.VsClojureRuntimesDir != runtimePath;
-      if (runtimePathIncorrect)
+      
+      bool firstInstall = string.Compare(EnvironmentVariables.VsClojureRuntimesDir, runtimePath, true) != 0;
+      if (firstInstall)
       {
         EnvironmentVariables.VsClojureRuntimesDir = runtimePath;
-      }
 
-      restartRequired = runtimePathIncorrect;
-			if (restartRequired)
-			{
         if (MessageBox.Show("Would you like to view the vsClojure ReadMe.txt", "vsClojure Readme.txt", MessageBoxButtons.YesNo) == DialogResult.Yes)
         {
           string pathToReadme = string.Format(@"{0}\ReadMe.txt", deployDirectory);
           Process.Start("notepad.exe", pathToReadme);
         }
-
-        MessageBox.Show("Setup of vsClojure complete. Visual Studio will now restart.", "vsClojure Setup");
-				var shell = (IVsShell4)GetService(typeof(SVsShell));
-				shell.Restart((uint)__VSRESTARTTYPE.RESTART_Normal);
-			}
+      }
 		}
 
 		private void HideAllClojureEditorMenuCommands()
@@ -462,17 +455,22 @@ namespace ClojureExtension.Deployment
 			DTE2 dte = (DTE2)GetService(typeof(DTE));
 			IProvider<EnvDTE.Project> projectProvider = new SelectedProjectProvider(dte.Solution, dte.ToolWindows.SolutionExplorer);
 
-			string frameworkPath = Path.Combine(Utilities.EnvironmentVariables.VsClojureRuntimesDir, "ClojureCLR-1.5.0");
-
-			try
-			{
-				frameworkPath = new LaunchParametersBuilder((ProjectNode)projectProvider.Get().Object).Get().FrameworkPath;
-			}
-			catch { }
-
 			SelectedProjectProvider selectedProjectProvider = new SelectedProjectProvider(dte.Solution, dte.ToolWindows.SolutionExplorer);
 			ReplFactory replFactory = new ReplFactory(replToolWindow.TabControl, replToolWindowFrame, this);
-			StartReplUsingProjectVersion replStartFunction = new StartReplUsingProjectVersion(replFactory, replToolWindowFrame, () => frameworkPath, selectedProjectProvider);
+      StartReplUsingProjectVersion replStartFunction = new StartReplUsingProjectVersion(replFactory, replToolWindowFrame,
+        () =>
+        {
+          string frameworkPath = Path.Combine(Utilities.EnvironmentVariables.VsClojureRuntimesDir, "ClojureCLR-1.5.0");
+
+          try
+          {
+            frameworkPath = new LaunchParametersBuilder((ProjectNode)projectProvider.Get().Object).Get().FrameworkPath;
+          }
+          catch { }
+
+          return frameworkPath;
+        }
+      , selectedProjectProvider);
 
 			menuCommandService.AddCommand(new MenuCommand((sender, args) => replStartFunction.Execute(), CommandIDs.StartReplUsingProjectVersion));
 		}

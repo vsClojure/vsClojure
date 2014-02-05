@@ -14,7 +14,12 @@ namespace ClojureExtension.Utilities
     public static string VsClojureRuntimesDir
     {
       get { return Environment.GetEnvironmentVariable(VSCLOJURE_RUNTIMES_DIR); }
-      set { Environment.SetEnvironmentVariable(VSCLOJURE_RUNTIMES_DIR, value, EnvironmentVariableTarget.User); }
+      set
+      {
+        //Set the environment variable on the current process to avoid the need to restart. Set it for the User to allow it to persist for the next visual studio load.
+        Environment.SetEnvironmentVariable(VSCLOJURE_RUNTIMES_DIR, value, EnvironmentVariableTarget.User);
+        Environment.SetEnvironmentVariable(VSCLOJURE_RUNTIMES_DIR, value, EnvironmentVariableTarget.Process);
+      }
     }
   }
 }
