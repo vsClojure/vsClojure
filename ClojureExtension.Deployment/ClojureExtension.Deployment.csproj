@@ -60,7 +60,7 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\Key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="ClearableMenuCommandService.cs" />
@@ -110,7 +110,7 @@
     <Content Include="CodeSnippets\Snippets\doto.snippet">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <None Include="Key.snk" />
+    <None Include="..\Key.snk" />
     <Content Include="..\DLR-License.html">
       <Link>DLR-License.html</Link>
       <IncludeInVSIX>true</IncludeInVSIX>

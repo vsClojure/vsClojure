@@ -34,7 +34,7 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\Key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EnvDTE, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -119,7 +119,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Key.snk" />
+    <None Include="..\Key.snk" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="ReplTab.xaml">
