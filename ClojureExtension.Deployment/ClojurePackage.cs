@@ -80,8 +80,6 @@ namespace ClojureExtension.Deployment
 					{
 						try
 						{
-							bool restartRequired;
-
 							AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainAssemblyResolve;
 
               EnableSettingOfRuntimePathForNewClojureProjects();
