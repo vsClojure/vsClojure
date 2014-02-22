@@ -25,21 +25,18 @@ namespace ClojureExtension.Repl
 {
 	public class ReplFactory
 	{
-		private readonly TabControl _replManager;
-		private readonly IVsWindowFrame _replToolWindow;
-		private readonly IServiceProvider _serviceProvider;
+    public TabControl ReplManager { get; set; }
+    public IVsWindowFrame ReplToolWindow { get; set; }
+    private readonly IServiceProvider _serviceProvider;
 
-		public ReplFactory(TabControl replManager, IVsWindowFrame replToolWindow, IServiceProvider serviceProvider)
+    public ReplFactory(IServiceProvider serviceProvider)
 		{
-			_replManager = replManager;
-			_replToolWindow = replToolWindow;
 			_serviceProvider = serviceProvider;
 		}
 
-		public void CreateRepl(string replPath, string projectPath)
+		public void CreateRepl(Process replProcess)
 		{
 			var tabItem = new ReplTab();
-			var replProcess = ReplUtilities.CreateReplProcess(replPath, projectPath);
 			var replEntity = new Entity<ReplState> { CurrentState = new ReplState() };
 
 			WireUpTheTextBoxInputToTheReplProcess(tabItem.InteractiveText, replProcess, replEntity);
@@ -50,11 +47,12 @@ namespace ClojureExtension.Repl
 			(o, e) =>
 			{
 				replProcess.Kill();
-				_replManager.Items.Remove(tabItem);
+				ReplManager.Items.Remove(tabItem);
 			};
 
-			_replManager.Items.Add(tabItem);
-			_replManager.SelectedItem = tabItem;
+			ReplManager.Items.Add(tabItem);
+			ReplManager.SelectedItem = tabItem;
+		  ReplToolWindow.Show();
 		}
 
 		private void WireUpTheReplEditorCommandsToTheEditor(TextBox replTextBox, Process replProcess, Entity<ReplState> replEntity, TabItem tabItem)
@@ -64,10 +62,10 @@ namespace ClojureExtension.Repl
 			var menuCommandListWirer = new MenuCommandListWirer(
 				(OleMenuCommandService)_serviceProvider.GetService(typeof(IMenuCommandService)),
 				CreateMenuCommands(replProcess, replTextBox, replEntity),
-								() => dte.ActiveDocument != null && (dte.ActiveDocument.FullName.ToLower().EndsWith(".clj") || dte.ActiveDocument.FullName.ToLower().EndsWith(".cljs")) && _replManager.SelectedItem == tabItem);
+								() => dte.ActiveDocument != null && (dte.ActiveDocument.FullName.ToLower().EndsWith(".clj") || dte.ActiveDocument.FullName.ToLower().EndsWith(".cljs")) && ReplManager.SelectedItem == tabItem);
 
 			dte.Events.WindowEvents.WindowActivated += (o, e) => menuCommandListWirer.TryToShowMenuCommands();
-			_replManager.SelectionChanged += (sender, eventData) => menuCommandListWirer.TryToShowMenuCommands();
+			ReplManager.SelectionChanged += (sender, eventData) => menuCommandListWirer.TryToShowMenuCommands();
 		}
 
 		private static void WireUpTheTextBoxInputToTheReplProcess(TextBox replTextBox, Process replProcess, Entity<ReplState> replEntity)
@@ -117,20 +115,20 @@ namespace ClojureExtension.Repl
 				new LoadFilesIntoRepl(
 					new ReplWriter(replProcess, new TextBoxWriter(interactiveText, replEntity)),
 					new SelectedFilesProvider(dte.ToolWindows.SolutionExplorer),
-					_replToolWindow);
+					ReplToolWindow);
 
 			var loadSelectedProjectIntoRepl =
 				new LoadFilesIntoRepl(
 					new ReplWriter(replProcess, new TextBoxWriter(interactiveText, replEntity)),
 					new ProjectFilesProvider(
 						new SelectedProjectProvider(dte.Solution, dte.ToolWindows.SolutionExplorer)),
-					_replToolWindow);
+					ReplToolWindow);
 
 			var loadActiveFileIntoRepl =
 				new LoadFilesIntoRepl(
 					new ReplWriter(replProcess, new TextBoxWriter(interactiveText, replEntity)),
 					new ActiveFileProvider(dte),
-					_replToolWindow);
+					ReplToolWindow);
 
 			var componentModel = (IComponentModel)_serviceProvider.GetService(typeof(SComponentModel));
 

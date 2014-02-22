@@ -29,17 +29,12 @@ namespace ClojureExtension.Editor.Intellisense
         {
             _serviceProvider = serviceProvider;
 
-            new Thread(() =>
-            {
-                try
-                {
-                    _metadata = new Metadata(); // SlowLoadingProcess for the 1st time.
-                }
-                catch
-                {
-                    //ignore exception to prevent crashing visual studio
-                }
-            }).Start();
+          Thread delayedLoadMetadataThread = new Thread(() =>
+          {
+            _metadata = new Metadata(); // SlowLoadingProcess for the 1st time.
+          });
+          delayedLoadMetadataThread.IsBackground = true;
+          delayedLoadMetadataThread.Start();
         }
 
         private readonly Entity<LinkedList<Token>> _tokenizedBuffer;

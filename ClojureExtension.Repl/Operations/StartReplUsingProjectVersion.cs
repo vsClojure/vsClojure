@@ -3,36 +3,29 @@
 // See AUTHORS.txt for a complete list of all contributors
 
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Windows.Controls;
 using ClojureExtension.Utilities;
-using Microsoft.VisualStudio.Shell.Interop;
 
 namespace ClojureExtension.Repl.Operations
 {
 	public class StartReplUsingProjectVersion
 	{
 		private readonly ReplFactory _replFactory;
-		private readonly IVsWindowFrame _toolWindowFrame;
-		private readonly Func<string> _frameworkProvider;
-		private readonly IProvider<EnvDTE.Project> _selectedProjectProvider;
+		private readonly Func<Process> _replProcessProvider;
 
 		public StartReplUsingProjectVersion(
 			ReplFactory replFactory,
-			IVsWindowFrame toolWindowFrame,
-			Func<string> frameworkProvider,
-			IProvider<EnvDTE.Project> selectedProjectProvider)
+			Func<Process> replProcessProvider)
 		{
-			_frameworkProvider = frameworkProvider;
-			_selectedProjectProvider = selectedProjectProvider;
+			_replProcessProvider = replProcessProvider;
 			_replFactory = replFactory;
-			_toolWindowFrame = toolWindowFrame;
 		}
 
 		public void Execute()
 		{
-			_replFactory.CreateRepl(_frameworkProvider(), Path.GetDirectoryName(_selectedProjectProvider.Get().FullName));
-			_toolWindowFrame.Show();
+      _replFactory.CreateRepl(_replProcessProvider());
 		}
 	}
 }

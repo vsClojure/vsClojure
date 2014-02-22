@@ -43,12 +43,13 @@ using vsClojure;
 using Constants = ClojureExtension.Utilities.Constants;
 using Process = System.Diagnostics.Process;
 using ClojureExtension.Editor.Intellisense;
+using Thread = System.Threading.Thread;
 
 namespace ClojureExtension.Deployment
 {
 	[Guid(PackageGuid)]
 	[PackageRegistration(UseManagedResourcesOnly = true)]
-	[DefaultRegistryRoot("Software\\Microsoft\\VisualStudio\\11.0")]
+	[DefaultRegistryRoot("Software\\Microsoft\\VisualStudio\\12.0")]
 	[ProvideService(typeof(ClojureLanguage), ServiceName = ClojureLanguage.CLOJURE_LANGUAGE_NAME)]
 	[ProvideLanguageService(typeof(ClojureLanguage), ClojureLanguage.CLOJURE_LANGUAGE_NAME, 100, CodeSense = true, DefaultToInsertSpaces = true, EnableCommenting = true, MatchBraces = true, MatchBracesAtCaret = true, ShowCompletion = true, ShowMatchingBrace = true, QuickInfo = true, AutoOutlining = true, DebuggerLanguageExpressionEvaluator = ClojureLanguage.CLOJURE_LANGUAGE_GUID)]
 	[ProvideLanguageExtension(typeof(ClojureLanguage), ClojureLanguage.CLJ_FILE_EXTENSION)]
@@ -59,9 +60,10 @@ namespace ClojureExtension.Deployment
 	[ProvideProjectItem(typeof(ClojureProjectFactory), "Clojure Items", @"Templates\ProjectItems\Clojure", 500)]
 	[ProvideMenuResource("Menus.ctmenu", 1)]
 	[ProvideToolWindow(typeof(ReplToolWindow))]
-	[ProvideAutoLoad(VSConstants.UICONTEXT.NoSolution_string)]
-	[RegisterExpressionEvaluator(typeof(ExpressionEvaluator), ClojureLanguage.CLOJURE_LANGUAGE_NAME, ExpressionEvaluator.CLOJURE_DEBUG_EXPRESSION_EVALUATOR_GUID, ExpressionEvaluator.MICROSOFT_VENDOR_GUID)]
-	public sealed class ClojurePackage : ProjectPackage
+  [RegisterExpressionEvaluator(typeof(ExpressionEvaluator), ClojureLanguage.CLOJURE_LANGUAGE_NAME, ExpressionEvaluator.CLOJURE_DEBUG_EXPRESSION_EVALUATOR_GUID, ExpressionEvaluator.MICROSOFT_VENDOR_GUID)]
+  [ProvideAutoLoad(VSConstants.UICONTEXT.NoSolution_string)]
+  [ProvideAutoLoad(VSConstants.UICONTEXT.SolutionExists_string)]
+  public sealed class ClojurePackage : ProjectPackage
 	{
 		public const string PackageGuid = "7712178c-977f-45ec-adf6-e38108cc7739";
 		private const bool OPTIMIZE_COMPILED_JAVASCRIPT = false;
@@ -71,55 +73,45 @@ namespace ClojureExtension.Deployment
 
 		protected override void Initialize()
 		{
-			base.Initialize();
+      base.Initialize();
 
-			_dte = (DTE2)GetService(typeof(DTE));
+      AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainAssemblyResolve;
 
-			_dte.Events.DTEEvents.OnStartupComplete +=
-					() =>
-					{
-						try
-						{
-							AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainAssemblyResolve;
-
-              EnableSettingOfRuntimePathForNewClojureProjects();
-              UnzipRuntimes();
-              RegisterProjectFactory(new ClojureProjectFactory(this));
-              RegisterCommandMenuService();
-              HideAllClojureEditorMenuCommands();
-              ShowClojureProjectMenuCommands();
-              EnableTokenizationOfNewClojureBuffers();
-              SetupNewClojureBuffersWithSpacingOptions();
-              EnableMenuCommandsOnNewClojureBuffers();
-                
-              AfterStartupComplete();
-						}
-						catch (Exception e)
-						{
-							MessageBox.Show("Unhandled Exception loading vsClojure : " + e.Message + System.Environment.NewLine + "Stack Trace: " + e.StackTrace);
-						}
-					};
+		  try
+		  {
+		    EnableSettingOfRuntimePathForNewClojureProjects();
+		    UnzipRuntimes();
+		    RegisterProjectFactory(new ClojureProjectFactory(this));
+		    RegisterCommandMenuService();
+		    HideAllClojureEditorMenuCommands();
+		    EnableTokenizationOfNewClojureBuffers();
+		    SetupNewClojureBuffersWithSpacingOptions();
+		    EnableMenuCommandsOnNewClojureBuffers();
+		    ShowClojureProjectMenuCommands();
+		    _errorListHelper = new ErrorListHelper();
+      
+		    Thread delayedStartup = new Thread(() =>
+		    {
+		      try
+		      {
+		        HippieCompletionSource.Initialize(this);
+		        _metadata = new Metadata(); // SlowLoadingProcess for the 1st time.
+		      }
+		      catch (Exception e)
+		      {
+		        MessageBox.Show(string.Format("Unhandled Exception loading vsClojure : {0}{1}Stack Trace: {2}", e.Message, System.Environment.NewLine, e.StackTrace));
+		      }
+		    });
+		    delayedStartup.IsBackground = true;
+		    delayedStartup.Start();
+		  }
+		  catch (Exception e)
+		  {
+		    MessageBox.Show(string.Format("Unhandled Exception loading vsClojure : {0}{1}Stack Trace: {2}", e.Message, System.Environment.NewLine, e.StackTrace));
+		  }
 		}
 
-		private void AfterStartupComplete()
-		{
-			new System.Threading.Thread(() =>
-				{
-					try
-					{
-						_metadata = new Metadata(); // SlowLoadingProcess for the 1st time.
-					}
-					catch
-					{
-						//ignore exception to prevent crashing visual studio
-					}
-				}).Start();
-
-			_errorListHelper = new ErrorListHelper();
-			HippieCompletionSource.Initialize(this);
-		}
-
-		private void UnzipRuntimes()
+	  private void UnzipRuntimes()
 		{
 			try
 			{
@@ -224,9 +216,8 @@ namespace ClojureExtension.Deployment
 
 		private Dictionary<string, Process> filesBeingCompiled = new Dictionary<string, Process>();
 		private object filesBeingCompiledLock = new object();
-		private DTE2 _dte;
 
-		private void CompileClojureScript(string filePath, string inputFileContents, Action<string> outputResult)
+	  private void CompileClojureScript(string filePath, string inputFileContents, Action<string> outputResult)
 		{
 			new System.Threading.Thread(() =>
 			{
@@ -445,20 +436,46 @@ namespace ClojureExtension.Deployment
 					});
 		}
 
-		private void ShowClojureProjectMenuCommands()
+    ReplToolWindow _replToolWindow = null;
+	  private ReplToolWindow ReplToolWindow
+	  {
+	    get
+	    {
+	      if (_replToolWindow == null)
+	      {
+	        _replToolWindow = (ReplToolWindow) FindToolWindow(typeof (ReplToolWindow), 0, true);
+
+	      }
+
+        return _replToolWindow;
+	    }
+	  }
+
+    IVsWindowFrame _replToolWindowFrame = null;
+	  private IVsWindowFrame ReplToolWindowFrame
+	  {
+	    get
+	    {
+	      if (_replToolWindowFrame == null)
+	      {
+	        _replToolWindowFrame = (IVsWindowFrame) ReplToolWindow.Frame;
+	      }
+
+	      return _replToolWindowFrame;
+	    }
+	  }
+
+    private void ShowClojureProjectMenuCommands()
 		{
 			OleMenuCommandService menuCommandService = (OleMenuCommandService)GetService(typeof(IMenuCommandService));
-			ReplToolWindow replToolWindow = (ReplToolWindow)FindToolWindow(typeof(ReplToolWindow), 0, true);
-			IVsWindowFrame replToolWindowFrame = (IVsWindowFrame)replToolWindow.Frame;
-			DTE2 dte = (DTE2)GetService(typeof(DTE));
-			IProvider<EnvDTE.Project> projectProvider = new SelectedProjectProvider(dte.Solution, dte.ToolWindows.SolutionExplorer);
-
-			SelectedProjectProvider selectedProjectProvider = new SelectedProjectProvider(dte.Solution, dte.ToolWindows.SolutionExplorer);
-			ReplFactory replFactory = new ReplFactory(replToolWindow.TabControl, replToolWindowFrame, this);
-      StartReplUsingProjectVersion replStartFunction = new StartReplUsingProjectVersion(replFactory, replToolWindowFrame,
+			ReplFactory replFactory = new ReplFactory(this);
+      StartReplUsingProjectVersion replStartFunction = new StartReplUsingProjectVersion(replFactory,
         () =>
         {
-          string frameworkPath = Path.Combine(Utilities.EnvironmentVariables.VsClojureRuntimesDir, "ClojureCLR-1.5.0");
+          DTE2 dte = (DTE2)GetService(typeof(DTE));
+          IProvider<EnvDTE.Project> projectProvider = new SelectedProjectProvider(dte.Solution, dte.ToolWindows.SolutionExplorer);
+         
+          string frameworkPath = Path.Combine(EnvironmentVariables.VsClojureRuntimesDir, "ClojureCLR-1.5.0");
 
           try
           {
@@ -466,11 +483,16 @@ namespace ClojureExtension.Deployment
           }
           catch { }
 
-          return frameworkPath;
-        }
-      , selectedProjectProvider);
+          SelectedProjectProvider selectedProjectProvider = new SelectedProjectProvider(dte.Solution, dte.ToolWindows.SolutionExplorer);
+          return ReplUtilities.CreateReplProcess(frameworkPath, Path.GetDirectoryName(selectedProjectProvider.Get().FullName));
+        });
 
-			menuCommandService.AddCommand(new MenuCommand((sender, args) => replStartFunction.Execute(), CommandIDs.StartReplUsingProjectVersion));
+			menuCommandService.AddCommand(new MenuCommand((sender, args) =>
+			{
+			  replFactory.ReplManager = ReplToolWindow.TabControl;
+			  replFactory.ReplToolWindow = ReplToolWindowFrame;
+			  replStartFunction.Execute();
+			}, CommandIDs.StartReplUsingProjectVersion));
 		}
 
 		public override string ProductUserContext
