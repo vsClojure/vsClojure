@@ -22,7 +22,7 @@ Features:
 		* Switch to active file's namespace (Editor menu command)
 		* History (UP ARROW or DOWN ARROW)
 	9.) Block commenting
-	10.) Simple auto-completion (may require disabling other intellisense extensions such as Resharper)
+	10.) Simple auto-completion
 	11.) Auto-compile .cljs ClojureScript on save to a code-behind JavaScript file
 
 Notes:
