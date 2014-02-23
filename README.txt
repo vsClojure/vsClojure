@@ -29,7 +29,6 @@ Notes:
 	1.) Compile errors show in the Output window, not the error list window.
 	2.) The solution configuration manager defaults to NOT build clojure projects. To correct this, right-click on the solution, choose Configuration Manager, and check the "build" box next to your clojure projects.
 	3.) The vsClojure installer should have stored the core framework directory in the VSCLOJURE_RUNTIMES_DIR environment variable pointing to C:\Users\[username]\AppData\Local\Microsoft\VisualStudio\[version]\Extensions\[randomCharacters]\Runtimes\
-	4.) Autocomplete may not work if another extension (such as Resharper) has taken over intellisense. You may need to disable it while developing in Clojure.
 
 Source:
 
