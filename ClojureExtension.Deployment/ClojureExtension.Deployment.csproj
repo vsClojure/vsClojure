@@ -147,22 +147,22 @@
     <Content Include="Templates\Projects\Console Application\program.clj">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="Templates\ProjectItems\Clojure\ASP.Net MVC Controller.clj">
+    <Content Include="Templates\ProjectItems\Clojure\ASPNetMVCController.clj">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="Templates\Projects\ASPNet MVC\HomeController.clj">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="Templates\ProjectItems\Clojure\Code File.clj">
+    <Content Include="Templates\ProjectItems\Clojure\CodeFile.clj">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="Templates\Projects\ASPNet MVC\ASP.Net MVC Controller Library.cljproj">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="Templates\ProjectItems\Clojure\ADONet Data Reader.clj">
+    <Content Include="Templates\ProjectItems\Clojure\ADONetDataReader.clj">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="Templates\ProjectItems\Clojure\Windows Form.clj">
+    <Content Include="Templates\ProjectItems\Clojure\WindowsForm.clj">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="Templates\Projects\Class Library\Clojure.ico">

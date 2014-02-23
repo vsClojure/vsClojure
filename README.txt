@@ -38,12 +38,11 @@ Source:
 Discussion:
 
 	http://gplus.to/clojureclr
-	
 	#vsclojure on irc.freenode.net
 
 Installing:
 
-	1.) Install vsClojure from the Visual Studio Gallery using the extension manager in Visual Studio.
+	1.) Install vsClojure from the Visual Studio Gallery using the extension manager in Visual Studio or from http://visualstudiogallery.msdn.microsoft.com/0e53eaf6-b031-4d12-84c1-9163db0b757e
 	2.) For ClojureScript, install the latest JDK from Oracle.com and add the folder containing Java.exe to your path environment variable (usually C:\Program Files (x86)\Java\jre7\bin)
 
 Building:
