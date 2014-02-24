@@ -151,11 +151,8 @@ namespace ClojureExtension.Deployment
       {
         EnvironmentVariables.VsClojureRuntimesDir = runtimePath;
 
-        if (MessageBox.Show("Would you like to view the vsClojure ReadMe.txt", "vsClojure Readme.txt", MessageBoxButtons.YesNo) == DialogResult.Yes)
-        {
-          string pathToReadme = string.Format(@"{0}\ReadMe.txt", deployDirectory);
-          Process.Start("notepad.exe", pathToReadme);
-        }
+        string pathToReadme = string.Format(@"{0}\ReadMe.txt", deployDirectory);
+        Process.Start("notepad.exe", pathToReadme);
       }
 		}
 
