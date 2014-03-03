@@ -154,10 +154,11 @@ namespace ClojureExtension.Deployment
         EnvironmentVariables.VsClojureRuntimesDir = runtimePath;
 
         var pathToReadme = string.Format(@"{0}\ReadMe.txt", deployDirectory);
-        //Process.Start("notepad.exe", pathToReadme);
-
-	      var dte = (DTE2) GetService(typeof(DTE));// (Microsoft.VisualStudio.Shell.Interop.SDTE));
-	      dte.MainWindow.Activate();
+				
+				// Opening a file within Visual Studio
+				// Reference: http://stackoverflow.com/a/10724025/170217
+				var dte = (DTE2) GetService(typeof(DTE));
+	      dte.MainWindow.Activate(); // This may not be needed, need to test without!
 	      dte.ItemOperations.OpenFile(pathToReadme, EnvDTE.Constants.vsViewKindTextView);
       }
 		}
