@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -79,7 +80,6 @@ namespace ClojureExtension.Deployment
 
 		  try
 		  {
-		    EnableSettingOfRuntimePathForNewClojureProjects();
 		    UnzipRuntimes();
 		    RegisterProjectFactory(new ClojureProjectFactory(this));
 		    RegisterCommandMenuService();
@@ -94,6 +94,8 @@ namespace ClojureExtension.Deployment
 		    {
 		      try
 		      {
+						EnableSettingOfRuntimePathForNewClojureProjectsOnFirstInstall();
+
 		        HippieCompletionSource.Initialize(this);
 		        _metadata = new Metadata(); // SlowLoadingProcess for the 1st time.
 		      }
@@ -141,18 +143,22 @@ namespace ClojureExtension.Deployment
 			commandRegistry.RegisterPriorityCommandTarget(0, _thirdPartyEditorCommands, out cookie);
 		}
 
-		private void EnableSettingOfRuntimePathForNewClojureProjects()
+		private void EnableSettingOfRuntimePathForNewClojureProjectsOnFirstInstall()
 		{
-      string deployDirectory = GetDirectoryOfDeployedContents();
-      string runtimePath = string.Format(@"{0}\Runtimes", deployDirectory);
-      
-      bool firstInstall = string.Compare(EnvironmentVariables.VsClojureRuntimesDir, runtimePath, true) != 0;
-      if (firstInstall)
+      var deployDirectory = GetDirectoryOfDeployedContents();
+      var runtimePath = string.Format(@"{0}\Runtimes", deployDirectory);
+      var firstInstall = string.Compare(EnvironmentVariables.VsClojureRuntimesDir, runtimePath, true, CultureInfo.CurrentCulture) != 0;
+
+			if (firstInstall)
       {
         EnvironmentVariables.VsClojureRuntimesDir = runtimePath;
 
-        string pathToReadme = string.Format(@"{0}\ReadMe.txt", deployDirectory);
-        Process.Start("notepad.exe", pathToReadme);
+        var pathToReadme = string.Format(@"{0}\ReadMe.txt", deployDirectory);
+        //Process.Start("notepad.exe", pathToReadme);
+
+	      var dte = (DTE2) GetService(typeof(DTE));// (Microsoft.VisualStudio.Shell.Interop.SDTE));
+	      dte.MainWindow.Activate();
+	      dte.ItemOperations.OpenFile(pathToReadme, EnvDTE.Constants.vsViewKindTextView);
       }
 		}
 
