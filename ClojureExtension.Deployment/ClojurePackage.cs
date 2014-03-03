@@ -80,7 +80,7 @@ namespace ClojureExtension.Deployment
 
 		  try
 		  {
-		    UnzipRuntimes();
+		    
 		    RegisterProjectFactory(new ClojureProjectFactory(this));
 		    RegisterCommandMenuService();
 		    HideAllClojureEditorMenuCommands();
@@ -95,6 +95,7 @@ namespace ClojureExtension.Deployment
 		      try
 		      {
 						EnableSettingOfRuntimePathForNewClojureProjectsOnFirstInstall();
+						UnzipRuntimes();
 
 		        HippieCompletionSource.Initialize(this);
 		        _metadata = new Metadata(); // SlowLoadingProcess for the 1st time.
