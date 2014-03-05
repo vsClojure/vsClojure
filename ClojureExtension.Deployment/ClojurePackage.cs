@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -79,8 +80,7 @@ namespace ClojureExtension.Deployment
 
 		  try
 		  {
-		    EnableSettingOfRuntimePathForNewClojureProjects();
-		    UnzipRuntimes();
+		    
 		    RegisterProjectFactory(new ClojureProjectFactory(this));
 		    RegisterCommandMenuService();
 		    HideAllClojureEditorMenuCommands();
@@ -94,6 +94,9 @@ namespace ClojureExtension.Deployment
 		    {
 		      try
 		      {
+						EnableSettingOfRuntimePathForNewClojureProjectsOnFirstInstall();
+						UnzipRuntimes();
+
 		        HippieCompletionSource.Initialize(this);
 		        _metadata = new Metadata(); // SlowLoadingProcess for the 1st time.
 		      }
@@ -141,18 +144,23 @@ namespace ClojureExtension.Deployment
 			commandRegistry.RegisterPriorityCommandTarget(0, _thirdPartyEditorCommands, out cookie);
 		}
 
-		private void EnableSettingOfRuntimePathForNewClojureProjects()
+		private void EnableSettingOfRuntimePathForNewClojureProjectsOnFirstInstall()
 		{
-      string deployDirectory = GetDirectoryOfDeployedContents();
-      string runtimePath = string.Format(@"{0}\Runtimes", deployDirectory);
-      
-      bool firstInstall = string.Compare(EnvironmentVariables.VsClojureRuntimesDir, runtimePath, true) != 0;
-      if (firstInstall)
+      var deployDirectory = GetDirectoryOfDeployedContents();
+      var runtimePath = string.Format(@"{0}\Runtimes", deployDirectory);
+      var firstInstall = string.Compare(EnvironmentVariables.VsClojureRuntimesDir, runtimePath, true, CultureInfo.CurrentCulture) != 0;
+
+			if (firstInstall)
       {
         EnvironmentVariables.VsClojureRuntimesDir = runtimePath;
 
-        string pathToReadme = string.Format(@"{0}\ReadMe.txt", deployDirectory);
-        Process.Start("notepad.exe", pathToReadme);
+        var pathToReadme = string.Format(@"{0}\ReadMe.txt", deployDirectory);
+				
+				// Opening a file within Visual Studio
+				// Reference: http://stackoverflow.com/a/10724025/170217
+				var dte = (DTE2) GetService(typeof(DTE));
+	      dte.MainWindow.Activate(); // This may not be needed, need to test without!
+	      dte.ItemOperations.OpenFile(pathToReadme, EnvDTE.Constants.vsViewKindTextView);
       }
 		}
 
