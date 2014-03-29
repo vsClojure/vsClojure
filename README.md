@@ -1,11 +1,4 @@
-vsClojureSandbox
-================
-
-A disconnected fork of vsClojure for learning purposes
-
-##Project:
-
-	vsClojure
+#vsClojure
 
 ##Description:
 
