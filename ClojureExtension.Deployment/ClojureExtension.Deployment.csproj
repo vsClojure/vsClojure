@@ -111,10 +111,6 @@
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <None Include="..\Key.snk" />
-    <Content Include="..\DLR-License.html">
-      <Link>DLR-License.html</Link>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
     <Content Include="..\LICENSE.txt">
       <Link>LICENSE.txt</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
