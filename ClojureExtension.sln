@@ -3,14 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.30110.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{9B2D8C59-FCD5-40E3-ADEA-44D64ECB6993}"
-	ProjectSection(SolutionItems) = preProject
-		ATTRIBUTION.txt = ATTRIBUTION.txt
-		AUTHORS.txt = AUTHORS.txt
-		LICENSE.txt = LICENSE.txt
-		README.txt = README.txt
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClojureExtension.Tests", "ClojureExtension.Tests\ClojureExtension.Tests.csproj", "{F417C00C-CE80-4E74-A611-8EC6CC04F37E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClojureExtension.Parsing", "ClojureExtension.Parsing\ClojureExtension.Parsing.csproj", "{6A42095C-CC50-4E3E-9672-6185A6F7A8A7}"

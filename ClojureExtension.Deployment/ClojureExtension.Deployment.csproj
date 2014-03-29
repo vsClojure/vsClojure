@@ -111,10 +111,6 @@
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <None Include="..\Key.snk" />
-    <Content Include="..\LICENSE.txt">
-      <Link>LICENSE.txt</Link>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
     <Content Include="..\README.txt">
       <Link>README.txt</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
