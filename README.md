@@ -84,7 +84,7 @@ an issue or fork and submit a pull request.
 
 Jon Mis - https://github.com/jmis  
 Devin Garner - https://github.com/speige  
-Frank Hale - https://github.com/frankhale  
+Frank Hale - https://github.com/frankhale
 
 ##Attribution
 
