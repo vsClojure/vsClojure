@@ -77,14 +77,16 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
-##Authors
-
-If you have contributed work to vsClojure and your name is not listed please file
-an issue or fork and submit a pull request.
+##Author
 
 Jon Mis - https://github.com/jmis  
+
+##Contributors
+
 Devin Garner - https://github.com/speige  
 Frank Hale - https://github.com/frankhale
+
+NOTE: Submit a pull request if you have helped and are not listed
 
 ##Attribution
 
