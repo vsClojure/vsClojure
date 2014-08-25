@@ -1,5 +1,9 @@
 #vsClojure
 
+##HELP!!!
+
+This project needs developers! Please consider helping out, pull requests are encouraged!
+
 ##Description
 
 A Visual Studio 2010, 2012, & 2013 Extension for ClojureCLR & ClojureScript.
