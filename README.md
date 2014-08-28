@@ -1,8 +1,6 @@
+#!!!HELP!!! THIS PROJECT NEEDS DEVELOPERS !!!HELP!!! 
+
 #vsClojure
-
-##HELP!!!
-
-This project needs developers! Please consider helping out, pull requests are encouraged!
 
 ##Description
 
