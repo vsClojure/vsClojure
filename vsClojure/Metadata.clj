@@ -1,4 +1,4 @@
-(System.Reflection.Assembly/Load "Microsoft.VisualStudio.Language.Intellisense, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")
+(System.Reflection.Assembly/Load "Microsoft.VisualStudio.Language.Intellisense, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")
 
 (ns Metadata
   (:require [clojure.core])
