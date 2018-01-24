@@ -37,7 +37,6 @@ https://github.com/vsClojure/vsClojure
 
 ##Discussion
 
-http://gplus.to/clojureclr
 \#vsclojure on irc.freenode.net
 
 ##Installing
